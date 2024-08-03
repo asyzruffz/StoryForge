@@ -13,14 +13,18 @@ public class TestCommand : CommandBase
 
     private async Task Execute(CommandData command)
     {
-        var subcommand = new CommandData(command.Params);
-        if (HasNoArgument(command.Params)) return;
+        if (!command.ParamIsAtLeast(1))
+        {
+            command.NoArgument();
+            return;
+        }
 
+        var subcommand = new CommandData(command.Params);
         switch (subcommand.Name)
         {
             case "gen": await GenerateText(subcommand); break;
             case "weight": break;
-            default: UnknownArgument(subcommand.Name); break;
+            default: command.UnknownArgument(subcommand.Name); break;
         }
 
         await Task.CompletedTask;
@@ -28,10 +32,14 @@ public class TestCommand : CommandBase
 
     private async Task GenerateText(CommandData command)
     {
-        if (!command.ParamIsAtLeast(1)) return;
+        if (!command.ParamIsAtLeast(1))
+        {
+            command.NoArgument();
+            return;
+        }
 
         Message(string.Empty);
         var result = await Sender.Send(new GenerateWithPromptOperation(command.Params[0]));
-        result.Then(Message);
+        result.OnError(Message).Then(Message);
     }
 }

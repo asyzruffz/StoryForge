@@ -13,7 +13,7 @@ public class CommandProcessor
         TestCommand testCommand)
     {
         // Add default exit command
-        Register("exit", async (_) =>
+        Register("exit", async _ =>
         {
             IsRunning = false;
             await Task.CompletedTask;

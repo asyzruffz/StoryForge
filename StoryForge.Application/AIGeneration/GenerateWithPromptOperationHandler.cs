@@ -1,4 +1,5 @@
 ﻿using StoryForge.Application.Abstractions;
+using StoryForge.Core.Utils;
 
 namespace StoryForge.Application.AIGeneration
 {
@@ -10,12 +11,13 @@ namespace StoryForge.Application.AIGeneration
             // dependency injection
         }
 
-        public async Task<string> Handle(GenerateWithPromptOperation request, CancellationToken cancellationToken)
+        public async Task<Result<string>> Handle(GenerateWithPromptOperation request, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(request.Prompt))
-                return await Task.FromResult(string.Empty);
+                return await Task.FromResult(Result<string>.Fail("Prompt is empty"));
 
-            return await Task.FromResult($"This is an AI genrated response from the prompt: \"{request.Prompt}\"");
+            var generated = $"This is an AI genrated response from the prompt: \"{request.Prompt}\"";
+            return await Task.FromResult(Result<string>.Ok(generated));
         }
     }
 }
