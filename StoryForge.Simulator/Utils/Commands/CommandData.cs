@@ -24,4 +24,9 @@ class CommandData
     {
         tokens = param;
     }
+
+    public bool ParamIsAtLeast(int amount)
+    {
+        return Params.Count >= amount;
+    }
 }
