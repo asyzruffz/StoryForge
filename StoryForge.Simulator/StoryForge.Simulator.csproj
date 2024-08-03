@@ -13,10 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Commands\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\StoryForge.Application\StoryForge.Application.csproj" />
     <ProjectReference Include="..\StoryForge.Core\StoryForge.Core.csproj" />
     <ProjectReference Include="..\StoryForge.Infrastructure\StoryForge.Infrastructure.csproj" />

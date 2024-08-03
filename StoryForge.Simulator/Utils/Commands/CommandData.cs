@@ -1,6 +1,6 @@
 ﻿namespace StoryForge.Simulator.Utils.Commands;
 
-class CommandData
+public class CommandData
 {
     public string Name
     {
@@ -9,10 +9,10 @@ class CommandData
 
     public List<string> Params
     {
-        get { return tokens.Count - 1 > 0 ? tokens.GetRange(1, tokens.Count - 1) : new List<string>(); }
+        get { return tokens.Count - 1 > 0 ? tokens.GetRange(1, tokens.Count - 1) : []; }
     }
 
-    List<string> tokens = new List<string>();
+    List<string> tokens;
 
     public CommandData(string rawInput)
     {

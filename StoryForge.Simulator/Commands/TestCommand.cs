@@ -7,14 +7,14 @@ namespace StoryForge.Simulator.Commands;
 public class TestCommand : CommandBase
 {
     public override string Name => "test";
-    public override Func<List<string>, Task> Action => Execute;
+    public override Func<CommandData, Task> Action => Execute;
 
     public TestCommand(ISender sender) : base(sender) { }
 
-    private async Task Execute(List<string> param)
+    private async Task Execute(CommandData command)
     {
-        var subcommand = new CommandData(param);
-        if (HasNoArgument(param)) return;
+        var subcommand = new CommandData(command.Params);
+        if (HasNoArgument(command.Params)) return;
 
         switch (subcommand.Name)
         {

@@ -6,7 +6,7 @@ public class CommandProcessor
 {
     public bool IsRunning { get; private set; } = true;
 
-    Dictionary<string, Func<List<string>, Task>> commandTable = [];
+    Dictionary<string, Func<CommandData, Task>> commandTable = [];
 
     public CommandProcessor(
         VersionCommand versionCommand,
@@ -29,7 +29,7 @@ public class CommandProcessor
         return this;
     }
 
-    public CommandProcessor Register(string name, Func<List<string>, Task> command)
+    public CommandProcessor Register(string name, Func<CommandData, Task> command)
     {
         commandTable.Add(name, command);
         return this;
@@ -40,9 +40,8 @@ public class CommandProcessor
         if (string.IsNullOrEmpty(input)) return;
 
         var command = new CommandData(input);
-        if (commandTable.ContainsKey(command.Name))
-        {
-            await commandTable[command.Name]!.Invoke(command.Params);
-        }
+        if (!commandTable.TryGetValue(command.Name, out var action)) return;
+        
+        await action!.Invoke(command);
     }
 }

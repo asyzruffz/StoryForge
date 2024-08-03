@@ -10,7 +10,7 @@ public abstract class CommandBase : ICommand
     protected CommandBase(ISender sender) => Sender = sender;
 
     public abstract string Name { get; }
-    public abstract Func<List<string>, Task> Action { get; }
+    public abstract Func<CommandData, Task> Action { get; }
 
     protected bool HasNoArgument(IEnumerable<string> args)
     {

@@ -3,5 +3,5 @@
 public interface ICommand
 {
     public string Name { get; }
-    public Func<List<string>, Task> Action { get; }
+    public Func<CommandData, Task> Action { get; }
 }
