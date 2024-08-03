@@ -14,8 +14,10 @@ public class Result
     public static Result Ok() => new Result(true, string.Empty);
     public static Result Fail(string errorMessage) => new Result(false, errorMessage);
 
+    public Result OnError(Action<string> action) { if (!IsSuccess) action(ErrorMessage); return this; }
+
     public Result Then(Func<Result> action) =>
-        IsSuccess ? action() : Result.Fail(ErrorMessage);
+        IsSuccess ? action() : this;
     public Result<TResult> Then<TResult>(Func<Result<TResult>> action) =>
         IsSuccess ? action() : Result<TResult>.Fail(ErrorMessage);
     public void Then(Action action) { if (IsSuccess) action(); }
@@ -39,6 +41,8 @@ public class Result<T>
     public static Result<T> Fail(string errorMessage) => new Result<T>(false, default!, errorMessage);
 
     public T Or(T defaultVal) => IsSuccess ? Value : defaultVal;
+
+    public Result<T> OnError(Action<string> action) { if (!IsSuccess) action(ErrorMessage); return this; }
 
     public Result Then(Func<T, Result> action) =>
         IsSuccess ? action(Value) : Result.Fail(ErrorMessage);
