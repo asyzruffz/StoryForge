@@ -32,6 +32,6 @@ public class TestCommand : CommandBase
 
         Message(string.Empty);
         var result = await Sender.Send(new GenerateWithPromptOperation(command.Params[0]));
-        Message(result);
+        result.Then(Message);
     }
 }
