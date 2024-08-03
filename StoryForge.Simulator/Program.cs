@@ -1,14 +1,25 @@
-﻿
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using StoryForge.Core.Services;
+using StoryForge.Core.Services.Implementations;
+using StoryForge.Infrastructure;
+using StoryForge.Simulator;
+using StoryForge.Simulator.Commands;
+
 var host = Host.CreateDefaultBuilder(args)
-    .ConfigureLogging(logging => logging.ClearProviders().AddProvider(NullLoggerProvider.Instance))
+    .SetNullLogger()
     .ConfigureServices(services =>
     {
+        services.AddMediatR(config => config
+            .RegisterServicesFromAssembly(StoryForge.Application.AssemblyReference.Assembly));
+
         services.AddSingleton<IDataSession, DataSession>();
         services.AddSingleton<IDataSessionFactory, DataSessionFactory>();
+        services.AddSingleton<ITemporaryStorage, TemporaryStorage>();
 
-        services.AddTomeSystem();
+        services.AddStoryForgeSystem();
         services.AddCommandService();
-        services.AddHostedService<TomeSimulator>();
+        services.AddHostedService<StoryForgeSimulator>();
     })
     .Build();
 
