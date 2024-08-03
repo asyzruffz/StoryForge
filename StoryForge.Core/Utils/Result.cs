@@ -49,4 +49,7 @@ public class Result<T>
     public Result<TResult> Then<TResult>(Func<T, Result<TResult>> action) =>
         IsSuccess ? action(Value) : Result<TResult>.Fail(ErrorMessage);
     public void Then(Action<T> action) { if (IsSuccess) action(Value); }
+
+    public TResult Match<TResult>(Func<T, TResult> onSuccess, Func<string, TResult> onFailure) =>
+        IsSuccess ? onSuccess(Value) : onFailure(ErrorMessage);
 }
