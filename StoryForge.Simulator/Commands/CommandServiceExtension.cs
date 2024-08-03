@@ -9,6 +9,7 @@ public static class CommandServiceExtension
     {
         services
             .AddSingleton<VersionCommand>()
+            .AddSingleton<PromptCommand>()
             .AddSingleton<TestCommand>();
         services.AddSingleton<CommandProcessor>();
         return services;
