@@ -14,14 +14,14 @@ public abstract class CommandBase : ICommand
 
     protected bool HasNoArgument(IEnumerable<string> args)
     {
-        if (args.Count() == 0) return true;
-        Console.WriteLine($"No argument for {Name} provided{Environment.NewLine}");
-        return false;
+        if (args.Count() > 0) return false;
+        Console.WriteLine($"{Environment.NewLine}No argument for {Name} provided{Environment.NewLine}");
+        return true;
     }
 
     protected void UnknownArgument(string arg)
     {
-        Console.WriteLine($"Unknown argument {arg} for {Name}{Environment.NewLine}");
+        Console.WriteLine($"{Environment.NewLine}Unknown argument {arg} for {Name}{Environment.NewLine}");
     }
 
     protected void Message(string msg)
