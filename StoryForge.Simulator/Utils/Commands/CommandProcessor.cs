@@ -10,6 +10,7 @@ public class CommandProcessor
 
     public CommandProcessor(
         VersionCommand versionCommand,
+        ClearCommand clearCommand,
         PromptCommand promptCommand,
         TestCommand testCommand)
     {
@@ -21,6 +22,7 @@ public class CommandProcessor
         });
 
         Register(versionCommand);
+        Register(clearCommand);
         Register(promptCommand);
         Register(testCommand);
     }
