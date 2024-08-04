@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using StoryForge.Application.Services;
 using StoryForge.Core.Services;
-using StoryForge.Core.Services.Implementations;
 using StoryForge.Infrastructure;
 using StoryForge.Simulator;
 using StoryForge.Simulator.Commands;

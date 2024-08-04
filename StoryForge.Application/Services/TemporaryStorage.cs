@@ -1,10 +1,11 @@
-﻿using StoryForge.Core.Utils;
+﻿using StoryForge.Core.Services;
+using StoryForge.Core.Utils;
 
-namespace StoryForge.Core.Services.Implementations;
+namespace StoryForge.Application.Services;
 
 public class TemporaryStorage : ITemporaryStorage
 {
-    private readonly Dictionary<string, object> storage = new Dictionary<string, object>();
+    private readonly Dictionary<string, object> storage = new();
 
     public void Set<T>(string key, T value) where T : notnull
     {

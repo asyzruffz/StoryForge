@@ -2,8 +2,8 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using StoryForge.Application.Services;
 using StoryForge.Core.Services;
-using StoryForge.Core.Services.Implementations;
 
 namespace StoryForge.Simulator;
 
