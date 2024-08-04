@@ -1,4 +1,6 @@
-﻿namespace StoryForge.Core.Data;
+﻿using System.Text;
+
+namespace StoryForge.Core.Data;
 
 public interface IContentSection
 {
@@ -30,11 +32,12 @@ public class MultipleSection : IContentSection
         return this;
     }
 
-    public string ToText()
-    {
-        return Sections
-            .Where(section => section is not EmptySection)
-            .Aggregate(string.Empty, (content, next) => 
-                $"{content}{Environment.NewLine}{Environment.NewLine}{next.ToText()}");
-    }
+    public string ToText() => Sections
+        .Where(section => section is not EmptySection)
+        .Aggregate(new StringBuilder(),
+            (builder, next) => builder
+                .Append(Environment.NewLine)
+                .Append(Environment.NewLine)
+                .Append(next.ToText()),
+            builder => builder.ToString());
 }
