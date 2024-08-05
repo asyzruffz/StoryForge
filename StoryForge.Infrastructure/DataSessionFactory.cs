@@ -4,7 +4,9 @@ namespace StoryForge.Infrastructure;
 
 public class DataSessionFactory : IDataSessionFactory
 {
-    public DataSessionFactory() { }
+    private readonly ApplicationDbContext context;
 
-    public IDataSession CreateSession() => new DataSession();
+    public DataSessionFactory(ApplicationDbContext context) => this.context = context;
+
+    public IDataSession CreateSession() => new DataSession(context);
 }

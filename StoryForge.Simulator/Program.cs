@@ -13,6 +13,7 @@ var host = Host.CreateDefaultBuilder(args)
         services.AddMediatR(config => config
             .RegisterServicesFromAssembly(StoryForge.Application.AssemblyReference.Assembly));
 
+        services.AddSingleton<ApplicationDbContext>();
         services.AddSingleton<IDataSession, DataSession>();
         services.AddSingleton<IDataSessionFactory, DataSessionFactory>();
         services.AddSingleton<ITemporaryStorage, TemporaryStorage>();
