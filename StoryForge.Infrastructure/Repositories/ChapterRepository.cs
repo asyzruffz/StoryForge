@@ -4,7 +4,7 @@ using StoryForge.Core.Utils;
 
 namespace StoryForge.Infrastructure.Repositories;
 
-public class ChapterRepository : IChapterRepository
+internal class ChapterRepository : IChapterRepository
 {
     //protected readonly DbSet<Chapter> chapters;
     protected readonly List<Chapter> chapters;
@@ -16,31 +16,33 @@ public class ChapterRepository : IChapterRepository
 
     public IQueryable<Chapter> GetAll()
     {
-        throw new NotImplementedException();
+        return chapters.AsQueryable();
     }
 
     public Result<Chapter> GetById(ChapterId id)
     {
-        throw new NotImplementedException();
+        return chapters
+            .SingleOrDefault(chapter => chapter.Id == id)
+            .AsOption().ToResult();
     }
 
-    public void Create(Chapter obj)
+    public void Create(Chapter chapter)
+    {
+        chapters.Add(chapter);
+    }
+
+    public void Create(IEnumerable<Chapter> chapter)
+    {
+        chapters.AddRange(chapter);
+    }
+
+    public void Update(Chapter chapter)
     {
         throw new NotImplementedException();
     }
 
-    public void Create(IEnumerable<Chapter> objs)
+    public void Delete(Chapter chapter)
     {
-        throw new NotImplementedException();
-    }
-
-    public void Update(Chapter obj)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Delete(Chapter obj)
-    {
-        throw new NotImplementedException();
+        chapters.Remove(chapter);
     }
 }
