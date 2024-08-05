@@ -9,9 +9,9 @@ public class Chapter
     public IContentSection Content { get; set; } = new EmptySection();
 }
 
-public readonly record struct ChapterId(string Value) : IStrongId
+public readonly record struct ChapterId(string Value) : ITypedId
 {
-    public static ChapterId Empty => new(string.Empty);
-    public static ChapterId New() => new(StrongId.New().ToString());
-    public static ChapterId From(string value) => new(StrongId.From(value).Or(string.Empty));
+    public static ChapterId Empty => new(TypedId.Empty);
+    public static ChapterId New() => new(TypedId.New());
+    public static ChapterId From(string value) => new(TypedId.From(value));
 }
