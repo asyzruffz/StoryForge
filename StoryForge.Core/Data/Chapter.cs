@@ -9,7 +9,7 @@ public class Chapter
     public IContentSection Content { get; set; } = new EmptySection();
 }
 
-public readonly record struct ChapterId(string Value)
+public readonly record struct ChapterId(string Value) : IStrongId
 {
     public static ChapterId Empty => new(string.Empty);
     public static ChapterId New() => new(StrongId.New().ToString());

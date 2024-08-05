@@ -2,6 +2,8 @@
 
 namespace StoryForge.Core.Data;
 
+public interface IStrongId { }
+
 public static class StrongId
 {
     public static string New() => Guid.NewGuid().ToString();
