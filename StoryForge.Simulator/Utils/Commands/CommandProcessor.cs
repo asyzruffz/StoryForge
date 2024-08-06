@@ -16,7 +16,7 @@ public class CommandProcessor : ICommandProcessor
         if (cancellationToken.IsCancellationRequested) return;
         if (string.IsNullOrEmpty(input)) return;
 
-        var command = new CommandData(input);
+        var command = new CommandData(CommandParams.Parse(input));
 
         if (IsExit(command)) return; // Add default exit command
 

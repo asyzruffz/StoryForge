@@ -14,15 +14,9 @@ public class CommandData
 
     List<string> tokens;
 
-    public CommandData(string rawInput)
+    public CommandData(IEnumerable<string> param)
     {
-        string input = rawInput.Trim();
-        tokens = input.Split(' ', options: StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).ToList();
-    }
-
-    public CommandData(List<string> param)
-    {
-        tokens = param;
+        tokens = param.ToList();
     }
 
     public bool ParamIsAtLeast(int amount)
