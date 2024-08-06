@@ -1,55 +1,43 @@
-﻿using StoryForge.Simulator.Commands;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace StoryForge.Simulator.Utils.Commands;
 
-public class CommandProcessor
+public class CommandProcessor : ICommandProcessor
 {
+    private readonly IServiceScopeFactory scopeFactory;
+
     public bool IsRunning { get; private set; } = true;
 
-    Dictionary<string, Func<CommandData, Task>> commandTable = [];
+    public CommandProcessor(IServiceScopeFactory serviceScopeFactory) =>
+        scopeFactory = serviceScopeFactory;
 
-    public CommandProcessor(
-        VersionCommand versionCommand,
-        ClearCommand clearCommand,
-        PromptCommand promptCommand,
-        TestCommand testCommand)
+    public async Task Read(string? input, CancellationToken cancellationToken)
     {
-        // Add default exit command
-        Register("exit", async _ =>
-        {
-            IsRunning = false;
-            await Task.CompletedTask;
-        });
-
-        Register(versionCommand);
-        Register(clearCommand);
-        Register(promptCommand);
-        Register(testCommand);
-    }
-
-    public CommandProcessor Register(ICommand command)
-    {
-        commandTable.Add(command.Name, command.Action);
-        return this;
-    }
-
-    public CommandProcessor Register(string name, Func<CommandData, Task> command)
-    {
-        commandTable.Add(name, command);
-        return this;
-    }
-
-    public async Task Read(string? input)
-    {
+        if (cancellationToken.IsCancellationRequested) return;
         if (string.IsNullOrEmpty(input)) return;
 
         var command = new CommandData(input);
-        if (!commandTable.TryGetValue(command.Name, out var action))
+
+        if (IsExit(command)) return; // Add default exit command
+
+        using (var scope = scopeFactory.CreateAsyncScope())
         {
-            Console.WriteLine($"{Environment.NewLine}No command called {command.Name} exists{Environment.NewLine}");
-            return;
+            var commandService = scope.ServiceProvider.GetKeyedService<ICommand>(command.Name);
+            if (commandService == null)
+            {
+                Console.WriteLine($"{Environment.NewLine}No command called {command.Name} exists{Environment.NewLine}");
+                return;
+            }
+
+            await commandService.Action!.Invoke(command, cancellationToken);
         }
-        
-        await action!.Invoke(command);
+    }
+
+    bool IsExit(CommandData command)
+    {
+        if (command.Name != "exit")
+            return false;
+        IsRunning = false;
+        return true;
     }
 }

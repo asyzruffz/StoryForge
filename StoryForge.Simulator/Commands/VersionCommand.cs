@@ -5,14 +5,15 @@ namespace StoryForge.Simulator.Commands;
 
 public class VersionCommand : CommandBase
 {
-    public override string Name => "version";
-    public override Func<CommandData, Task> Action => Execute;
+    public const string Name = "version";
+
+    public override Func<CommandData, CancellationToken, Task> Action => Execute;
 
     public VersionCommand(ISender sender) : base(sender) { }
 
-    private async Task Execute(CommandData command)
+    private async Task Execute(CommandData command, CancellationToken cancellationToken)
     {
-        Message("Story Forge v1.0");
+        MessageLine("Story Forge v1.0");
         await Task.CompletedTask;
     }
 }

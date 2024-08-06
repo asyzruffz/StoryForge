@@ -8,10 +8,14 @@ public abstract class CommandBase : ICommand
 
     protected CommandBase(ISender sender) => Sender = sender;
 
-    public abstract string Name { get; }
-    public abstract Func<CommandData, Task> Action { get; }
+    public abstract Func<CommandData, CancellationToken, Task> Action { get; }
 
     protected void Message(string msg)
+    {
+        Console.WriteLine(msg);
+    }
+
+    protected void MessageLine(string msg)
     {
         Console.WriteLine($"{msg}{Environment.NewLine}");
     }

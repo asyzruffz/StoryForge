@@ -3,38 +3,27 @@ using StoryForge.Simulator.Utils.Commands;
 
 namespace StoryForge.Simulator;
 
-public class StoryForgeSimulator : IHostedService
+public class StoryForgeSimulator : BackgroundService
 {
     private readonly IHostApplicationLifetime simulation;
-    private readonly CommandProcessor process;
+    private readonly ICommandProcessor process;
 
-    public StoryForgeSimulator(IHostApplicationLifetime appLifetime, CommandProcessor commandProcessor)
+    public StoryForgeSimulator(IHostApplicationLifetime appLifetime, ICommandProcessor commandProcessor)
     {
         simulation = appLifetime;
         process = commandProcessor;
     }
 
-    public Task StartAsync(CancellationToken cancellationToken)
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         Console.WriteLine("Story Forge");
-        return Run();
-    }
-
-    public Task StopAsync(CancellationToken cancellationToken)
-    {
-        Console.WriteLine("Exiting Simulator");
-        return Task.CompletedTask;
-    }
-
-    private async Task Run()
-    {
-        do
+        while (process.IsRunning && !stoppingToken.IsCancellationRequested)
         {
             Console.Write(">> ");
             var input = Console.ReadLine();
 
-            await process.Read(input);
-        } while (process.IsRunning);
+            await process.Read(input, stoppingToken);
+        }
         simulation.StopApplication();
     }
 }

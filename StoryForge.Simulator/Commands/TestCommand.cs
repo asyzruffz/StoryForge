@@ -6,12 +6,13 @@ namespace StoryForge.Simulator.Commands;
 
 public class TestCommand : CommandBase
 {
-    public override string Name => "test";
-    public override Func<CommandData, Task> Action => Execute;
+    public const string Name = "test";
+
+    public override Func<CommandData, CancellationToken, Task> Action => Execute;
 
     public TestCommand(ISender sender) : base(sender) { }
 
-    private async Task Execute(CommandData command)
+    private async Task Execute(CommandData command, CancellationToken cancellationToken)
     {
         if (!command.ParamIsAtLeast(1))
         {
@@ -22,7 +23,7 @@ public class TestCommand : CommandBase
         var subcommand = new CommandData(command.Params);
         switch (subcommand.Name)
         {
-            case "gen": await GenerateText(subcommand); break;
+            case "gen": await GenerateText(subcommand, cancellationToken); break;
             case "weight": break;
             default: command.UnknownArgument(subcommand.Name); break;
         }
@@ -30,7 +31,7 @@ public class TestCommand : CommandBase
         await Task.CompletedTask;
     }
 
-    private async Task GenerateText(CommandData command)
+    private async Task GenerateText(CommandData command, CancellationToken cancellationToken)
     {
         if (!command.ParamIsAtLeast(1))
         {
@@ -40,6 +41,6 @@ public class TestCommand : CommandBase
 
         Message(string.Empty);
         var result = await Sender.Send(new GenerateWithPromptOperation(command.Params[0]));
-        result.OnError(Message).Then(Message);
+        result.OnError(MessageLine).Then(MessageLine);
     }
 }

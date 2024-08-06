@@ -8,11 +8,11 @@ public static class CommandServiceExtension
     public static IServiceCollection AddCommandService(this IServiceCollection services)
     {
         services
-            .AddSingleton<VersionCommand>()
-            .AddSingleton<ClearCommand>()
-            .AddSingleton<PromptCommand>()
-            .AddSingleton<TestCommand>();
-        services.AddSingleton<CommandProcessor>();
+            .AddKeyedScoped<ICommand, VersionCommand>(VersionCommand.Name)
+            .AddKeyedScoped<ICommand, ClearCommand>(ClearCommand.Name)
+            .AddKeyedScoped<ICommand, PromptCommand>(PromptCommand.Name)
+            .AddKeyedScoped<ICommand, TestCommand>(TestCommand.Name);
+        services.AddSingleton<ICommandProcessor, CommandProcessor>();
         return services;
     }
 }

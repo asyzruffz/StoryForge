@@ -6,12 +6,13 @@ namespace StoryForge.Simulator.Commands;
 
 public class PromptCommand : CommandBase
 {
-    public override string Name => "prompt";
-    public override Func<CommandData, Task> Action => Execute;
+    public const string Name = "prompt";
+
+    public override Func<CommandData, CancellationToken, Task> Action => Execute;
 
     public PromptCommand(ISender sender) : base(sender) { }
 
-    private async Task Execute(CommandData command)
+    private async Task Execute(CommandData command, CancellationToken cancellationToken)
     {
         if (!command.ParamIsAtLeast(1))
         {
@@ -20,7 +21,7 @@ public class PromptCommand : CommandBase
         }
 
         Message(string.Empty);
-        var result = await Sender.Send(new GenerateWithPromptOperation(command.Params[0]));
-        result.OnError(Message).Then(Message);
+        var result = await Sender.Send(new GenerateWithPromptOperation(command.Params[0]), cancellationToken);
+        result.OnError(MessageLine).Then(MessageLine);
     }
 }
