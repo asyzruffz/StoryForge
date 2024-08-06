@@ -12,7 +12,7 @@ public static class CommandServiceExtension
             .AddKeyedScoped<ICommand, ClearCommand>(ClearCommand.Name)
             .AddKeyedScoped<ICommand, PromptCommand>(PromptCommand.Name)
             .AddKeyedScoped<ICommand, TestCommand>(TestCommand.Name);
-        services.AddSingleton<ICommandProcessor, CommandProcessor>();
+        services.AddSingleton<CommandProcessor>();
         return services;
     }
 }

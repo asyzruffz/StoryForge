@@ -2,7 +2,7 @@
 
 namespace StoryForge.Simulator.Utils.Commands;
 
-public class CommandProcessor : ICommandProcessor
+public class CommandProcessor
 {
     private readonly IServiceScopeFactory scopeFactory;
 

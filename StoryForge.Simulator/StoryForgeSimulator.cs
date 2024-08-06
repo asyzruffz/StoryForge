@@ -6,9 +6,9 @@ namespace StoryForge.Simulator;
 public class StoryForgeSimulator : BackgroundService
 {
     private readonly IHostApplicationLifetime simulation;
-    private readonly ICommandProcessor process;
+    private readonly CommandProcessor process;
 
-    public StoryForgeSimulator(IHostApplicationLifetime appLifetime, ICommandProcessor commandProcessor)
+    public StoryForgeSimulator(IHostApplicationLifetime appLifetime, CommandProcessor commandProcessor)
     {
         simulation = appLifetime;
         process = commandProcessor;
