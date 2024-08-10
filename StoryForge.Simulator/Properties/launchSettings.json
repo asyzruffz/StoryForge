@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "StoryForge.Simulator": {
+      "commandName": "Project",
+      "commandLineArgs": "--environment Development"
+    }
+  }
+}

@@ -8,10 +8,12 @@ using StoryForge.Simulator.Commands;
 
 var host = Host.CreateDefaultBuilder(args)
     .SetNullLogger()
-    .ConfigureServices(services =>
+    .ConfigureServices((context, services) =>
     {
         services.AddMediatR(config => config
             .RegisterServicesFromAssembly(StoryForge.Application.AssemblyReference.Assembly));
+
+        services.AddOpenAI(context.Configuration);
 
         services.AddSingleton<ApplicationDbContext>();
         services.AddSingleton<IDataSession, DataSession>();
