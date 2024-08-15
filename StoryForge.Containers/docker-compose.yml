@@ -1,0 +1,34 @@
+version: '3.4'
+
+name: storyforge
+services:
+  storyforge.simulator:
+    container_name: storyforge.simulator
+    image: ${DOCKER_REGISTRY-}storyforgesimulator
+    build:
+      context: .
+      dockerfile: ../StoryForge.Simulator/Dockerfile
+    depends_on:
+      - storyforge.ai
+
+  storyforge.ai:
+    container_name: storyforge.ai
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities:
+                - gpu
+    volumes:
+      - ~/.cache/huggingface:/root/.cache/huggingface
+      - ./models:/models
+    environment:
+      - HUGGING_FACE_HUB_TOKEN=<hugging_face_token>
+    ports:
+      - 8000:8000
+    ipc: host
+    image: vllm/vllm-openai:latest
+    command: --download-dir /models --model gpt2
+    #command: --download-dir /models --model mistralai/Mistral-7B-v0.1 --max-model-len 2176

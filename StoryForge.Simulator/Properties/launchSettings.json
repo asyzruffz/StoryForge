@@ -3,6 +3,9 @@
     "StoryForge.Simulator": {
       "commandName": "Project",
       "commandLineArgs": "--environment Development"
+    },
+    "StoryForge Container": {
+      "commandName": "Docker"
     }
   }
 }
