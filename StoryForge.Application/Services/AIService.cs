@@ -16,9 +16,11 @@ public class AIService : IAIService
     public async Task<string> Complete(string preface, CancellationToken cancellationToken)
     {
         var result = await client.Complete(preface, cancellationToken);
-        return result.Aggregate(
-            new StringBuilder(), 
-            (builder, next) => builder.AppendLine(next),
-            builder => builder.ToString());
+        return result.Match(
+            parts => parts.Aggregate(
+                new StringBuilder(),
+                (builder, next) => builder.AppendLine(next),
+                builder => builder.ToString()), 
+            error => error);
     }
 }

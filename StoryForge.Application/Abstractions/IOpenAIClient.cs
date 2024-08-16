@@ -1,7 +1,9 @@
-﻿namespace StoryForge.Application.Abstractions;
+﻿using StoryForge.Core.Utils;
+
+namespace StoryForge.Application.Abstractions;
 
 public interface IOpenAIClient
 {
-    Task<IEnumerable<string>> Complete(string message, CancellationToken cancellationToken);
+    Task<Result<IEnumerable<string>>> Complete(string message, CancellationToken cancellationToken);
     void Reset();
 }
