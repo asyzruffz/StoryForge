@@ -1,8 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using StoryForge.Application.Services;
-using StoryForge.Core.Services;
-using StoryForge.Infrastructure;
 using StoryForge.Simulator;
 using StoryForge.Simulator.Commands;
 
@@ -10,17 +7,9 @@ var host = Host.CreateDefaultBuilder(args)
     .SetNullLogger()
     .ConfigureServices((context, services) =>
     {
-        services.AddMediatR(config => config
-            .RegisterServicesFromAssembly(StoryForge.Application.AssemblyReference.Assembly));
+        services.AddStoryForgeInfrastructure(context.Configuration);
+        services.AddStoryForgeApplication();
 
-        services.AddOpenAI(context.Configuration);
-
-        services.AddSingleton<ApplicationDbContext>();
-        services.AddSingleton<IDataSession, DataSession>();
-        services.AddSingleton<IDataSessionFactory, DataSessionFactory>();
-        services.AddSingleton<ITemporaryStorage, TemporaryStorage>();
-
-        services.AddStoryForgeSystem();
         services.AddCommandService();
         services.AddHostedService<StoryForgeSimulator>();
     })
