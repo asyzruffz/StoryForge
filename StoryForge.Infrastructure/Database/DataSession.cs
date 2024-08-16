@@ -1,8 +1,8 @@
 ﻿using StoryForge.Core.Repositories;
 using StoryForge.Core.Services;
-using StoryForge.Infrastructure.Repositories;
+using StoryForge.Infrastructure.Database.Repositories;
 
-namespace StoryForge.Infrastructure;
+namespace StoryForge.Infrastructure.Database;
 
 public class DataSession : IDataSession, IDisposable
 {

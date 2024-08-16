@@ -1,6 +1,6 @@
 ﻿using StoryForge.Core.Services;
 
-namespace StoryForge.Infrastructure;
+namespace StoryForge.Infrastructure.Database;
 
 public class DataSessionFactory : IDataSessionFactory
 {

@@ -2,7 +2,7 @@
 using StoryForge.Core.Repositories;
 using StoryForge.Core.Utils;
 
-namespace StoryForge.Infrastructure.Repositories;
+namespace StoryForge.Infrastructure.Database.Repositories;
 
 internal class ChapterRepository : IChapterRepository
 {
