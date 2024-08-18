@@ -1,5 +1,7 @@
 ﻿using MediatR;
 using StoryForge.Application.AIGeneration;
+using StoryForge.Core.Utils;
+using StoryForge.Simulator.Utils;
 using StoryForge.Simulator.Utils.Commands;
 
 namespace StoryForge.Simulator.Commands;
@@ -21,7 +23,14 @@ public class PromptCommand : CommandBase
         }
 
         Message(string.Empty);
-        var result = await Sender.Send(new GenerateWithPromptOperation(command.Params[0]), cancellationToken);
-        result.OnError(MessageLine).Then(MessageLine);
+
+        CancellationTokenSource cts = new();
+        Task loading = LoadingSpinner.Wait(cts.Token);
+
+        Task<Result<string>> operation = Sender.Send(new GenerateWithPromptOperation(command.Params[0]), cancellationToken);
+        await operation.ContinueWith(op => cts.Cancel(), cancellationToken);
+
+        Console.Write("\r");
+        operation.Result.OnError(MessageLine).Then(MessageLine);
     }
 }
