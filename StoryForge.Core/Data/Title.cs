@@ -3,4 +3,6 @@
 public record Title(string Content)
 {
     public static Title Empty => new(string.Empty);
+
+    public override string ToString() => Content;
 }

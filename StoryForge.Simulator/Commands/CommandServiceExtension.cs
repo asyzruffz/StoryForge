@@ -11,6 +11,7 @@ public static class CommandServiceExtension
             .AddKeyedScoped<ICommand, VersionCommand>(VersionCommand.Name)
             .AddKeyedScoped<ICommand, ClearCommand>(ClearCommand.Name)
             .AddKeyedScoped<ICommand, PromptCommand>(PromptCommand.Name)
+            .AddKeyedScoped<ICommand, ChapterCommand>(ChapterCommand.Name)
             .AddKeyedScoped<ICommand, TestCommand>(TestCommand.Name);
         services.AddSingleton<CommandProcessor>();
         return services;
