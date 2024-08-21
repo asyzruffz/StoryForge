@@ -35,7 +35,7 @@ public class ChapterCommand : CommandBase
     private async Task ListChapters(CommandData command, CancellationToken cancellationToken)
     {
         Message(string.Empty);
-        var result = await Sender.Send(new GetChaptersOperation());
+        var result = await Sender.Send(new GetChaptersOperation(), cancellationToken);
         result.OnError(MessageLine).Then(chapters =>
         {
             if (chapters.Count() == 0)
@@ -55,7 +55,7 @@ public class ChapterCommand : CommandBase
     private async Task AddChapter(CommandData command, CancellationToken cancellationToken)
     {
         var title = command.ParamIsAtLeast(1) ? command.Params[0] : "Untitled";
-        var result = await Sender.Send(new AddChapterOperation(title));
+        var result = await Sender.Send(new AddChapterOperation(title), cancellationToken);
 
         Message(string.Empty);
         result.OnError(MessageLine).Then(() =>
@@ -72,7 +72,7 @@ public class ChapterCommand : CommandBase
             return;
         }
 
-        var result = await Sender.Send(new DeleteChapterOperation(command.Params[0]));
+        var result = await Sender.Send(new DeleteChapterOperation(command.Params[0]), cancellationToken);
 
         Message(string.Empty);
         result.OnError(MessageLine).Then(() =>
