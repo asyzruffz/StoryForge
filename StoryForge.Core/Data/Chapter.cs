@@ -7,6 +7,28 @@ public class Chapter
     public Chapter? Next { get; set; }
     public Title Title { get; set; } = Title.Empty;
     public IContentSection Content { get; set; } = new EmptySection();
+
+    public void SetNext(Chapter nextChapter)
+    {
+        nextChapter.Unlink();
+        nextChapter.Next = Next;
+        nextChapter.Prev = this;
+        Next = nextChapter;
+    }
+
+    void Unlink()
+    {
+        if (Prev != null)
+        {
+            Prev.Next = Next;
+        }
+        if (Next != null)
+        {
+            Next.Prev = Prev;
+        }
+        Prev = null;
+        Next = null;
+    }
 }
 
 public readonly record struct ChapterId(string Value) : ITypedId

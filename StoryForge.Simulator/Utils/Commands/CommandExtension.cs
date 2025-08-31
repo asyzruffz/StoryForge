@@ -4,7 +4,7 @@ public static class CommandExtension
 {
     public static void NoArgument(this CommandData command)
     {
-        Console.WriteLine($"{Environment.NewLine}No argument for {command.Name} provided{Environment.NewLine}");
+        Console.WriteLine($"{Environment.NewLine}No valid argument for {command.Name} provided{Environment.NewLine}");
     }
 
     public static void UnknownArgument(this CommandData command, string arg)

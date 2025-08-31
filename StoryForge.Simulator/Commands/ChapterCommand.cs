@@ -26,6 +26,7 @@ public class ChapterCommand : CommandBase
             case "list": await ListChapters(subcommand, cancellationToken); break;
             case "add": await AddChapter(subcommand, cancellationToken); break;
             case "delete": await DeleteChapter(subcommand, cancellationToken); break;
+            case "link": await LinkChapters(subcommand, cancellationToken); break;
             default: command.UnknownArgument(subcommand.Name); break;
         }
 
@@ -78,6 +79,23 @@ public class ChapterCommand : CommandBase
         result.OnError(MessageLine).Then(() =>
         {
             MessageLine("Chapter deleted sucessfully");
+        });
+    }
+
+    private async Task LinkChapters(CommandData command, CancellationToken cancellationToken)
+    {
+        if (!command.ParamIsAtLeast(2))
+        {
+            command.NoArgument();
+            return;
+        }
+
+        var result = await Sender.Send(new LinkChapterOperation(command.Params[0], command.Params[1]), cancellationToken);
+
+        Message(string.Empty);
+        result.OnError(MessageLine).Then(() =>
+        {
+            MessageLine("Chapters linked sucessfully");
         });
     }
 }
