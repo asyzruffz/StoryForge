@@ -1,0 +1,14 @@
+﻿<MudBreadcrumbs Items="items">
+    <SeparatorTemplate>
+        <MudIcon Icon="@Icons.Material.Filled.ChevronRight" Size="Size.Small" />
+    </SeparatorTemplate>
+</MudBreadcrumbs>
+
+@code {
+    List<BreadcrumbItem> items =
+    [
+        new("General", href: "/", icon: Icons.Material.Filled.Dashboard),
+        new("Book Information", href: "#"),
+        new("Author Information", href: null, disabled: true)
+    ];
+}
