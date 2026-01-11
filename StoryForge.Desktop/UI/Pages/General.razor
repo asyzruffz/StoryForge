@@ -1,10 +1,22 @@
 ﻿@page "/"
 @page "/general"
+@inject BreadCrumbHandler crumbHandler;
 
-<PageTitle>General</PageTitle>
+<PageTitle>@Title</PageTitle>
 <MudText Typo="Typo.h4">General Information</MudText>
 
 <MudContainer class="d-flex flex-wrap px-0 mt-4 gap-4">
     <BookInfoCard />
     <AuthorInfoCard />
 </MudContainer>
+
+@code {
+    const string Title = "General";
+
+    protected override void OnInitialized()
+    {
+        crumbHandler.Items.Clear();
+        crumbHandler.Items.Add(new(Title, "/general", Icons.Material.Filled.Dashboard));
+        crumbHandler.NavigationChange?.Invoke();
+    }
+}

@@ -14,7 +14,8 @@ internal class Program
 
         builder.Services
             .AddLogging()
-            .AddMudServices();
+            .AddMudServices()
+            .AddUIUtils();
 
         builder.RootComponents.Add<App>("app");
 
