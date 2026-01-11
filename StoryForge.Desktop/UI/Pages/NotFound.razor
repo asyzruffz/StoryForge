@@ -1,0 +1,14 @@
+﻿@inject BreadCrumbHandler crumbHandler;
+
+<PageTitle>Not found</PageTitle>
+<MudText Typo="Typo.h4">Error</MudText>
+
+<MudText>Something went wrong!</MudText>
+
+@code {
+    protected override void OnInitialized()
+    {
+        crumbHandler.Items.Clear();
+        crumbHandler.NavigationChange?.Invoke();
+    }
+}
