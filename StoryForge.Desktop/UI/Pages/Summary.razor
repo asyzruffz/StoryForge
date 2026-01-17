@@ -2,9 +2,9 @@
 @inject BreadCrumbHandler crumbHandler;
 
 <PageTitle>@Title</PageTitle>
-<MudText Typo="Typo.h4">@Title</MudText>
+<MudText Typo="Typo.h4" Class="mb-4">@Title</MudText>
 
-<MudStack Class="mt-4">
+<MudStack Spacing="0">
     <MudTextField @bind-Value="Situation" Label="Situation" Variant="Variant.Outlined" />
     <MudTextField @bind-Value="SentenceSummary" Label="One-Sentence Summary" Lines="2" Variant="Variant.Outlined" />
     <MudText>Words: 0</MudText>
