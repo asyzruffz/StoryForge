@@ -4,13 +4,13 @@
 <PageTitle>@Title</PageTitle>
 <MudText Typo="Typo.h4">@Title</MudText>
 
-<MudContainer Gutters="false" class="d-flex flex-column mt-4">
+<MudStack Class="mt-4">
     <MudTextField @bind-Value="Situation" Label="Situation" Variant="Variant.Outlined" />
     <MudTextField @bind-Value="SentenceSummary" Label="One-Sentence Summary" Lines="2" Variant="Variant.Outlined" />
     <MudText>Words: 0</MudText>
     <MudTextField @bind-Value="ParagraphSummary" Label="One-Paragraph Summary" Lines="8" Variant="Variant.Outlined" />
     <MudText>Words: 0</MudText>
-</MudContainer>
+</MudStack>
 
 @code {
     const string Title = "Summary";

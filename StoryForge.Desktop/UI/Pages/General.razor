@@ -4,10 +4,10 @@
 <PageTitle>@Title</PageTitle>
 <MudText Typo="Typo.h4">General Information</MudText>
 
-<MudContainer class="d-flex flex-wrap px-0 mt-4 gap-4">
+<MudStack Row="true" Wrap="Wrap.Wrap" Spacing="4" Class="mt-4">
     <BookInfoCard />
     <AuthorInfoCard />
-</MudContainer>
+</MudStack>
 
 @code {
     const string Title = "General";

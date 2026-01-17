@@ -4,10 +4,10 @@
 <PageTitle>@Title</PageTitle>
 <MudText Typo="Typo.h4">@Title</MudText>
 
-<MudContainer Gutters="false" class="d-flex flex-column mt-4">
+<MudStack Class="mt-4">
     <MudTextField @bind-Value="AuthorName" Label="Name" Variant="Variant.Outlined" />
     <MudTextField @bind-Value="AuthorEmail" Label="Email" Variant="Variant.Outlined" />
-</MudContainer>
+</MudStack>
 
 @code {
     const string Title = "Author Information";
