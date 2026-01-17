@@ -1,0 +1,22 @@
+﻿@page "/characters/{id}"
+@inject BreadCrumbHandler crumbHandler;
+
+<PageTitle>@Title</PageTitle>
+<MudText Typo="Typo.h4" Class="mb-4">@Title</MudText>
+
+<h3>CharacterInfo</h3>
+
+@code {
+    const string Title = "Character Information";
+
+    [Parameter]
+    public string Id { get; set; } = default!;
+
+    protected override void OnInitialized()
+    {
+        crumbHandler.Items.Clear();
+        crumbHandler.Items.Add(new("Characters", "/characters", Icons.Material.Filled.People));
+        crumbHandler.Items.Add(new(Title, $"/general/{Id}", null));
+        crumbHandler.NavigationChange?.Invoke();
+    }
+}
