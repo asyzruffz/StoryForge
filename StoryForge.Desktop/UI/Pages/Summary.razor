@@ -4,12 +4,22 @@
 <PageTitle>@Title</PageTitle>
 <MudText Typo="Typo.h4" Class="mb-4">@Title</MudText>
 
-<MudStack Spacing="0">
+<MudStack Spacing="2">
     <MudTextField @bind-Value="Situation" Label="Situation" Variant="Variant.Outlined" />
-    <MudTextField @bind-Value="SentenceSummary" Label="One-Sentence Summary" Lines="2" Variant="Variant.Outlined" />
-    <MudText>Words: 0</MudText>
-    <MudTextField @bind-Value="ParagraphSummary" Label="One-Paragraph Summary" Lines="8" Variant="Variant.Outlined" />
-    <MudText>Words: 0</MudText>
+    <MudTabs Rounded="true" Centered="true">
+        <MudTabPanel Text="Sentence">
+            <MudTextField @bind-Value="SentenceSummary" Label="One-Sentence Summary" Lines="2" Variant="Variant.Outlined" />
+            <MudText>Words: 0</MudText>
+        </MudTabPanel>
+        <MudTabPanel Text="Paragraph">
+            <MudTextField @bind-Value="ParagraphSummary" Label="One-Paragraph Summary" Lines="8" Variant="Variant.Outlined" />
+            <MudText>Words: 0</MudText>
+        </MudTabPanel>
+        <MudTabPanel Text="Page">
+            <MudTextField @bind-Value="PageSummary" Label="One-Page Summary" Lines="18" Variant="Variant.Outlined" />
+            <MudText>Words: 0</MudText>
+        </MudTabPanel>
+    </MudTabs>
 </MudStack>
 
 @code {
@@ -18,6 +28,7 @@
     public string Situation { get; set; } = string.Empty;
     public string SentenceSummary { get; set; } = string.Empty;
     public string ParagraphSummary { get; set; } = string.Empty;
+    public string PageSummary { get; set; } = string.Empty;
 
     protected override void OnInitialized()
     {
