@@ -1,0 +1,34 @@
+﻿@typeparam T
+
+@if (Items.Count() > 0)
+{
+    <MudList T="string" SelectionMode="SelectionMode.SingleSelection">
+        @foreach (var item in Items)
+        {
+            var id = item!.ToString()?.Replace(" ", "_");
+            var path = $"{PathPrefix}/{id}";
+            <MudListItem Dense="true" Href="@path" OnClick="@(_ => OnItemClick?.Invoke(item))">
+                <ChildContent>
+                    <MudText Color="Color.Tertiary">@item!.ToString()</MudText>
+                </ChildContent>
+            </MudListItem>
+        }
+    </MudList>
+}
+else
+{
+    <MudStack Justify="Justify.Center" AlignItems="AlignItems.Center" Class="my-1">
+        <MudText>Not available</MudText>
+    </MudStack>
+}
+
+@code {
+    [Parameter]
+    public IEnumerable<T> Items { get; set; } = new List<T>();
+
+    [Parameter]
+    public string PathPrefix { get; set; } = string.Empty;
+
+    [Parameter]
+    public Action<T>? OnItemClick { get; set; }
+}
