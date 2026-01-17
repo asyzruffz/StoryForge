@@ -1,0 +1,25 @@
+﻿@page "/general/author"
+@inject BreadCrumbHandler crumbHandler;
+
+<PageTitle>@Title</PageTitle>
+<MudText Typo="Typo.h4">@Title</MudText>
+
+<MudContainer Gutters="false" class="d-flex flex-column mt-4">
+    <MudTextField @bind-Value="AuthorName" Label="Name" Variant="Variant.Outlined" />
+    <MudTextField @bind-Value="AuthorEmail" Label="Email" Variant="Variant.Outlined" />
+</MudContainer>
+
+@code {
+    const string Title = "Author Information";
+
+    public string AuthorName { get; set; } = string.Empty;
+    public string AuthorEmail { get; set; } = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        crumbHandler.Items.Clear();
+        crumbHandler.Items.Add(new("General", "/general", Icons.Material.Filled.Dashboard));
+        crumbHandler.Items.Add(new(Title, "/general/author", null));
+        crumbHandler.NavigationChange?.Invoke();
+    }
+}

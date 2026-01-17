@@ -1,0 +1,31 @@
+﻿@page "/general/book"
+@inject BreadCrumbHandler crumbHandler;
+
+<PageTitle>@Title</PageTitle>
+<MudText Typo="Typo.h4">@Title</MudText>
+
+<MudContainer Gutters="false" class="d-flex flex-column mt-4">
+    <MudTextField @bind-Value="BookTitle" Label="Title" Variant="Variant.Outlined" />
+    <MudTextField @bind-Value="BookSubtitle" Label="Subtitle" Variant="Variant.Outlined" />
+    <MudTextField @bind-Value="BookSeries" Label="Series" Variant="Variant.Outlined" />
+    <MudTextField @bind-Value="BookVolume" Label="Volume" Variant="Variant.Outlined" />
+    <MudTextField @bind-Value="BookGenre" Label="Genre" Variant="Variant.Outlined" />
+</MudContainer>
+
+@code {
+    const string Title = "Book Information";
+
+    public string BookTitle { get; set; } = string.Empty;
+    public string BookSubtitle { get; set; } = string.Empty;
+    public string BookSeries { get; set; } = string.Empty;
+    public string BookVolume { get; set; } = string.Empty;
+    public string BookGenre { get; set; } = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        crumbHandler.Items.Clear();
+        crumbHandler.Items.Add(new("General", "/general", Icons.Material.Filled.Dashboard));
+        crumbHandler.Items.Add(new(Title, "/general/book", null));
+        crumbHandler.NavigationChange?.Invoke();
+    }
+}
