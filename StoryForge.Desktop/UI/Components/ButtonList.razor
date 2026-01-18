@@ -5,8 +5,7 @@
     <MudList T="string" SelectionMode="SelectionMode.SingleSelection">
         @foreach (var item in Items)
         {
-            var id = item!.ToString()?.Replace(" ", "_");
-            var path = $"{PathPrefix}/{id}";
+            var path = $"{PathPrefix}/{EscapeString(item!.ToString())}";
             <MudListItem Dense="true" Href="@path" OnClick="@(_ => OnItemClick?.Invoke(item))">
                 <ChildContent>
                     <MudText Color="Color.Tertiary">@item!.ToString()</MudText>
@@ -31,4 +30,9 @@ else
 
     [Parameter]
     public Action<T>? OnItemClick { get; set; }
+
+    string EscapeString(string? rawString)
+    {
+        return Uri.EscapeDataString(rawString?.Replace(" ", "_") ?? string.Empty);
+    }
 }
