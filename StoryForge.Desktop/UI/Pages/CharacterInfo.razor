@@ -4,13 +4,51 @@
 <PageTitle>@Title</PageTitle>
 <MudText Typo="Typo.h4" Class="mb-4">@Title</MudText>
 
-<h3>CharacterInfo</h3>
+<MudStack Spacing="2">
+    <MudTabs Rounded="true" Centered="true">
+        <MudTabPanel Text="Basic Info" Class="pt-2">
+            <MudStack Spacing="2">
+                <MudTextField @bind-Value="CharacterName" Label="Name" Variant="Variant.Outlined" />
+                <MudTextField @bind-Value="CharacterMotivation" Label="Motivation" Lines="3" Variant="Variant.Outlined" />
+                <MudTextField @bind-Value="CharacterGoal" Label="Goal" Lines="3" Variant="Variant.Outlined" />
+                <MudTextField @bind-Value="CharacterConflict" Label="Conflict" Lines="3" Variant="Variant.Outlined" />
+                <MudTextField @bind-Value="CharacterEpiphany" Label="Epiphany" Lines="3" Variant="Variant.Outlined" />
+            </MudStack>
+        </MudTabPanel>
+        <MudTabPanel Text="Summary" Class="pt-2">
+            <MudStack Spacing="2">
+                <MudTextField @bind-Value="SentenceSummary" Label="One-Sentence Summary" Lines="2" Variant="Variant.Outlined" />
+                <MudTextField @bind-Value="ParagraphSummary" Label="One-Paragraph Summary" Lines="8" Variant="Variant.Outlined" />
+                <MudTextField @bind-Value="PageSummary" Label="One-Page Summary" Lines="18" Variant="Variant.Outlined" />
+            </MudStack>
+        </MudTabPanel>
+        <MudTabPanel Text="Notes" Class="pt-2">
+            <MudTextField @bind-Value="Notes" Label="Notes" Lines="18" Variant="Variant.Outlined" />
+        </MudTabPanel>
+        <MudTabPanel Text="Detailed Info" Class="pt-2">
+            <MudTextField @bind-Value="Details" Label="Details" Lines="18" Variant="Variant.Outlined" />
+        </MudTabPanel>
+    </MudTabs>
+</MudStack>
 
 @code {
     const string Title = "Character Information";
 
     [Parameter]
     public string Id { get; set; } = default!;
+
+    string CharacterName { get; set; } = string.Empty;
+    string CharacterMotivation { get; set; } = string.Empty;
+    string CharacterGoal { get; set; } = string.Empty;
+    string CharacterConflict { get; set; } = string.Empty;
+    string CharacterEpiphany { get; set; } = string.Empty;
+
+    string SentenceSummary { get; set; } = string.Empty;
+    string ParagraphSummary { get; set; } = string.Empty;
+    string PageSummary { get; set; } = string.Empty;
+
+    string Notes { get; set; } = string.Empty;
+    string Details { get; set; } = string.Empty;
 
     protected override void OnInitialized()
     {
