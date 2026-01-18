@@ -10,9 +10,10 @@
             <MudStack Spacing="2">
                 <MudTextField @bind-Value="PlotName" Label="Plot" Variant="Variant.Outlined" />
                 <MudStack Row="true" Spacing="4">
-                    <MudText>Importance</MudText>
+                    <MudText Class="mr-4">Importance</MudText>
                     <MudSlider TickMarks="true" Min="0" Max="2" @bind-Value="Importance"></MudSlider>
                     <MudText>@Importance</MudText>
+                    <div class="w-full"></div>
                 </MudStack>
                 <MudTextField @bind-Value="PlotCharacters" Label="Character(s)" Lines="2" Variant="Variant.Outlined" />
                 <MudTextField @bind-Value="PlotDescription" Label="Description" Lines="4" Variant="Variant.Outlined" />
