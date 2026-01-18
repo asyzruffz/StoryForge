@@ -1,0 +1,30 @@
+﻿@page "/world"
+@inject BreadCrumbHandler crumbHandler;
+
+<PageTitle>@Title</PageTitle>
+<MudText Typo="Typo.h4" Class="mb-4">@Title</MudText>
+
+<MudStack Spacing="4">
+    <MudStack Row="true" Justify="Justify.FlexEnd">
+        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">New Location</MudButton>
+    </MudStack>
+    <ButtonList T="string" Items="LocationList" PathPrefix="/world" OnItemClick="OnLocationSelected" />
+</MudStack>
+
+@code {
+    const string Title = "World";
+
+    List<string> LocationList { get; } = ["Gaia"];
+
+    protected override void OnInitialized()
+    {
+        crumbHandler.Items.Clear();
+        crumbHandler.Items.Add(new(Title, "/world", Icons.Material.Filled.NaturePeople));
+        crumbHandler.NavigationChange?.Invoke();
+    }
+
+    void OnLocationSelected(string plot)
+    {
+        
+    }
+}

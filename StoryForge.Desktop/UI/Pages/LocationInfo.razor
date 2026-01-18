@@ -1,0 +1,39 @@
+﻿@page "/world/{id}"
+@inject BreadCrumbHandler crumbHandler;
+
+<PageTitle>@Title</PageTitle>
+<MudText Typo="Typo.h4" Class="mb-4">@Title</MudText>
+
+<MudStack Spacing="2">
+    <MudTabs Rounded="true" Centered="true">
+        <MudTabPanel Text="General" Class="pt-2">
+            <MudStack Spacing="2">
+                <MudTextField @bind-Value="LocationName" Label="Name" Variant="Variant.Outlined" />
+                <MudTextField @bind-Value="LocationDescription" Label="Description" Lines="8" Variant="Variant.Outlined" />
+            </MudStack>
+        </MudTabPanel>
+        <MudTabPanel Text="More" Class="pt-2">
+            <MudTextField @bind-Value="Details" Label="Details" Lines="18" Variant="Variant.Outlined" />
+        </MudTabPanel>
+    </MudTabs>
+</MudStack>
+
+@code {
+    const string Title = "Location Information";
+
+    [Parameter]
+    public string Id { get; set; } = default!;
+
+    string LocationName { get; set; } = string.Empty;
+    string LocationDescription { get; set; } = string.Empty;
+
+    string Details { get; set; } = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        crumbHandler.Items.Clear();
+        crumbHandler.Items.Add(new("World", "/world", Icons.Material.Filled.NaturePeople));
+        crumbHandler.Items.Add(new(Title, $"/world/{Id}", null));
+        crumbHandler.NavigationChange?.Invoke();
+    }
+}
