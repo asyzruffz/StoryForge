@@ -9,6 +9,11 @@
         <MudTabPanel Text="Basic Info" Class="pt-2">
             <MudStack Spacing="2">
                 <MudTextField @bind-Value="CharacterName" Label="Name" Variant="Variant.Outlined" />
+                <MudStack Row="true" Spacing="4">
+                    <MudText>Importance</MudText>
+                    <MudSlider TickMarks="true" Min="0" Max="2" @bind-Value="Importance"></MudSlider>
+                    <MudText>@Importance</MudText>
+                </MudStack>
                 <MudTextField @bind-Value="CharacterMotivation" Label="Motivation" Lines="3" Variant="Variant.Outlined" />
                 <MudTextField @bind-Value="CharacterGoal" Label="Goal" Lines="3" Variant="Variant.Outlined" />
                 <MudTextField @bind-Value="CharacterConflict" Label="Conflict" Lines="3" Variant="Variant.Outlined" />
@@ -36,6 +41,8 @@
 
     [Parameter]
     public string Id { get; set; } = default!;
+
+    int Importance { get; set; } = 0;
 
     string CharacterName { get; set; } = string.Empty;
     string CharacterMotivation { get; set; } = string.Empty;
