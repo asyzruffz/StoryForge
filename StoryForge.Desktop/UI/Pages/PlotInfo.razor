@@ -1,0 +1,50 @@
+﻿@page "/plots/{id}"
+@inject BreadCrumbHandler crumbHandler;
+
+<PageTitle>@Title</PageTitle>
+<MudText Typo="Typo.h4" Class="mb-4">@Title</MudText>
+
+<MudStack Spacing="2">
+    <MudTabs Rounded="true" Centered="true">
+        <MudTabPanel Text="Basic Info" Class="pt-2">
+            <MudStack Spacing="2">
+                <MudTextField @bind-Value="PlotName" Label="Plot" Variant="Variant.Outlined" />
+                <MudStack Row="true" Spacing="4">
+                    <MudText>Importance</MudText>
+                    <MudSlider TickMarks="true" Min="0" Max="2" @bind-Value="Importance"></MudSlider>
+                    <MudText>@Importance</MudText>
+                </MudStack>
+                <MudTextField @bind-Value="PlotCharacters" Label="Character(s)" Lines="2" Variant="Variant.Outlined" />
+                <MudTextField @bind-Value="PlotDescription" Label="Description" Lines="4" Variant="Variant.Outlined" />
+                <MudTextField @bind-Value="PlotResult" Label="Result" Lines="4" Variant="Variant.Outlined" />
+            </MudStack>
+        </MudTabPanel>
+        <MudTabPanel Text="Resolution Steps" Class="pt-2">
+            <MudTextField @bind-Value="Details" Label="Details" Lines="18" Variant="Variant.Outlined" />
+        </MudTabPanel>
+    </MudTabs>
+</MudStack>
+
+@code {
+    const string Title = "Plot Information";
+
+    [Parameter]
+    public string Id { get; set; } = default!;
+
+    int Importance { get; set; } = 0;
+
+    string PlotName { get; set; } = string.Empty;
+    string PlotCharacters { get; set; } = string.Empty;
+    string PlotDescription { get; set; } = string.Empty;
+    string PlotResult { get; set; } = string.Empty;
+
+    string Details { get; set; } = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        crumbHandler.Items.Clear();
+        crumbHandler.Items.Add(new("Plots", "/plots", Icons.Material.Filled.Timeline));
+        crumbHandler.Items.Add(new(Title, $"/plots/{Id}", null));
+        crumbHandler.NavigationChange?.Invoke();
+    }
+}

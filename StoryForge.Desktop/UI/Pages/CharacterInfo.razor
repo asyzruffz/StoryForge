@@ -61,7 +61,7 @@
     {
         crumbHandler.Items.Clear();
         crumbHandler.Items.Add(new("Characters", "/characters", Icons.Material.Filled.People));
-        crumbHandler.Items.Add(new(Title, $"/general/{Id}", null));
+        crumbHandler.Items.Add(new(Title, $"/characters/{Id}", null));
         crumbHandler.NavigationChange?.Invoke();
     }
 }

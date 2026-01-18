@@ -1,0 +1,41 @@
+﻿@page "/plots"
+@inject BreadCrumbHandler crumbHandler;
+
+<PageTitle>@Title</PageTitle>
+<MudText Typo="Typo.h4" Class="mb-4">@Title</MudText>
+
+<MudStack Spacing="4">
+    <MudStack Row="true" Justify="Justify.FlexEnd">
+        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">New Plot</MudButton>
+    </MudStack>
+    <MudStack Spacing="2">
+        <MudText Typo="Typo.h6">Main</MudText>
+        <ButtonList T="string" Items="PlotList" PathPrefix="/plots" OnItemClick="OnPlotSelected" />
+    </MudStack>
+    <MudStack Spacing="2">
+        <MudText Typo="Typo.h6">Secondary</MudText>
+        <ButtonList T="string" PathPrefix="/plots" OnItemClick="OnPlotSelected" />
+    </MudStack>
+    <MudStack Spacing="2">
+        <MudText Typo="Typo.h6">Minor</MudText>
+        <ButtonList T="string" PathPrefix="/plots" OnItemClick="OnPlotSelected" />
+    </MudStack>
+</MudStack>
+
+@code {
+    const string Title = "Plots";
+
+    List<string> PlotList { get; } = ["Hero's Journey"];
+
+    protected override void OnInitialized()
+    {
+        crumbHandler.Items.Clear();
+        crumbHandler.Items.Add(new(Title, "/plots", Icons.Material.Filled.Timeline));
+        crumbHandler.NavigationChange?.Invoke();
+    }
+
+    void OnPlotSelected(string plot)
+    {
+        
+    }
+}
