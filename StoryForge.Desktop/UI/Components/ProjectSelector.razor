@@ -1,7 +1,35 @@
-﻿<MudContainer Class="pa-3" >
-    <MudButton Variant="Variant.Filled" FullWidth="true" StartIcon="@Icons.Material.Filled.Folder">Default Project</MudButton>
+﻿<MudContainer Class="pa-3">
+    <MudTooltip Text="Default Project of the Book" Disabled="@menuOpen">
+    <MudButtonGroup Variant="Variant.Filled" FullWidth="true" OverrideStyles="false">
+        <MudMenu Dense="true" Size="Size.Small" @bind-Open="menuOpen">
+            <ActivatorContent>
+                <MudButton Variant="Variant.Filled" Size="Size.Small" Class="pr-1">
+                    <MudIcon Icon="@Icons.Material.Filled.Folder" Size="Size.Small" />
+                    <MudIcon Icon="@Icons.Material.Filled.ArrowDropDown" />
+                </MudButton>
+            </ActivatorContent>
+            <ChildContent>
+                <MudMenuItem OnClick="() => SetButton(0)">New Project</MudMenuItem>
+                <MudMenuItem OnClick="() => SetButton(1)">Open Project</MudMenuItem>
+            </ChildContent>
+        </MudMenu>
+        <MudButton Variant="Variant.Filled"
+                   FullWidth="true"
+                   Size="Size.Small"
+                   Class="justify-start">
+            <MudText Typo="Typo.body2" Align="Align.Start" Class="ellipsis-overflow" Style="margin-top:2px">
+                <b>Default Project of the Book</b>
+            </MudText>
+        </MudButton>
+    </MudButtonGroup>
+    </MudTooltip>
 </MudContainer>
 
 @code {
+    bool menuOpen = false;
 
+    void SetButton(int id)
+    {
+        
+    }
 }
