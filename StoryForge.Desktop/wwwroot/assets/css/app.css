@@ -61,7 +61,3 @@ h1:focus {
 .h-full {
     height: 100%;
 }
-
-.scrollable {
-    overflow-y: auto;
-}
