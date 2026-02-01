@@ -1,4 +1,6 @@
-﻿<MudContainer Class="pa-3">
+﻿@inject IDialogService DialogService
+
+<MudContainer Class="pa-3">
     <MudTooltip Text="Default Project of the Book" Disabled="@menuOpen">
     <MudButtonGroup Variant="Variant.Filled" FullWidth="true" OverrideStyles="false">
         <MudMenu Dense="true" Size="Size.Small" @bind-Open="menuOpen">
@@ -9,8 +11,14 @@
                 </MudButton>
             </ActivatorContent>
             <ChildContent>
-                <MudMenuItem OnClick="() => SetButton(0)">New Project</MudMenuItem>
-                <MudMenuItem OnClick="() => SetButton(1)">Open Project</MudMenuItem>
+                <MudMenuItem OnClick="CreateNewProject">New Project</MudMenuItem>
+                <MudMenuItem OnClick="OpenFilePicker">
+                    <MudFileUpload T="IBrowserFile" @ref="@fileUpload" Accept=".zip" FilesChanged="OpenProject">
+                        <ActivatorContent>
+                            <MudLink Typo="Typo.body2" Color="Color.Default" Underline="Underline.None">Open Project</MudLink>
+                        </ActivatorContent>
+                    </MudFileUpload>
+                </MudMenuItem>
             </ChildContent>
         </MudMenu>
         <MudButton Variant="Variant.Filled"
@@ -26,10 +34,31 @@
 </MudContainer>
 
 @code {
+    MudFileUpload<IBrowserFile>? fileUpload;
     bool menuOpen = false;
 
-    void SetButton(int id)
+    async Task CreateNewProject()
+    {
+        var options = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true, BackgroundClass = "blur-background" };
+        var dialog = await DialogService.ShowAsync<NameProjectDialog>("Create New Project", options);
+        DialogResult result = await dialog.Result ?? DialogResult.Cancel();
+
+        if (result.Canceled) return;
+
+        string projectName = result.Data?.ToString() ?? string.Empty;
+        projectName = projectName.Trim();
+        if (string.IsNullOrEmpty(projectName)) return;
+
+        // Create project with name
+    }
+
+    void OpenProject(IBrowserFile file)
     {
         
+    }
+
+    async Task OpenFilePicker()
+    {
+        await (fileUpload?.OpenFilePickerAsync() ?? Task.CompletedTask);
     }
 }

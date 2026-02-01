@@ -67,3 +67,9 @@ h1:focus {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.blur-background {
+    background: rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
