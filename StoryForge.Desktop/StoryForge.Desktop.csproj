@@ -9,8 +9,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+	<PackageReference Include="MediatR" Version="12.4.0" />
     <PackageReference Include="MudBlazor" Version="8.15.0" />
     <PackageReference Include="Photino.Blazor" Version="4.0.13" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\StoryForge.Application\StoryForge.Application.csproj" />
+    <ProjectReference Include="..\StoryForge.Core\StoryForge.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

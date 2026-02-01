@@ -1,4 +1,6 @@
-﻿@inject IDialogService DialogService
+﻿@using StoryForge.Application.Projects
+@inject IDialogService DialogService
+@inject ISender Sender
 
 <MudContainer Class="pa-3">
     <MudTooltip Text="Default Project of the Book" Disabled="@menuOpen">
@@ -49,12 +51,12 @@
         projectName = projectName.Trim();
         if (string.IsNullOrEmpty(projectName)) return;
 
-        // Create project with name
+        await Sender.Send(new CreateProjectOperation(projectName));
     }
 
     void OpenProject(IBrowserFile file)
     {
-        
+        _ = Sender.Send(new OpenProjectOperation());
     }
 
     async Task OpenFilePicker()

@@ -14,6 +14,11 @@ EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "StoryForge.Containers", "StoryForge.Containers\StoryForge.Containers.dcproj", "{A40BE26B-75C7-4890-A6F5-5731C0EBC6D4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoryForge.Desktop", "StoryForge.Desktop\StoryForge.Desktop.csproj", "{BD292DEE-AEB0-752F-9F15-8B3421D7C35D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2425B96A-F7A6-4553-AE09-C0AC33D26BFF} = {2425B96A-F7A6-4553-AE09-C0AC33D26BFF}
+		{D7552EB7-9D60-4151-938F-64648D88A410} = {D7552EB7-9D60-4151-938F-64648D88A410}
+		{FD3A5179-4494-422B-8AFD-32BEACE474F4} = {FD3A5179-4494-422B-8AFD-32BEACE474F4}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
