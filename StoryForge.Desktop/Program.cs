@@ -15,7 +15,7 @@ internal class Program
         builder.Services
             .AddLogging()
             .AddMudServices()
-            .AddStoryForgeApplication()
+            .AddApplication()
             .AddUIUtils();
 
         builder.RootComponents.Add<App>("app");
