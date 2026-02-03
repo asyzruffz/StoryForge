@@ -15,7 +15,7 @@
             <ChildContent>
                 <MudMenuItem OnClick="CreateNewProject">New Project</MudMenuItem>
                 <MudMenuItem OnClick="OpenFilePicker">
-                    <MudFileUpload T="IBrowserFile" @ref="@fileUpload" Accept=".zip" FilesChanged="OpenProject">
+                    <MudFileUpload T="IBrowserFile" @ref="@fileUpload" Accept=".zip" FilesChanged="OnFileSelected">
                         <ActivatorContent>
                             <MudLink Typo="Typo.body2" Color="Color.Default" Underline="Underline.None">Open Project</MudLink>
                         </ActivatorContent>
@@ -43,24 +43,28 @@
     {
         var options = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true, BackgroundClass = "blur-background" };
         var dialog = await DialogService.ShowAsync<NameProjectDialog>("Create New Project", options);
-        DialogResult result = await dialog.Result ?? DialogResult.Cancel();
+        DialogResult dialogResult = await dialog.Result ?? DialogResult.Cancel();
+        if (dialogResult.Canceled) return;
 
-        if (result.Canceled) return;
-
-        string projectName = result.Data?.ToString() ?? string.Empty;
+        string projectName = dialogResult.Data?.ToString() ?? string.Empty;
         projectName = projectName.Trim();
         if (string.IsNullOrEmpty(projectName)) return;
 
-        await Sender.Send(new CreateProjectOperation(projectName));
+        var projectResult = await Sender.Send(new CreateProjectOperation(projectName));
     }
 
-    void OpenProject(IBrowserFile file)
+    async Task OpenProject(IBrowserFile file)
     {
-        _ = Sender.Send(new OpenProjectOperation());
+        await Sender.Send(new OpenProjectOperation());
     }
 
     async Task OpenFilePicker()
     {
         await (fileUpload?.OpenFilePickerAsync() ?? Task.CompletedTask);
+    }
+
+    void OnFileSelected(IBrowserFile file)
+    {
+        _ = OpenProject(file);
     }
 }
