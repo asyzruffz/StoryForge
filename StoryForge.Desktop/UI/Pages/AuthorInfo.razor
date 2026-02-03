@@ -1,5 +1,8 @@
 ﻿@page "/general/author"
+@using StoryForge.Application.Projects
+@using StoryForge.Core.Data
 @inject BreadCrumbHandler crumbHandler;
+@inject ISender Sender;
 
 <PageTitle>@Title</PageTitle>
 <MudText Typo="Typo.h4" Class="mb-4">@Title</MudText>
@@ -12,14 +15,36 @@
 @code {
     const string Title = "Author Information";
 
-    string AuthorName { get; set; } = string.Empty;
-    string AuthorEmail { get; set; } = string.Empty;
+    string AuthorName
+    {
+        get => authorData?.Name ?? string.Empty;
+        set
+        {
+            if (authorData is null) return;
+            authorData.Name = value;
+        }
+    }
 
-    protected override void OnInitialized()
+    string AuthorEmail
+    {
+        get => authorData?.Email ?? string.Empty;
+        set
+        {
+            if (authorData is null) return;
+            authorData.Email = value;
+        }
+    }
+
+    Author? authorData;
+
+    protected override async Task OnInitializedAsync()
     {
         crumbHandler.Items.Clear();
         crumbHandler.Items.Add(new("General", "/general", Icons.Material.Filled.Dashboard));
         crumbHandler.Items.Add(new(Title, "/general/author", null));
         crumbHandler.NavigationChange?.Invoke();
+
+        var authorResult = await Sender.Send(new GetAuthorOperation());
+        authorData = authorResult.Or(Author.Invalid);
     }
 }

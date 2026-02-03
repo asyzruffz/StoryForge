@@ -1,15 +1,25 @@
-﻿<MudPaper Class="d-flex flex-column pa-4 rounded-lg" Width="480px" Height="260px" Elevation="4">
+﻿@using StoryForge.Application.Projects
+@using StoryForge.Core.Data
+@inject ISender Sender;
+
+<MudPaper Class="d-flex flex-column pa-4 rounded-lg" Width="480px" Height="260px" Elevation="4">
     <MudStack Row="true" Spacing="4" Class="mb-2">
         <MudText Typo="Typo.h5" Class="flex-grow-1">
-            Unnamed Author
+            @(authorData?.Name ?? "Unnamed Author")
         </MudText>
         <MudFab IconColor="Color.Primary" DropShadow="false"
                 StartIcon="@Icons.Material.Filled.Edit"
                 Href="/general/author"></MudFab>
     </MudStack>
-    <MudText>author@mail.com</MudText>
+    <MudText>@(authorData?.Email ?? string.Empty)</MudText>
 </MudPaper>
 
 @code {
+    Author? authorData;
 
+    protected override async Task OnInitializedAsync()
+    {
+        var authorResult = await Sender.Send(new GetAuthorOperation());
+        authorData = authorResult.Or(Author.Invalid);
+    }
 }

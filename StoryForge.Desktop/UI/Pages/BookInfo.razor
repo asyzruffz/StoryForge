@@ -1,5 +1,8 @@
 ﻿@page "/general/book"
+@using StoryForge.Application.Projects
+@using StoryForge.Core.Data
 @inject BreadCrumbHandler crumbHandler;
+@inject ISender Sender;
 
 <PageTitle>@Title</PageTitle>
 <MudText Typo="Typo.h4" Class="mb-4">@Title</MudText>
@@ -15,17 +18,65 @@
 @code {
     const string Title = "Book Information";
 
-    string BookTitle { get; set; } = string.Empty;
-    string BookSubtitle { get; set; } = string.Empty;
-    string BookSeries { get; set; } = string.Empty;
-    string BookVolume { get; set; } = string.Empty;
-    string BookGenre { get; set; } = string.Empty;
+    string BookTitle
+    {
+        get => bookData?.Title ?? string.Empty;
+        set {
+            if (bookData is null) return;
+            bookData.Title = value;
+        }
+    }
 
-    protected override void OnInitialized()
+    string BookSubtitle
+    {
+        get => bookData?.Subtitle ?? string.Empty;
+        set
+        {
+            if (bookData is null) return;
+            bookData.Subtitle = value;
+        }
+    }
+
+    string BookSeries
+    {
+        get => bookData?.Series ?? string.Empty;
+        set
+        {
+            if (bookData is null) return;
+            bookData.Series = value;
+        }
+    }
+
+    string BookVolume
+    {
+        get => bookData?.Volume ?? string.Empty;
+        set
+        {
+            if (bookData is null) return;
+            bookData.Volume = value;
+        }
+    }
+
+    string BookGenre
+    {
+        get => bookData?.Genre ?? string.Empty;
+        set
+        {
+            if (bookData is null) return;
+            bookData.Genre = value;
+        }
+    }
+
+    Book? bookData;
+
+    protected override async Task OnInitializedAsync()
     {
         crumbHandler.Items.Clear();
         crumbHandler.Items.Add(new("General", "/general", Icons.Material.Filled.Dashboard));
         crumbHandler.Items.Add(new(Title, "/general/book", null));
         crumbHandler.NavigationChange?.Invoke();
+
+        var bookResult = await Sender.Send(new GetBookOperation());
+        bookData = bookResult.Or(Book.Invalid);
     }
 }
