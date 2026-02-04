@@ -19,8 +19,8 @@ internal sealed class GetChaptersOperationHandler
 
     public async Task<Result<IEnumerable<Chapter>>> Handle(GetChaptersOperation request, CancellationToken cancellationToken)
     {
-        var result = data.Chapters.GetAll();
         await Task.CompletedTask;
+        var result = data.Chapters.GetAll();
         return Result<IEnumerable<Chapter>>.Ok(result);
     }
 }
