@@ -12,9 +12,13 @@ public class DataSession : IDataSession, IDisposable
     {
         this.context = context;
 
+        Books = new BookRepository();
+        Authors = new AuthorRepository();
         Chapters = new ChapterRepository(context);
     }
 
+    public IBookRepository Books { get; init; }
+    public IAuthorRepository Authors { get; init; }
     public IChapterRepository Chapters { get; init; }
 
     public int Save() => context.SaveChanges();

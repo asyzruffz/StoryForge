@@ -22,6 +22,7 @@
         {
             if (authorData is null) return;
             authorData.Name = value;
+            SaveData();
         }
     }
 
@@ -31,7 +32,15 @@
         set
         {
             if (authorData is null) return;
-            authorData.Email = value;
+            if (string.IsNullOrEmpty(value))
+            {
+                authorData.Email = null;
+            }
+            else
+            {
+                authorData.Email = value;
+            }
+            SaveData();
         }
     }
 
@@ -46,5 +55,11 @@
 
         var authorResult = await Sender.Send(new GetAuthorOperation());
         authorData = authorResult.Or(Author.Invalid);
+    }
+
+    void SaveData()
+    {
+        if (authorData is null) return;
+        _ = Sender.Send(new UpdateAuthorOperation(authorData));
     }
 }

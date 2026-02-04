@@ -15,6 +15,7 @@ internal class Program
         builder.Services
             .AddLogging()
             .AddMudServices()
+            .AddInfrastructure()
             .AddApplication()
             .AddUIUtils();
 
