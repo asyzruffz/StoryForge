@@ -8,16 +8,16 @@
     <MudTextField @bind-Value="Situation" Label="Situation" Variant="Variant.Outlined" />
     <MudTabs Rounded="true" Centered="true">
         <MudTabPanel Text="Sentence" Class="pt-2">
-            <MudTextField @bind-Value="SentenceSummary" Label="One-Sentence Summary" Lines="2" Variant="Variant.Outlined" />
-            <MudText>Words: 0</MudText>
+            <MudTextField T="string" Value="@SentenceSummary" ValueChanged="SentenceUpdated" Label="One-Sentence Summary" Lines="2" Variant="Variant.Outlined" />
+            <WordCountLabel WordCount="@SentenceWordCount" />
         </MudTabPanel>
         <MudTabPanel Text="Paragraph" Class="pt-2">
-            <MudTextField @bind-Value="ParagraphSummary" Label="One-Paragraph Summary" Lines="8" Variant="Variant.Outlined" />
-            <MudText>Words: 0</MudText>
+            <MudTextField T="string" Value="@ParagraphSummary" ValueChanged="ParagraphUpdated" Label="One-Paragraph Summary" Lines="8" Variant="Variant.Outlined" />
+            <WordCountLabel WordCount="@ParagraphWordCount" />
         </MudTabPanel>
         <MudTabPanel Text="Page" Class="pt-2">
-            <MudTextField @bind-Value="PageSummary" Label="One-Page Summary" Lines="18" Variant="Variant.Outlined" />
-            <MudText>Words: 0</MudText>
+            <MudTextField T="string" Value="@PageSummary" ValueChanged="PageUpdated" Label="One-Page Summary" Lines="18" Variant="Variant.Outlined" />
+            <WordCountLabel WordCount="@PageWordCount" />
         </MudTabPanel>
     </MudTabs>
 </MudStack>
@@ -26,14 +26,39 @@
     const string Title = "Summary";
 
     string Situation { get; set; } = string.Empty;
+
     string SentenceSummary { get; set; } = string.Empty;
     string ParagraphSummary { get; set; } = string.Empty;
     string PageSummary { get; set; } = string.Empty;
+
+    int SentenceWordCount { get; set; } = 0;
+    int ParagraphWordCount { get; set; } = 0;
+    int PageWordCount { get; set; } = 0;
 
     protected override void OnInitialized()
     {
         crumbHandler.Items.Clear();
         crumbHandler.Items.Add(new("Summary", "/summary", Icons.Material.Filled.Summarize));
         crumbHandler.NavigationChange?.Invoke();
+
+        SentenceWordCount = SentenceSummary.WordCount();
+    }
+
+    void SentenceUpdated(string sentence)
+    {
+        SentenceSummary = sentence;
+        SentenceWordCount = sentence.WordCount();
+    }
+
+    void ParagraphUpdated(string paragraph)
+    {
+        ParagraphSummary = paragraph;
+        ParagraphWordCount = paragraph.WordCount();
+    }
+
+    void PageUpdated(string page)
+    {
+        PageSummary = page;
+        PageWordCount = page.WordCount();
     }
 }
