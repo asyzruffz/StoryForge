@@ -20,6 +20,7 @@ internal sealed class UpdateBookSummaryOperationHandler : IOperationHandler<Upda
     {
         await Task.CompletedTask;
         data.Summaries.Update(request.Summary);
+        data.Save();
         return Result.Ok();
     }
 }

@@ -20,6 +20,7 @@ internal sealed class UpdateBookOperationHandler : IOperationHandler<UpdateBookO
     {
         await Task.CompletedTask;
         data.Books.Update(request.Book);
+        data.Save();
         return Result.Ok();
     }
 }

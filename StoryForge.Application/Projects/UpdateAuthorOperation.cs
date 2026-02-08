@@ -20,6 +20,7 @@ internal sealed class UpdateAuthorOperationHandler : IOperationHandler<UpdateAut
     {
         await Task.CompletedTask;
         data.Authors.Update(request.Author);
+        data.Save();
         return Result.Ok();
     }
 }

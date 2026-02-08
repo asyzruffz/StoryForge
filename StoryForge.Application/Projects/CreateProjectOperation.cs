@@ -12,8 +12,9 @@ internal sealed class CreateProjectOperationHandler : IOperationHandler<CreatePr
         
     }
 
-    public Task<Result> Handle(CreateProjectOperation request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(CreateProjectOperation request, CancellationToken cancellationToken)
     {
-        return Task.FromResult(Result.Ok());
+        await Task.CompletedTask;
+        return Result.Ok();
     }
 }
