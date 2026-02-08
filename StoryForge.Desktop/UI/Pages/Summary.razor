@@ -1,5 +1,8 @@
 ﻿@page "/summary"
+@using StoryForge.Application.Summary
+@using StoryForge.Core.Data
 @inject BreadCrumbHandler crumbHandler;
+@inject ISender Sender;
 
 <PageTitle>@Title</PageTitle>
 <MudText Typo="Typo.h4" Class="mb-4">@Title</MudText>
@@ -25,23 +28,72 @@
 @code {
     const string Title = "Summary";
 
-    string Situation { get; set; } = string.Empty;
+    string Situation
+    {
+        get => summaryData?.Situation ?? string.Empty;
+        set
+        {
+            if (summaryData is null) return;
+            summaryData.Situation = value;
+            SaveData();
+        }
+    }
 
-    string SentenceSummary { get; set; } = string.Empty;
-    string ParagraphSummary { get; set; } = string.Empty;
-    string PageSummary { get; set; } = string.Empty;
+    string SentenceSummary
+    {
+        get => summaryData?.Sentence ?? string.Empty;
+        set
+        {
+            if (summaryData is null) return;
+            summaryData.Sentence = value;
+            SaveData();
+        }
+    }
+
+    string ParagraphSummary
+    {
+        get => summaryData?.Paragraph ?? string.Empty;
+        set
+        {
+            if (summaryData is null) return;
+            summaryData.Paragraph = value;
+            SaveData();
+        }
+    }
+
+    string PageSummary
+    {
+        get => summaryData?.Page ?? string.Empty;
+        set
+        {
+            if (summaryData is null) return;
+            summaryData.Page = value;
+            SaveData();
+        }
+    }
 
     int SentenceWordCount { get; set; } = 0;
     int ParagraphWordCount { get; set; } = 0;
     int PageWordCount { get; set; } = 0;
 
-    protected override void OnInitialized()
+    BookSummary? summaryData;
+
+    protected override async Task OnInitializedAsync()
     {
         crumbHandler.Items.Clear();
         crumbHandler.Items.Add(new("Summary", "/summary", Icons.Material.Filled.Summarize));
         crumbHandler.NavigationChange?.Invoke();
 
+        var summaryResult = await Sender.Send(new GetBookSummaryOperation());
+        summaryData = summaryResult.Or(new BookSummary());
+
         SentenceWordCount = SentenceSummary.WordCount();
+    }
+
+    void SaveData()
+    {
+        if (summaryData is null) return;
+        _ = Sender.Send(new UpdateBookSummaryOperation(summaryData));
     }
 
     void SentenceUpdated(string sentence)
