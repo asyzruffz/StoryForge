@@ -19,7 +19,8 @@ internal sealed class GetBookSummaryOperationHandler : IOperationHandler<GetBook
     public async Task<Result<BookSummary>> Handle(GetBookSummaryOperation request, CancellationToken cancellationToken)
     {
         await Task.CompletedTask;
-        var result = data.Summaries.Get();
+        var result = data.Books.Get()
+            .Then(book => Result<BookSummary>.Ok(book.Extra));
         return result;
     }
 }

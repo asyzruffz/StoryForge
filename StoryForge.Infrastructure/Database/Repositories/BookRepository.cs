@@ -6,7 +6,13 @@ namespace StoryForge.Infrastructure.Database.Repositories;
 
 internal class BookRepository : IBookRepository
 {
+    protected readonly ISummaryRepository summaries;
     protected Book? book;
+
+    public BookRepository(ISummaryRepository summaryRepository)
+    {
+        summaries = summaryRepository;
+    }
 
     public Result<Book> Get()
     {
@@ -17,6 +23,7 @@ internal class BookRepository : IBookRepository
     public void Update(Book updatedBook)
     {
         book = updatedBook;
+        summaries.Update(updatedBook.Extra.Summary);
     }
 
     public void Reset()

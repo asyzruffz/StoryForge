@@ -12,9 +12,9 @@ public class DataSession : IDataSession, IDisposable
     {
         this.context = context;
 
-        Books = new BookRepository();
+        Summaries = new SummaryRepository(context);
+        Books = new BookRepository(Summaries);
         Authors = new AuthorRepository();
-        Summaries = new SummaryRepository();
         Chapters = new ChapterRepository(context);
     }
 

@@ -4,6 +4,7 @@ namespace StoryForge.Infrastructure.Database;
 
 public class ApplicationDbContext
 {
+    public List<Summary> Summaries { get; } = [];
     public List<Chapter> Chapters { get; } = [];
 
     public int SaveChanges() => 0;

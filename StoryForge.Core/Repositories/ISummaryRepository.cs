@@ -3,9 +3,6 @@ using StoryForge.Core.Utils;
 
 namespace StoryForge.Core.Repositories;
 
-public interface ISummaryRepository
+public interface ISummaryRepository : IRepository<Summary>, IQueryableById<Summary, SummaryId>
 {
-    Result<BookSummary> Get();
-    void Update(BookSummary summary);
-    void Reset();
 }

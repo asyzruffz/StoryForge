@@ -38,7 +38,11 @@ internal class ChapterRepository : IChapterRepository
 
     public void Update(Chapter chapter)
     {
-        throw new NotImplementedException();
+        var foundChapter = chapters.SingleOrDefault(entry => entry.Id == chapter.Id);
+        if (foundChapter is null) return;
+
+        int idx = chapters.IndexOf(foundChapter);
+        chapters[idx] = chapter;
     }
 
     public void Delete(Chapter chapter)

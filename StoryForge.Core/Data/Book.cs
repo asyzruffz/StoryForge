@@ -7,6 +7,7 @@ public class Book
     public string? Series { get; set; }
     public string? Volume { get; set; }
     public string? Genre { get; set; }
+    public BookSummary Extra { get; set; } = default!;
 
-    public static Book Invalid => new Book { Title = "Error" };
+    public static Book Invalid => new Book { Title = "Error", Extra = BookSummary.Invalid };
 }

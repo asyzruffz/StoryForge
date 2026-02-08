@@ -30,44 +30,44 @@
 
     string Situation
     {
-        get => summaryData?.Situation ?? string.Empty;
+        get => bookData?.Situation ?? string.Empty;
         set
         {
-            if (summaryData is null) return;
-            summaryData.Situation = value;
+            if (bookData is null) return;
+            bookData.Situation = value;
             SaveData();
         }
     }
 
     string SentenceSummary
     {
-        get => summaryData?.Sentence ?? string.Empty;
+        get => bookData?.Summary.Sentence ?? string.Empty;
         set
         {
-            if (summaryData is null) return;
-            summaryData.Sentence = value;
+            if (bookData is null) return;
+            bookData.Summary.Sentence = value;
             SaveData();
         }
     }
 
     string ParagraphSummary
     {
-        get => summaryData?.Paragraph ?? string.Empty;
+        get => bookData?.Summary.Paragraph ?? string.Empty;
         set
         {
-            if (summaryData is null) return;
-            summaryData.Paragraph = value;
+            if (bookData is null) return;
+            bookData.Summary.Paragraph = value;
             SaveData();
         }
     }
 
     string PageSummary
     {
-        get => summaryData?.Page ?? string.Empty;
+        get => bookData?.Summary.Page ?? string.Empty;
         set
         {
-            if (summaryData is null) return;
-            summaryData.Page = value;
+            if (bookData is null) return;
+            bookData.Summary.Page = value;
             SaveData();
         }
     }
@@ -76,7 +76,7 @@
     int ParagraphWordCount { get; set; } = 0;
     int PageWordCount { get; set; } = 0;
 
-    BookSummary? summaryData;
+    BookSummary? bookData;
 
     protected override async Task OnInitializedAsync()
     {
@@ -85,7 +85,7 @@
         crumbHandler.NavigationChange?.Invoke();
 
         var summaryResult = await Sender.Send(new GetBookSummaryOperation());
-        summaryData = summaryResult.Or(new BookSummary());
+        bookData = summaryResult.Or(new BookSummary());
 
         SentenceWordCount = SentenceSummary.WordCount();
         ParagraphWordCount = ParagraphSummary.WordCount();
@@ -94,8 +94,8 @@
 
     void SaveData()
     {
-        if (summaryData is null) return;
-        _ = Sender.Send(new UpdateBookSummaryOperation(summaryData));
+        if (bookData is null) return;
+        _ = Sender.Send(new UpdateBookSummaryOperation(bookData));
     }
 
     void SentenceUpdated(string sentence)

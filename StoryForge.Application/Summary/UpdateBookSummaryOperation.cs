@@ -19,7 +19,12 @@ internal sealed class UpdateBookSummaryOperationHandler : IOperationHandler<Upda
     public async Task<Result> Handle(UpdateBookSummaryOperation request, CancellationToken cancellationToken)
     {
         await Task.CompletedTask;
-        data.Summaries.Update(request.Summary);
+        data.Books.Get()
+            .Then(book =>
+            {
+                book.Extra = request.Summary;
+                data.Books.Update(book);
+            });
         data.Save();
         return Result.Ok();
     }

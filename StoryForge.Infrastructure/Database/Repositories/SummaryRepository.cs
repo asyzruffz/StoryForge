@@ -6,21 +6,46 @@ namespace StoryForge.Infrastructure.Database.Repositories;
 
 internal class SummaryRepository : ISummaryRepository
 {
-    protected BookSummary? bookSummary;
+    protected readonly List<Summary> summaries;
 
-    public Result<BookSummary> Get()
+    public SummaryRepository(ApplicationDbContext context)
     {
-        if (bookSummary is null) return Result<BookSummary>.Fail("Summary not found");
-        return Result<BookSummary>.Ok(bookSummary);
+        summaries = context.Summaries;
     }
 
-    public void Update(BookSummary summary)
+    public IQueryable<Summary> GetAll()
     {
-        bookSummary = summary;
+        return summaries.AsQueryable();
     }
 
-    public void Reset()
+    public Result<Summary> GetById(SummaryId id)
     {
-        bookSummary = null;
+        return summaries
+            .SingleOrDefault(summary => summary.Id == id)
+            .AsOption().ToResult();
+    }
+
+    public void Create(Summary summary)
+    {
+        summaries.Add(summary);
+    }
+
+    public void Create(IEnumerable<Summary> summary)
+    {
+        summaries.AddRange(summary);
+    }
+
+    public void Update(Summary summary)
+    {
+        var foundSummary = summaries.SingleOrDefault(entry => entry.Id == summary.Id);
+        if (foundSummary is null) return;
+
+        int idx = summaries.IndexOf(foundSummary);
+        summaries[idx] = summary;
+    }
+
+    public void Delete(Summary summary)
+    {
+        summaries.Remove(summary);
     }
 }
