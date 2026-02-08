@@ -88,6 +88,8 @@
         summaryData = summaryResult.Or(new BookSummary());
 
         SentenceWordCount = SentenceSummary.WordCount();
+        ParagraphWordCount = ParagraphSummary.WordCount();
+        PageWordCount = PageSummary.WordCount();
     }
 
     void SaveData()
