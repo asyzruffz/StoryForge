@@ -1,4 +1,5 @@
 ﻿@page "/outline"
+@using StoryForge.Core.Data
 @inject BreadCrumbHandler crumbHandler;
 
 <PageTitle>@Title</PageTitle>
@@ -7,22 +8,22 @@
 <MudStack Spacing="4">
     <MudStack Spacing="2">
         <MudText Typo="Typo.h6">Main</MudText>
-        <ButtonList T="string" Items="PlotList" PathPrefix="/outline" OnItemClick="OnPlotSelected" />
+        <ButtonList T="PlotEntry" Items="PlotList" PathPrefix="/outline" OnItemClick="OnPlotSelected" />
     </MudStack>
     <MudStack Spacing="2">
         <MudText Typo="Typo.h6">Secondary</MudText>
-        <ButtonList T="string" PathPrefix="/outline" OnItemClick="OnPlotSelected" />
+        <ButtonList T="PlotEntry" PathPrefix="/outline" OnItemClick="OnPlotSelected" />
     </MudStack>
     <MudStack Spacing="2">
         <MudText Typo="Typo.h6">Minor</MudText>
-        <ButtonList T="string" PathPrefix="/outline" OnItemClick="OnPlotSelected" />
+        <ButtonList T="PlotEntry" PathPrefix="/outline" OnItemClick="OnPlotSelected" />
     </MudStack>
 </MudStack>
 
 @code {
     const string Title = "Outline";
 
-    List<string> PlotList { get; } = ["Hero's Journey"];
+    List<PlotEntry> PlotList { get; } = [new PlotEntry(PlotId.New(), "Hero's Journey")];
 
     protected override void OnInitialized()
     {
@@ -31,7 +32,7 @@
         crumbHandler.NavigationChange?.Invoke();
     }
 
-    void OnPlotSelected(string plot)
+    void OnPlotSelected(PlotEntry plot)
     {
         
     }

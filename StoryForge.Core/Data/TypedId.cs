@@ -21,3 +21,8 @@ public static class TypedId
         }
     }
 }
+
+public interface IIdentifiable
+{
+    string IdString { get; }
+}

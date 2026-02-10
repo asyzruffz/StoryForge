@@ -1,11 +1,12 @@
-﻿@typeparam T
+﻿@using StoryForge.Core.Data
+@typeparam T where T : IIdentifiable
 
 @if (Items.Count() > 0)
 {
     <MudList T="string" SelectionMode="SelectionMode.SingleSelection">
         @foreach (var item in Items)
         {
-            var path = $"{PathPrefix}/{EscapeString(item!.ToString())}";
+            var path = $"{PathPrefix}/{item!.IdString}";
             <MudListItem Dense="true" Href="@path" OnClick="@(_ => OnItemClick?.Invoke(item))">
                 <ChildContent>
                     <MudText Color="Color.Tertiary">@item!.ToString()</MudText>
@@ -30,9 +31,4 @@ else
 
     [Parameter]
     public Action<T>? OnItemClick { get; set; }
-
-    string EscapeString(string? rawString)
-    {
-        return Uri.EscapeDataString(rawString?.Replace(" ", "_") ?? string.Empty);
-    }
 }

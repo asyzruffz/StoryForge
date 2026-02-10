@@ -1,4 +1,5 @@
 ﻿@page "/world"
+@using StoryForge.Core.Data
 @inject BreadCrumbHandler crumbHandler;
 
 <PageTitle>@Title</PageTitle>
@@ -8,13 +9,13 @@
     <MudStack Row="true" Justify="Justify.FlexEnd">
         <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">New Location</MudButton>
     </MudStack>
-    <ButtonList T="string" Items="LocationList" PathPrefix="/world" OnItemClick="OnLocationSelected" />
+    <ButtonList T="WorldEntry" Items="LocationList" PathPrefix="/world" OnItemClick="OnLocationSelected" />
 </MudStack>
 
 @code {
     const string Title = "World";
 
-    List<string> LocationList { get; } = ["Gaia"];
+    List<WorldEntry> LocationList { get; } = [new WorldEntry(WorldSettingId.New(), "Gaia")];
 
     protected override void OnInitialized()
     {
@@ -23,7 +24,7 @@
         crumbHandler.NavigationChange?.Invoke();
     }
 
-    void OnLocationSelected(string plot)
+    void OnLocationSelected(WorldEntry plot)
     {
         
     }
