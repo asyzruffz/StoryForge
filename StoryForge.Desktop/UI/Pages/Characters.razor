@@ -1,4 +1,5 @@
 ﻿@page "/characters"
+@using StoryForge.Application.Characters
 @using StoryForge.Core.Data
 @inject BreadCrumbHandler crumbHandler;
 @inject ISender Sender;
@@ -27,13 +28,16 @@
 @code {
     const string Title = "Characters";
 
-    List<CharacterEntry> CharacterList { get; set; } = [];
+    IEnumerable<CharacterEntry> CharacterList { get; set; } = [];
 
     protected override async Task OnInitializedAsync()
     {
         crumbHandler.Items.Clear();
         crumbHandler.Items.Add(new(Title, "/characters", Icons.Material.Filled.People));
         crumbHandler.NavigationChange?.Invoke();
+
+        var charactersResult = await Sender.Send(new GetCharacterEntriesOperation());
+        CharacterList = charactersResult.Or([]);
     }
 
     void OnCharacterSelected(CharacterEntry character)
