@@ -17,7 +17,7 @@
                 <MudTextField @bind-Value="CharacterName" Label="Name" Variant="Variant.Outlined" />
                 <MudStack Row="true" Spacing="4">
                     <MudText Class="mr-4">Importance</MudText>
-                    <MudSlider TickMarks="true" Min="0" Max="2" @bind-Value="Importance"></MudSlider>
+                    <MudSlider TickMarks="true" Min="0" Max="2" @bind-Value="ImportanceValue"></MudSlider>
                     <MudText>@Importance</MudText>
                     <div class="w-full"></div>
                 </MudStack>
@@ -49,20 +49,127 @@
     [Parameter]
     public string Id { get; set; } = default!;
 
-    int Importance { get; set; } = 0;
+    string CharacterName
+    {
+        get => characterData?.Name ?? string.Empty;
+        set
+        {
+            if (characterData is null) return;
+            characterData.Name = value;
+            SaveCharacter();
+        }
+    }
 
-    string CharacterName { get; set; } = string.Empty;
-    string CharacterMotivation { get; set; } = string.Empty;
-    string CharacterGoal { get; set; } = string.Empty;
-    string CharacterConflict { get; set; } = string.Empty;
-    string CharacterEpiphany { get; set; } = string.Empty;
+    int ImportanceValue
+    {
+        get => characterData?.Importance.Tier() ?? 0;
+        set
+        {
+            if (characterData is null) return;
+            characterData.Importance = (Importance)value;
+            SaveCharacter();
+        }
+    }
+    string Importance => characterData?.Importance.ToString() ?? string.Empty;
 
-    string SentenceSummary { get; set; } = string.Empty;
-    string ParagraphSummary { get; set; } = string.Empty;
-    string PageSummary { get; set; } = string.Empty;
+    string CharacterMotivation
+    {
+        get => characterData?.Motivation ?? string.Empty;
+        set
+        {
+            if (characterData is null) return;
+            characterData.Motivation = value;
+            SaveCharacter();
+        }
+    }
 
-    string Notes { get; set; } = string.Empty;
-    string Details { get; set; } = string.Empty;
+    string CharacterGoal
+    {
+        get => characterData?.Goal ?? string.Empty;
+        set
+        {
+            if (characterData is null) return;
+            characterData.Goal = value;
+            SaveCharacter();
+        }
+    }
+
+    string CharacterConflict
+    {
+        get => characterData?.Conflict ?? string.Empty;
+        set
+        {
+            if (characterData is null) return;
+            characterData.Conflict = value;
+            SaveCharacter();
+        }
+    }
+
+    string CharacterEpiphany
+    {
+        get => characterData?.Epiphany ?? string.Empty;
+        set
+        {
+            if (characterData is null) return;
+            characterData.Epiphany = value;
+            SaveCharacter();
+        }
+    }
+
+    string SentenceSummary
+    {
+        get => characterData?.Summary.Sentence ?? string.Empty;
+        set
+        {
+            if (characterData is null) return;
+            characterData.Summary.Sentence = value;
+            SaveSummary();
+        }
+    }
+
+    string ParagraphSummary
+    {
+        get => characterData?.Summary.Paragraph ?? string.Empty;
+        set
+        {
+            if (characterData is null) return;
+            characterData.Summary.Paragraph = value;
+            SaveSummary();
+}
+    }
+
+    string PageSummary
+    {
+        get => characterData?.Summary.Page ?? string.Empty;
+        set
+        {
+            if (characterData is null) return;
+            characterData.Summary.Page = value;
+            SaveSummary();
+        }
+    }
+
+    string Notes
+    {
+        get => characterData?.Notes ?? string.Empty;
+        set
+        {
+            if (characterData is null) return;
+            characterData.Notes = value;
+            SaveCharacter();
+        }
+    }
+
+    string Details
+    {
+        get => characterData?.Details ?? string.Empty;
+        set
+        {
+            if (characterData is null) return;
+            characterData.Details = value;
+            SaveCharacter();
+        }
+    }
 
     Character? characterData;
 
@@ -81,5 +188,17 @@
                     return Result<Character>.Ok(character);
                 })
             .OnError(msg => navigationManager.NavigateTo("/error"));
+    }
+
+    void SaveCharacter()
+    {
+        if (characterData is null) return;
+        _ = Sender.Send(new UpdateCharacterOperation(characterData));
+    }
+
+    void SaveSummary()
+    {
+        if (characterData is null) return;
+        _ = Sender.Send(new UpdateSummaryOperation(characterData.Summary));
     }
 }

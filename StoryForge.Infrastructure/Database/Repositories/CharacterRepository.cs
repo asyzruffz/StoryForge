@@ -46,12 +46,6 @@ internal class CharacterRepository : ICharacterRepository
 
         int idx = characters.IndexOf(foundCharacter);
         characters[idx] = character;
-
-        var foundSummary = summaries.SingleOrDefault(entry => entry.Id == character.Summary.Id);
-        if (foundSummary is null) return;
-
-        int idx2 = summaries.IndexOf(foundSummary);
-        summaries[idx2] = character.Summary;
     }
 
     public void Delete(Character character)
