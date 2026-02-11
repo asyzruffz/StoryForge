@@ -9,7 +9,6 @@ public sealed record CreateCharacterOperation(string Name) : IOperation;
 
 internal sealed class CreateCharacterOperationHandler : IOperationHandler<CreateCharacterOperation>
 {
-
     private readonly IDataSession data;
 
     public CreateCharacterOperationHandler(IDataSession dataSession)

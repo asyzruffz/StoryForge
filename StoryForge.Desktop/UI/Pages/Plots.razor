@@ -58,6 +58,8 @@
         string plotName = dialogResult.Data?.ToString() ?? string.Empty;
         plotName = plotName.Trim();
         if (string.IsNullOrEmpty(plotName)) return;
+
+        var plotResult = await sender.Send(new CreatePlotOperation(plotName));
     }
 
     void OnPlotSelected(PlotEntry plot)
