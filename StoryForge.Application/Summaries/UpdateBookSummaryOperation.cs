@@ -3,7 +3,7 @@ using StoryForge.Core.Data;
 using StoryForge.Core.Services;
 using StoryForge.Core.Utils;
 
-namespace StoryForge.Application.Summary;
+namespace StoryForge.Application.Summaries;
 
 public sealed record UpdateBookSummaryOperation(BookSummary Summary) : IOperation;
 
