@@ -1,0 +1,95 @@
+@page "/about"
+@using StoryForge.Application.About
+@using StoryForge.Core.Data
+@inject BreadCrumbHandler crumbHandler;
+@inject ISender sender;
+
+<PageTitle>@Title</PageTitle>
+<MudText Typo="Typo.h4" Class="mb-4">@Title</MudText>
+
+<MudStack Spacing="4">
+    <MudCard Elevation="4">
+        <MudCardContent>
+            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="4">
+                <MudIcon Icon="@Icons.Material.Filled.AutoStories" Size="Size.Large" Color="Color.Primary" />
+                <MudStack Spacing="0">
+                    <MudText Typo="Typo.h5">@appInfo.Name</MudText>
+                    <MudText Typo="Typo.caption" Color="Color.Secondary">Version @appInfo.Version</MudText>
+                </MudStack>
+            </MudStack>
+            <MudText Class="mt-4">@appInfo.Description</MudText>
+        </MudCardContent>
+    </MudCard>
+
+    <MudCard Elevation="4">
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Typo="Typo.h6">System Information</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudSimpleTable Dense="true" Hover="true" Bordered="false">
+                <tbody>
+                    <tr>
+                        <td><MudText Typo="Typo.body2" Color="Color.Secondary">Runtime</MudText></td>
+                        <td><MudText Typo="Typo.body2">@appInfo.Runtime</MudText></td>
+                    </tr>
+                    <tr>
+                        <td><MudText Typo="Typo.body2" Color="Color.Secondary">Platform</MudText></td>
+                        <td><MudText Typo="Typo.body2">@appInfo.Platform</MudText></td>
+                    </tr>
+                </tbody>
+            </MudSimpleTable>
+        </MudCardContent>
+    </MudCard>
+
+    <MudCard Elevation="4">
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Typo="Typo.h6">Technologies</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudChipSet T="string" ReadOnly="true">
+                @foreach (var tech in appInfo.Technologies)
+                {
+                    <MudChip T="string" Color="Color.Primary" Variant="Variant.Outlined">@tech</MudChip>
+                }
+            </MudChipSet>
+        </MudCardContent>
+    </MudCard>
+
+    <MudCard Elevation="4">
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Typo="Typo.h6">Credits</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudText Typo="Typo.body2">
+                StoryForge is built with open-source technologies and powered by AI to help writers craft their stories.
+            </MudText>
+            <MudStack Row="true" Class="mt-4" Spacing="2">
+                <MudLink Href="https://github.com/asyzruffz/StoryForge" Target="_blank" Typo="Typo.body2" Class="d-flex flex-row gap-2">
+                    <MudIcon Icon="@Icons.Custom.Brands.GitHub" Size="Size.Small" /> GitHub
+                </MudLink>
+            </MudStack>
+        </MudCardContent>
+    </MudCard>
+</MudStack>
+
+@code {
+    const string Title = "About";
+
+    AppInfo appInfo = AppInfo.Default;
+
+    protected override async Task OnInitializedAsync()
+    {
+        crumbHandler.Items.Clear();
+        crumbHandler.Items.Add(new(Title, "/about", Icons.Material.Filled.Info));
+        crumbHandler.NavigationChange?.Invoke();
+
+        var result = await sender.Send(new GetAppInfoOperation());
+        appInfo = result.Or(AppInfo.Default);
+    }
+}
