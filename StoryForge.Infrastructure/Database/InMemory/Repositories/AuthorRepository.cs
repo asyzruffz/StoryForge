@@ -2,7 +2,7 @@
 using StoryForge.Core.Repositories;
 using StoryForge.Core.Utils;
 
-namespace StoryForge.Infrastructure.Database.Repositories;
+namespace StoryForge.Infrastructure.Database.InMemory.Repositories;
 
 internal class AuthorRepository : IAuthorRepository
 {

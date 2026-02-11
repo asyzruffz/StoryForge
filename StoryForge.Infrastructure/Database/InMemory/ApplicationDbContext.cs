@@ -1,6 +1,6 @@
 ﻿using StoryForge.Core.Data;
 
-namespace StoryForge.Infrastructure.Database;
+namespace StoryForge.Infrastructure.Database.InMemory;
 
 public class ApplicationDbContext
 {

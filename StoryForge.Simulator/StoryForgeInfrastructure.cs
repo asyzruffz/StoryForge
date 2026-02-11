@@ -4,6 +4,7 @@ using StoryForge.Application.Abstractions;
 using StoryForge.Application.Services;
 using StoryForge.Core.Services;
 using StoryForge.Infrastructure.Database;
+using StoryForge.Infrastructure.Database.InMemory;
 using StoryForge.Infrastructure.OpenAI;
 
 namespace StoryForge.Simulator;

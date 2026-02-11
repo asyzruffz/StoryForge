@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using StoryForge.Application.Services;
 using StoryForge.Core.Services;
 using StoryForge.Desktop.Utils;
 using StoryForge.Infrastructure.Database;
+using StoryForge.Infrastructure.Database.InMemory;
 
 namespace StoryForge.Desktop;
 

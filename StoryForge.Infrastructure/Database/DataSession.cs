@@ -1,6 +1,7 @@
 ﻿using StoryForge.Core.Repositories;
 using StoryForge.Core.Services;
-using StoryForge.Infrastructure.Database.Repositories;
+using StoryForge.Infrastructure.Database.InMemory;
+using StoryForge.Infrastructure.Database.InMemory.Repositories;
 
 namespace StoryForge.Infrastructure.Database;
 
