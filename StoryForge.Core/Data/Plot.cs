@@ -8,6 +8,7 @@ public class Plot
     public string Characters { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public string Result { get; set; } = string.Empty;
+    public string ResolutionSteps { get; set; } = string.Empty;
 
     public static Plot New(string name) =>
         new() { Id = PlotId.New(), Name = name };

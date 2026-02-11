@@ -1,5 +1,10 @@
 ﻿@page "/plots/{id}"
+@using StoryForge.Application.Plots
+@using StoryForge.Core.Data
+@using StoryForge.Core.Utils
 @inject BreadCrumbHandler crumbHandler;
+@inject NavigationManager navigationManager;
+@inject ISender sender;
 
 <PageTitle>@Title</PageTitle>
 <MudText Typo="Typo.h4" Class="mb-4">@Title</MudText>
@@ -11,7 +16,7 @@
                 <MudTextField @bind-Value="PlotName" Label="Plot" Variant="Variant.Outlined" />
                 <MudStack Row="true" Spacing="4">
                     <MudText Class="mr-4">Importance</MudText>
-                    <MudSlider TickMarks="true" Min="0" Max="2" @bind-Value="Importance"></MudSlider>
+                    <MudSlider TickMarks="true" Min="0" Max="2" @bind-Value="ImportanceValue"></MudSlider>
                     <MudText>@Importance</MudText>
                     <div class="w-full"></div>
                 </MudStack>
@@ -21,7 +26,7 @@
             </MudStack>
         </MudTabPanel>
         <MudTabPanel Text="Resolution Steps" Class="pt-2">
-            <MudTextField @bind-Value="Details" Label="Details" Lines="18" Variant="Variant.Outlined" />
+            <MudTextField @bind-Value="ResolutionSteps" Label="Details" Lines="18" Variant="Variant.Outlined" />
         </MudTabPanel>
     </MudTabs>
 </MudStack>
@@ -32,20 +37,95 @@
     [Parameter]
     public string Id { get; set; } = default!;
 
-    int Importance { get; set; } = 0;
+    string PlotName
+    {
+        get => plotData?.Name ?? string.Empty;
+        set
+        {
+            if (plotData is null) return;
+            plotData.Name = value;
+            SaveData();
+        }
+    }
 
-    string PlotName { get; set; } = string.Empty;
-    string PlotCharacters { get; set; } = string.Empty;
-    string PlotDescription { get; set; } = string.Empty;
-    string PlotResult { get; set; } = string.Empty;
+    int ImportanceValue
+    {
+        get => plotData?.Importance.Tier() ?? 0;
+        set
+        {
+            if (plotData is null) return;
+            plotData.Importance = (Importance)value;
+            SaveData();
+        }
+    }
+    string Importance => plotData?.Importance.ToString() ?? string.Empty;
 
-    string Details { get; set; } = string.Empty;
+    string PlotCharacters
+    {
+        get => plotData?.Characters ?? string.Empty;
+        set
+        {
+            if (plotData is null) return;
+            plotData.Characters = value;
+            SaveData();
+        }
+    }
 
-    protected override void OnInitialized()
+    string PlotDescription
+    {
+        get => plotData?.Description ?? string.Empty;
+        set
+        {
+            if (plotData is null) return;
+            plotData.Description = value;
+            SaveData();
+        }
+    }
+
+    string PlotResult
+    {
+        get => plotData?.Result ?? string.Empty;
+        set
+        {
+            if (plotData is null) return;
+            plotData.Result = value;
+            SaveData();
+        }
+    }
+
+    string ResolutionSteps
+    {
+        get => plotData?.ResolutionSteps ?? string.Empty;
+        set
+        {
+            if (plotData is null) return;
+            plotData.ResolutionSteps = value;
+            SaveData();
+        }
+    }
+
+    Plot? plotData;
+
+    protected override async Task OnInitializedAsync()
     {
         crumbHandler.Items.Clear();
         crumbHandler.Items.Add(new("Plots", "/plots", Icons.Material.Filled.Timeline));
         crumbHandler.Items.Add(new(Title, $"/plots/{Id}", null));
         crumbHandler.NavigationChange?.Invoke();
+
+        var plotResult = await sender.Send(new GetPlotOperation(PlotId.From(Id)));
+        plotResult
+            .Then(plot =>
+            {
+                plotData = plot;
+                return Result<Plot>.Ok(plot);
+            })
+            .OnError(msg => navigationManager.NavigateTo("/error"));
+    }
+
+    void SaveData()
+    {
+        if (plotData is null) return;
+        _ = sender.Send(new UpdatePlotOperation(plotData));
     }
 }

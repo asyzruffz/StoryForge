@@ -9,7 +9,6 @@ public sealed record UpdateCharacterOperation(Character Character) : IOperation;
 
 internal sealed class UpdateCharacterOperationHandler : IOperationHandler<UpdateCharacterOperation>
 {
-
     private readonly IDataSession data;
 
     public UpdateCharacterOperationHandler(IDataSession dataSession)

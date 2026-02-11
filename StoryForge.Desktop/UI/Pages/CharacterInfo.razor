@@ -183,10 +183,10 @@
         var characterResult = await sender.Send(new GetCharacterOperation(CharacterId.From(Id)));
         characterResult
             .Then(character =>
-                {
-                    characterData = character;
-                    return Result<Character>.Ok(character);
-                })
+            {
+                characterData = character;
+                return Result<Character>.Ok(character);
+            })
             .OnError(msg => navigationManager.NavigateTo("/error"));
     }
 
