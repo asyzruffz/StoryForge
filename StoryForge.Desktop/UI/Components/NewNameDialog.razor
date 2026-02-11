@@ -1,6 +1,6 @@
 ﻿<MudDialog>
     <DialogContent>
-        <MudTextField @bind-Value="ProjectName" Label="Project Name" Variant="Variant.Outlined" />
+        <MudTextField @bind-Value="CharacterName" Label="@NameLabel" Variant="Variant.Outlined" />
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
@@ -12,12 +12,15 @@
     [CascadingParameter]
     IMudDialogInstance MudDialog { get; set; } = default!;
 
-    string ProjectName { get; set; } = string.Empty;
+    [Parameter]
+    public string NameLabel { get; set; } = "Name";
+
+    string CharacterName { get; set; } = string.Empty;
 
     void Cancel() => MudDialog.Cancel();
 
     void ConfirmName()
     {
-        MudDialog.Close(DialogResult.Ok(ProjectName));
+        MudDialog.Close(DialogResult.Ok(CharacterName));
     }
 }

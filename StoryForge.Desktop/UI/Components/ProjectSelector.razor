@@ -1,5 +1,6 @@
 ﻿@using StoryForge.Application.Projects
 @inject IDialogService dialogService;
+@inject NavigationManager navigationManager;
 @inject ISender sender;
 
 <MudContainer Class="pa-3">
@@ -42,7 +43,10 @@
     async Task CreateNewProject()
     {
         var options = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true, BackgroundClass = "blur-background" };
-        var dialog = await dialogService.ShowAsync<NameProjectDialog>("Create New Project", options);
+        var param = new DialogParameters<NewNameDialog>();
+        param.Add(dlg => dlg.NameLabel, "Project Name");
+
+        var dialog = await dialogService.ShowAsync<NewNameDialog>("Create New Project", param, options);
         DialogResult dialogResult = await dialog.Result ?? DialogResult.Cancel();
         if (dialogResult.Canceled) return;
 
@@ -51,6 +55,7 @@
         if (string.IsNullOrEmpty(projectName)) return;
 
         var projectResult = await sender.Send(new CreateProjectOperation(projectName));
+        projectResult.Then(() => navigationManager.NavigateTo("/general", true));
     }
 
     async Task OpenProject(IBrowserFile file)

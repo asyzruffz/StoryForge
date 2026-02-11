@@ -9,7 +9,7 @@
 
 <MudStack Spacing="4">
     <MudStack Row="true" Justify="Justify.FlexEnd">
-        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">New Plot</MudButton>
+        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="CreateNewCharacter">New Plot</MudButton>
     </MudStack>
     <MudStack Spacing="2">
         <MudText Typo="Typo.h6">Main</MudText>
@@ -28,13 +28,32 @@
 @code {
     const string Title = "Plots";
 
-    List<PlotEntry> PlotList { get; } = [new PlotEntry(PlotId.New(), "Hero's Journey")];
+    IEnumerable<PlotEntry> PlotList { get; set; } = [];
 
-    protected override void OnInitialized()
+    IEnumerable<PlotEntry> MainPlots => PlotList.Where(p => p.Importance == Importance.Main);
+    IEnumerable<PlotEntry> SecondaryPlots => PlotList.Where(p => p.Importance == Importance.Secondary);
+    IEnumerable<PlotEntry> MinorPlots => PlotList.Where(p => p.Importance == Importance.Minor);
+
+    protected override async Task OnInitializedAsync()
     {
         crumbHandler.Items.Clear();
         crumbHandler.Items.Add(new(Title, "/plots", Icons.Material.Filled.Timeline));
         crumbHandler.NavigationChange?.Invoke();
+    }
+
+    async Task CreateNewCharacter()
+    {
+        var options = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true, BackgroundClass = "blur-background" };
+        var param = new DialogParameters<NewNameDialog>();
+        param.Add(dlg => dlg.NameLabel, "Plot Name");
+
+        var dialog = await dialogService.ShowAsync<NewNameDialog>("Create New Plot", param, options);
+        DialogResult dialogResult = await dialog.Result ?? DialogResult.Cancel();
+        if (dialogResult.Canceled) return;
+
+        string characterName = dialogResult.Data?.ToString() ?? string.Empty;
+        characterName = characterName.Trim();
+        if (string.IsNullOrEmpty(characterName)) return;
     }
 
     void OnPlotSelected(PlotEntry plot)

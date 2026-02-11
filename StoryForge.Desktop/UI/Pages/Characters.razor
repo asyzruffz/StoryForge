@@ -47,8 +47,11 @@
 
     async Task CreateNewCharacter()
     {
-        var options = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true, BackgroundClass = "blur-background" };
-        var dialog = await dialogService.ShowAsync<NewCharacterDialog>("Create New Character", options);
+        var options = new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true, BackgroundClass = "blur-background" };
+        var param = new DialogParameters<NewNameDialog>();
+        param.Add(dlg => dlg.NameLabel, "Character Name");
+
+        var dialog = await dialogService.ShowAsync<NewNameDialog>("Create New Character", param, options);
         DialogResult dialogResult = await dialog.Result ?? DialogResult.Cancel();
         if (dialogResult.Canceled) return;
 
