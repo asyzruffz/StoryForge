@@ -1,6 +1,8 @@
 ﻿@page "/outline"
+@using StoryForge.Application.Plots
 @using StoryForge.Core.Data
 @inject BreadCrumbHandler crumbHandler;
+@inject ISender sender;
 
 <PageTitle>@Title</PageTitle>
 <MudText Typo="Typo.h4" Class="mb-4">@Title</MudText>
@@ -8,28 +10,35 @@
 <MudStack Spacing="4">
     <MudStack Spacing="2">
         <MudText Typo="Typo.h6">Main</MudText>
-        <ButtonList T="PlotEntry" Items="PlotList" PathPrefix="/outline" OnItemClick="OnPlotSelected" />
+        <ButtonList T="PlotEntry" Items="MainPlots" PathPrefix="/outline" OnItemClick="OnPlotSelected" />
     </MudStack>
     <MudStack Spacing="2">
         <MudText Typo="Typo.h6">Secondary</MudText>
-        <ButtonList T="PlotEntry" PathPrefix="/outline" OnItemClick="OnPlotSelected" />
+        <ButtonList T="PlotEntry" Items="SecondaryPlots" PathPrefix="/outline" OnItemClick="OnPlotSelected" />
     </MudStack>
     <MudStack Spacing="2">
         <MudText Typo="Typo.h6">Minor</MudText>
-        <ButtonList T="PlotEntry" PathPrefix="/outline" OnItemClick="OnPlotSelected" />
+        <ButtonList T="PlotEntry" Items="MinorPlots" PathPrefix="/outline" OnItemClick="OnPlotSelected" />
     </MudStack>
 </MudStack>
 
 @code {
     const string Title = "Outline";
 
-    List<PlotEntry> PlotList { get; } = [new PlotEntry(PlotId.New(), "Hero's Journey")];
+    IEnumerable<PlotEntry> PlotList { get; set; } = [];
 
-    protected override void OnInitialized()
+    IEnumerable<PlotEntry> MainPlots => PlotList.Where(p => p.Importance == Importance.Main);
+    IEnumerable<PlotEntry> SecondaryPlots => PlotList.Where(p => p.Importance == Importance.Secondary);
+    IEnumerable<PlotEntry> MinorPlots => PlotList.Where(p => p.Importance == Importance.Minor);
+
+    protected override async Task OnInitializedAsync()
     {
         crumbHandler.Items.Clear();
         crumbHandler.Items.Add(new(Title, "/outline", Icons.Material.Filled.Webhook));
         crumbHandler.NavigationChange?.Invoke();
+
+        var plotsResult = await sender.Send(new GetPlotEntriesOperation());
+        PlotList = plotsResult.Or([]);
     }
 
     void OnPlotSelected(PlotEntry plot)
