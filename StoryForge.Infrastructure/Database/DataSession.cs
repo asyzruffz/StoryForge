@@ -17,6 +17,7 @@ public class DataSession : IDataSession, IDisposable
         Books = new BookRepository(Summaries);
         Authors = new AuthorRepository();
         Characters = new CharacterRepository(context);
+        Plots = new PlotRepository(context);
         Chapters = new ChapterRepository(context);
     }
 
@@ -24,6 +25,7 @@ public class DataSession : IDataSession, IDisposable
     public IAuthorRepository Authors { get; init; }
     public ISummaryRepository Summaries { get; init; }
     public ICharacterRepository Characters { get; init; }
+    public IPlotRepository Plots { get; init; }
     public IChapterRepository Chapters { get; init; }
 
     public int Save() => context.SaveChanges();
