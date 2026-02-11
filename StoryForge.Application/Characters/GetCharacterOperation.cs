@@ -20,7 +20,7 @@ internal sealed class GetCharacterOperationHandler : IOperationHandler<GetCharac
     public async Task<Result<Character>> Handle(GetCharacterOperation request, CancellationToken cancellationToken)
     {
         await Task.CompletedTask;
-
-        return Result<Character>.Fail("GetCharacterOperation not implemented"); //result;
+        var result = data.Characters.GetById(request.Id);
+        return result;
     }
 }

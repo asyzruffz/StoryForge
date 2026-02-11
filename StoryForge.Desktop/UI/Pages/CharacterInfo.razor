@@ -1,5 +1,10 @@
 ﻿@page "/characters/{id}"
+@using StoryForge.Application.Characters
+@using StoryForge.Core.Data
+@using StoryForge.Core.Utils
 @inject BreadCrumbHandler crumbHandler;
+@inject NavigationManager navigationManager;
+@inject ISender Sender;
 
 <PageTitle>@Title</PageTitle>
 <MudText Typo="Typo.h4" Class="mb-4">@Title</MudText>
@@ -68,5 +73,12 @@
         crumbHandler.NavigationChange?.Invoke();
 
         var characterResult = await Sender.Send(new GetCharacterOperation(CharacterId.From(Id)));
+        characterResult
+            .Then(character =>
+                {
+                    characterData = character;
+                    return Result<Character>.Ok(character);
+                })
+            .OnError(msg => navigationManager.NavigateTo("/error"));
     }
 }

@@ -15,12 +15,14 @@ public class DataSession : IDataSession, IDisposable
         Summaries = new SummaryRepository(context);
         Books = new BookRepository(Summaries);
         Authors = new AuthorRepository();
+        Characters = new CharacterRepository(context);
         Chapters = new ChapterRepository(context);
     }
 
     public IBookRepository Books { get; init; }
     public IAuthorRepository Authors { get; init; }
     public ISummaryRepository Summaries { get; init; }
+    public ICharacterRepository Characters { get; init; }
     public IChapterRepository Chapters { get; init; }
 
     public int Save() => context.SaveChanges();
