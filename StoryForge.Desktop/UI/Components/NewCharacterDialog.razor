@@ -1,0 +1,23 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudTextField @bind-Value="CharacterName" Label="Character Name" Variant="Variant.Outlined" />
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="ConfirmName">Confirm</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    IMudDialogInstance MudDialog { get; set; } = default!;
+
+    string CharacterName { get; set; } = string.Empty;
+
+    void Cancel() => MudDialog.Cancel();
+
+    void ConfirmName()
+    {
+        MudDialog.Close(DialogResult.Ok(CharacterName));
+    }
+}

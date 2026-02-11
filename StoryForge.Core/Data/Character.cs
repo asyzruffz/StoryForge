@@ -4,6 +4,7 @@ public class Character
 {
     public CharacterId Id { get; set; } = CharacterId.Empty;
     public string Name { get; set; } = string.Empty;
+    public Importance Importance { get; set; }
     public string Motivation { get; set; } = string.Empty;
     public string Goal { get; set; } = string.Empty;
     public string Conflict { get; set; } = string.Empty;
@@ -15,7 +16,7 @@ public class Character
     public static Character New(string name) =>
         new() { Id = CharacterId.New(), Name = name, Summary = Summary.New() };
 
-    public CharacterEntry ToEntry() => new CharacterEntry(Id, Name);
+    public CharacterEntry ToEntry() => new CharacterEntry(Id, Name, Importance);
 }
 
 public readonly record struct CharacterId(string Value) : ITypedId
@@ -28,7 +29,7 @@ public readonly record struct CharacterId(string Value) : ITypedId
     //    new(Uri.EscapeDataString(name.Replace(" ", "_")));
 }
 
-public record CharacterEntry(CharacterId Id, string Name) : IIdentifiable
+public record CharacterEntry(CharacterId Id, string Name, Importance Importance) : IIdentifiable
 {
     public string IdString => Id.Value;
     public override string ToString() => Name;

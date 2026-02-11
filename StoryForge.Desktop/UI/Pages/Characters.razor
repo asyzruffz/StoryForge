@@ -2,6 +2,7 @@
 @using StoryForge.Application.Characters
 @using StoryForge.Core.Data
 @inject BreadCrumbHandler crumbHandler;
+@inject IDialogService DialogService;
 @inject ISender Sender;
 
 <PageTitle>@Title</PageTitle>
@@ -9,19 +10,19 @@
 
 <MudStack Spacing="4">
     <MudStack Row="true" Justify="Justify.FlexEnd">
-        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">New Character</MudButton>
+        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="CreateNewCharacter">New Character</MudButton>
     </MudStack>
     <MudStack Spacing="2">
         <MudText Typo="Typo.h6">Main</MudText>
-        <ButtonList T="CharacterEntry" Items="CharacterList" PathPrefix="/characters" OnItemClick="OnCharacterSelected" />
+        <ButtonList T="CharacterEntry" Items="MainCharacters" PathPrefix="/characters" OnItemClick="OnCharacterSelected" />
     </MudStack>
     <MudStack Spacing="2">
         <MudText Typo="Typo.h6">Secondary</MudText>
-        <ButtonList T="CharacterEntry" Items="CharacterList" PathPrefix="/characters" OnItemClick="OnCharacterSelected" />
+        <ButtonList T="CharacterEntry" Items="SecondaryCharacters" PathPrefix="/characters" OnItemClick="OnCharacterSelected" />
     </MudStack>
     <MudStack Spacing="2">
         <MudText Typo="Typo.h6">Minor</MudText>
-        <ButtonList T="CharacterEntry" Items="CharacterList" PathPrefix="/characters" OnItemClick="OnCharacterSelected" />
+        <ButtonList T="CharacterEntry" Items="MinorCharacters" PathPrefix="/characters" OnItemClick="OnCharacterSelected" />
     </MudStack>
 </MudStack>
 
@@ -29,6 +30,10 @@
     const string Title = "Characters";
 
     IEnumerable<CharacterEntry> CharacterList { get; set; } = [];
+
+    IEnumerable<CharacterEntry> MainCharacters => CharacterList.Where(c => c.Importance == Importance.Main);
+    IEnumerable<CharacterEntry> SecondaryCharacters => CharacterList.Where(c => c.Importance == Importance.Secondary);
+    IEnumerable<CharacterEntry> MinorCharacters => CharacterList.Where(c => c.Importance == Importance.Minor);
 
     protected override async Task OnInitializedAsync()
     {
@@ -38,6 +43,20 @@
 
         var charactersResult = await Sender.Send(new GetCharacterEntriesOperation());
         CharacterList = charactersResult.Or([]);
+    }
+
+    async Task CreateNewCharacter()
+    {
+        var options = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true, BackgroundClass = "blur-background" };
+        var dialog = await DialogService.ShowAsync<NewCharacterDialog>("Create New Character", options);
+        DialogResult dialogResult = await dialog.Result ?? DialogResult.Cancel();
+        if (dialogResult.Canceled) return;
+
+        string characterName = dialogResult.Data?.ToString() ?? string.Empty;
+        characterName = characterName.Trim();
+        if (string.IsNullOrEmpty(characterName)) return;
+
+        var characterResult = await Sender.Send(new CreateCharacterOperation(characterName));
     }
 
     void OnCharacterSelected(CharacterEntry character)
