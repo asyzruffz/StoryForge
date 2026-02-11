@@ -2,7 +2,7 @@
 @using StoryForge.Application.Projects
 @using StoryForge.Core.Data
 @inject BreadCrumbHandler crumbHandler;
-@inject ISender Sender;
+@inject ISender sender;
 
 <PageTitle>@Title</PageTitle>
 <MudText Typo="Typo.h4" Class="mb-4">@Title</MudText>
@@ -53,13 +53,13 @@
         crumbHandler.Items.Add(new(Title, "/general/author", null));
         crumbHandler.NavigationChange?.Invoke();
 
-        var authorResult = await Sender.Send(new GetAuthorOperation());
+        var authorResult = await sender.Send(new GetAuthorOperation());
         authorData = authorResult.Or(Author.Invalid);
     }
 
     void SaveData()
     {
         if (authorData is null) return;
-        _ = Sender.Send(new UpdateAuthorOperation(authorData));
+        _ = sender.Send(new UpdateAuthorOperation(authorData));
     }
 }

@@ -1,6 +1,6 @@
 ﻿@using StoryForge.Application.Projects
 @using StoryForge.Core.Data
-@inject ISender Sender;
+@inject ISender sender;
 
 <MudPaper Class="d-flex flex-column pa-4 rounded-lg" Width="480px" Height="260px" Elevation="4">
     <MudStack Row="true" Spacing="4" Class="mb-2">
@@ -19,7 +19,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var authorResult = await Sender.Send(new GetAuthorOperation());
+        var authorResult = await sender.Send(new GetAuthorOperation());
         authorData = authorResult.Or(Author.Invalid);
     }
 }

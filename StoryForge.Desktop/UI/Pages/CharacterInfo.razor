@@ -5,7 +5,7 @@
 @using StoryForge.Core.Utils
 @inject BreadCrumbHandler crumbHandler;
 @inject NavigationManager navigationManager;
-@inject ISender Sender;
+@inject ISender sender;
 
 <PageTitle>@Title</PageTitle>
 <MudText Typo="Typo.h4" Class="mb-4">@Title</MudText>
@@ -180,7 +180,7 @@
         crumbHandler.Items.Add(new(Title, $"/characters/{Id}", null));
         crumbHandler.NavigationChange?.Invoke();
 
-        var characterResult = await Sender.Send(new GetCharacterOperation(CharacterId.From(Id)));
+        var characterResult = await sender.Send(new GetCharacterOperation(CharacterId.From(Id)));
         characterResult
             .Then(character =>
                 {
@@ -193,12 +193,12 @@
     void SaveCharacter()
     {
         if (characterData is null) return;
-        _ = Sender.Send(new UpdateCharacterOperation(characterData));
+        _ = sender.Send(new UpdateCharacterOperation(characterData));
     }
 
     void SaveSummary()
     {
         if (characterData is null) return;
-        _ = Sender.Send(new UpdateSummaryOperation(characterData.Summary));
+        _ = sender.Send(new UpdateSummaryOperation(characterData.Summary));
     }
 }

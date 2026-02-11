@@ -1,6 +1,6 @@
 ﻿@using StoryForge.Application.Projects
 @using StoryForge.Core.Data
-@inject ISender Sender;
+@inject ISender sender;
 
 <MudPaper Class="d-flex flex-column pa-4 rounded-lg" Width="480px" Height="260px" Elevation="4">
     <MudStack Row="true" Spacing="4" Class="mb-2">
@@ -26,7 +26,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var bookResult = await Sender.Send(new GetBookOperation());
+        var bookResult = await sender.Send(new GetBookOperation());
         bookData = bookResult.Or(Book.Invalid);
     }
 }

@@ -1,6 +1,8 @@
 ﻿@page "/plots"
 @using StoryForge.Core.Data
 @inject BreadCrumbHandler crumbHandler;
+@inject IDialogService dialogService;
+@inject ISender sender;
 
 <PageTitle>@Title</PageTitle>
 <MudText Typo="Typo.h4" Class="mb-4">@Title</MudText>

@@ -2,7 +2,7 @@
 @using StoryForge.Application.Summaries
 @using StoryForge.Core.Data
 @inject BreadCrumbHandler crumbHandler;
-@inject ISender Sender;
+@inject ISender sender;
 
 <PageTitle>@Title</PageTitle>
 <MudText Typo="Typo.h4" Class="mb-4">@Title</MudText>
@@ -84,7 +84,7 @@
         crumbHandler.Items.Add(new("Summary", "/summary", Icons.Material.Filled.Summarize));
         crumbHandler.NavigationChange?.Invoke();
 
-        var summaryResult = await Sender.Send(new GetBookSummaryOperation());
+        var summaryResult = await sender.Send(new GetBookSummaryOperation());
         bookData = summaryResult.Or(new BookSummary());
 
         SentenceWordCount = SentenceSummary.WordCount();
@@ -95,7 +95,7 @@
     void SaveData()
     {
         if (bookData is null) return;
-        _ = Sender.Send(new UpdateBookSummaryOperation(bookData));
+        _ = sender.Send(new UpdateBookSummaryOperation(bookData));
     }
 
     void SentenceUpdated(string sentence)

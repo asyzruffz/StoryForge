@@ -2,7 +2,7 @@
 @using StoryForge.Application.Projects
 @using StoryForge.Core.Data
 @inject BreadCrumbHandler crumbHandler;
-@inject ISender Sender;
+@inject ISender sender;
 
 <PageTitle>@Title</PageTitle>
 <MudText Typo="Typo.h4" Class="mb-4">@Title</MudText>
@@ -81,13 +81,13 @@
         crumbHandler.Items.Add(new(Title, "/general/book", null));
         crumbHandler.NavigationChange?.Invoke();
 
-        var bookResult = await Sender.Send(new GetBookOperation());
+        var bookResult = await sender.Send(new GetBookOperation());
         bookData = bookResult.Or(Book.Invalid);
     }
 
     void SaveData()
     {
         if (bookData is null) return;
-        _ = Sender.Send(new UpdateBookOperation(bookData));
+        _ = sender.Send(new UpdateBookOperation(bookData));
     }
 }

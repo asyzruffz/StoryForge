@@ -1,6 +1,6 @@
 ﻿@using StoryForge.Application.Projects
-@inject IDialogService DialogService;
-@inject ISender Sender;
+@inject IDialogService dialogService;
+@inject ISender sender;
 
 <MudContainer Class="pa-3">
     <MudTooltip Text="Default Project of the Book" Disabled="@menuOpen">
@@ -42,7 +42,7 @@
     async Task CreateNewProject()
     {
         var options = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true, BackgroundClass = "blur-background" };
-        var dialog = await DialogService.ShowAsync<NameProjectDialog>("Create New Project", options);
+        var dialog = await dialogService.ShowAsync<NameProjectDialog>("Create New Project", options);
         DialogResult dialogResult = await dialog.Result ?? DialogResult.Cancel();
         if (dialogResult.Canceled) return;
 
@@ -50,12 +50,12 @@
         projectName = projectName.Trim();
         if (string.IsNullOrEmpty(projectName)) return;
 
-        var projectResult = await Sender.Send(new CreateProjectOperation(projectName));
+        var projectResult = await sender.Send(new CreateProjectOperation(projectName));
     }
 
     async Task OpenProject(IBrowserFile file)
     {
-        await Sender.Send(new OpenProjectOperation());
+        await sender.Send(new OpenProjectOperation());
     }
 
     async Task OpenFilePicker()
