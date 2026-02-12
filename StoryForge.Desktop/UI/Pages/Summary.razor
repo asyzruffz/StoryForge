@@ -85,7 +85,7 @@
         crumbHandler.NavigationChange?.Invoke();
 
         var summaryResult = await sender.Send(new GetBookSummaryOperation());
-        bookData = summaryResult.Or(new BookSummary());
+        bookData = summaryResult.Or(BookSummary.Invalid);
 
         SentenceWordCount = SentenceSummary.WordCount();
         ParagraphWordCount = ParagraphSummary.WordCount();
