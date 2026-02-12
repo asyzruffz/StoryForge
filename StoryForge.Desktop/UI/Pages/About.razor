@@ -67,13 +67,9 @@
         </MudCardHeader>
         <MudCardContent>
             <MudText Typo="Typo.body2">
-                StoryForge is built with open-source technologies and powered by AI to help writers craft their stories.
+                @appInfo.Name is built with open-source technologies and powered by AI to help writers craft their stories.
             </MudText>
-            <MudStack Row="true" Class="mt-4" Spacing="2">
-                <MudLink Href="https://github.com/asyzruffz/StoryForge" Target="_blank" Typo="Typo.body2" Class="d-flex flex-row gap-2">
-                    <MudIcon Icon="@Icons.Custom.Brands.GitHub" Size="Size.Small" /> GitHub
-                </MudLink>
-            </MudStack>
+            <GitHubLink Href="@appInfo.SourceLink" Class="mt-4" />
         </MudCardContent>
     </MudCard>
 </MudStack>
