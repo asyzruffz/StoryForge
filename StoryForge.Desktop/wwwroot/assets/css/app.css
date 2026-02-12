@@ -54,14 +54,6 @@ h1:focus {
     border-color: #929292;
 }
 
-.w-full {
-    width: 100%;
-}
-
-.h-full {
-    height: 100%;
-}
-
 .ellipsis-overflow {
     white-space: nowrap;
     overflow: hidden;
