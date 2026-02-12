@@ -13,6 +13,7 @@
     <MudTabs Rounded="true" Centered="true">
         <MudTabPanel Text="General" Class="pt-2">
             <MudStack Spacing="2">
+                <MudTextField @bind-Value="SettingCategory" Label="Category" Variant="Variant.Outlined" />
                 <MudTextField @bind-Value="SettingName" Label="Name" Variant="Variant.Outlined" />
                 <MudTextField @bind-Value="SettingDescription" Label="Description" Lines="8" Variant="Variant.Outlined" />
             </MudStack>
@@ -28,6 +29,17 @@
 
     [Parameter]
     public string Id { get; set; } = default!;
+
+    string SettingCategory
+    {
+        get => settingData?.Category.ToString() ?? string.Empty;
+        set
+        {
+            if (settingData is null) return;
+            settingData.Category = new StorySettingCategory(value);
+            SaveData();
+        }
+    }
 
     string SettingName
     {

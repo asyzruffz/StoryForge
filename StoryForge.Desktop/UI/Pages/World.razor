@@ -12,7 +12,10 @@
     <MudStack Row="true" Justify="Justify.FlexEnd">
         <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="CreateNewSetting">New Setting</MudButton>
     </MudStack>
-    <ButtonList T="StorySettingEntry" Items="SettingList" PathPrefix="/world" OnItemClick="OnLocationSelected" />
+    @foreach (var group in SettingList.GroupBy(setting => setting.Category))
+    {
+        <ButtonList T="StorySettingEntry" Label="@group.Key.ToString()" Items="group" PathPrefix="/world" OnItemClick="OnSettingSelected" />
+    }
 </MudStack>
 
 @code {
@@ -47,7 +50,7 @@
         var settingResult = await sender.Send(new CreateStorySettingOperation(settingName));
     }
 
-    void OnLocationSelected(StorySettingEntry plot)
+    void OnSettingSelected(StorySettingEntry plot)
     {
         
     }
