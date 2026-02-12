@@ -1,5 +1,10 @@
 ﻿@page "/world/{id}"
+@using StoryForge.Application.StorySettings
+@using StoryForge.Core.Data
+@using StoryForge.Core.Utils
 @inject BreadCrumbHandler crumbHandler;
+@inject NavigationManager navigationManager;
+@inject ISender sender;
 
 <PageTitle>@Title</PageTitle>
 <MudText Typo="Typo.h4" Class="mb-4">@Title</MudText>
@@ -8,8 +13,8 @@
     <MudTabs Rounded="true" Centered="true">
         <MudTabPanel Text="General" Class="pt-2">
             <MudStack Spacing="2">
-                <MudTextField @bind-Value="LocationName" Label="Name" Variant="Variant.Outlined" />
-                <MudTextField @bind-Value="LocationDescription" Label="Description" Lines="8" Variant="Variant.Outlined" />
+                <MudTextField @bind-Value="SettingName" Label="Name" Variant="Variant.Outlined" />
+                <MudTextField @bind-Value="SettingDescription" Label="Description" Lines="8" Variant="Variant.Outlined" />
             </MudStack>
         </MudTabPanel>
         <MudTabPanel Text="More" Class="pt-2">
@@ -19,21 +24,66 @@
 </MudStack>
 
 @code {
-    const string Title = "Location Information";
+    const string Title = "Setting Information";
 
     [Parameter]
     public string Id { get; set; } = default!;
 
-    string LocationName { get; set; } = string.Empty;
-    string LocationDescription { get; set; } = string.Empty;
+    string SettingName
+    {
+        get => settingData?.Name ?? string.Empty;
+        set
+        {
+            if (settingData is null) return;
+            settingData.Name = value;
+            SaveData();
+        }
+    }
 
-    string Details { get; set; } = string.Empty;
+    string SettingDescription
+    {
+        get => settingData?.Description ?? string.Empty;
+        set
+        {
+            if (settingData is null) return;
+            settingData.Description = value;
+            SaveData();
+        }
+    }
 
-    protected override void OnInitialized()
+    string Details
+    {
+        get => settingData?.Details ?? string.Empty;
+        set
+        {
+            if (settingData is null) return;
+            settingData.Details = value;
+            SaveData();
+        }
+    }
+
+    StorySetting? settingData;
+
+    protected override async Task OnInitializedAsync()
     {
         crumbHandler.Items.Clear();
         crumbHandler.Items.Add(new("World", "/world", Icons.Material.Filled.NaturePeople));
         crumbHandler.Items.Add(new(Title, $"/world/{Id}", null));
         crumbHandler.NavigationChange?.Invoke();
+
+        var settingResult = await sender.Send(new GetStorySettingOperation(StorySettingId.From(Id)));
+        settingResult
+            .Then(plot =>
+            {
+                settingData = plot;
+                return Result<StorySetting>.Ok(plot);
+            })
+            .OnError(msg => navigationManager.NavigateTo("/error"));
+    }
+
+    void SaveData()
+    {
+        if (settingData is null) return;
+        _ = sender.Send(new UpdateStorySettingOperation(settingData));
     }
 }

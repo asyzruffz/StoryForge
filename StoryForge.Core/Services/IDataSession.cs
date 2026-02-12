@@ -9,6 +9,7 @@ public interface IDataSession : IDisposable
     ISummaryRepository Summaries { get; }
     ICharacterRepository Characters { get; }
     IPlotRepository Plots { get; }
+    IStorySettingRepository StorySettings { get; }
     IChapterRepository Chapters { get; }
     int Save();
 }

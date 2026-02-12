@@ -1,13 +1,16 @@
 ﻿@page "/world"
+@using StoryForge.Application.StorySettings
 @using StoryForge.Core.Data
 @inject BreadCrumbHandler crumbHandler;
+@inject IDialogService dialogService;
+@inject ISender sender;
 
 <PageTitle>@Title</PageTitle>
 <MudText Typo="Typo.h4" Class="mb-4">@Title</MudText>
 
 <MudStack Spacing="4">
     <MudStack Row="true" Justify="Justify.FlexEnd">
-        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">New Setting</MudButton>
+        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="CreateNewSetting">New Setting</MudButton>
     </MudStack>
     <ButtonList T="StorySettingEntry" Items="SettingList" PathPrefix="/world" OnItemClick="OnLocationSelected" />
 </MudStack>
@@ -15,13 +18,33 @@
 @code {
     const string Title = "World";
 
-    List<StorySettingEntry> SettingList { get; } = [new StorySettingEntry(StorySettingId.New(), "Gaia")];
+    IEnumerable<StorySettingEntry> SettingList { get; set; } = [];
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         crumbHandler.Items.Clear();
         crumbHandler.Items.Add(new(Title, "/world", Icons.Material.Filled.NaturePeople));
         crumbHandler.NavigationChange?.Invoke();
+
+        var settingResult = await sender.Send(new GetStorySettingEntriesOperation());
+        SettingList = settingResult.Or([]);
+    }
+
+    async Task CreateNewSetting()
+    {
+        var options = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true, BackgroundClass = "blur-background" };
+        var param = new DialogParameters<NewNameDialog>();
+        param.Add(dlg => dlg.NameLabel, "Setting Name");
+
+        var dialog = await dialogService.ShowAsync<NewNameDialog>("Create New Setting", param, options);
+        DialogResult dialogResult = await dialog.Result ?? DialogResult.Cancel();
+        if (dialogResult.Canceled) return;
+
+        string settingName = dialogResult.Data?.ToString() ?? string.Empty;
+        settingName = settingName.Trim();
+        if (string.IsNullOrEmpty(settingName)) return;
+
+        var settingResult = await sender.Send(new CreateStorySettingOperation(settingName));
     }
 
     void OnLocationSelected(StorySettingEntry plot)
