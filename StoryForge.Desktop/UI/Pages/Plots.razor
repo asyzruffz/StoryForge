@@ -12,9 +12,21 @@
     <MudStack Row="true" Justify="Justify.FlexEnd">
         <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="CreateNewPlot">New Plot</MudButton>
     </MudStack>
-    @foreach (var group in PlotList.GroupBy(plot => plot.Importance))
-    {
-        <ButtonList T="PlotEntry" Label="@group.Key.ToString()" Items="group" PathPrefix="/plots" OnItemClick="OnPlotSelected" />
+    @{
+        var groupings = PlotList.GroupBy(plot => plot.Importance);
+        if (groupings.Count() > 0)
+        {
+            foreach (var group in groupings)
+            {
+                <ButtonList T="PlotEntry" Label="@group.Key.ToString()" Items="group" PathPrefix="/plots" OnItemClick="OnPlotSelected" />
+            }
+        }
+        else
+        {
+            <MudStack Justify="Justify.Center" AlignItems="AlignItems.Center" Class="my-4">
+                <MudText>Not available</MudText>
+            </MudStack>
+        }
     }
 </MudStack>
 

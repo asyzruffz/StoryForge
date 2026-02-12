@@ -12,9 +12,21 @@
     <MudStack Row="true" Justify="Justify.FlexEnd">
         <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" OnClick="CreateNewCharacter">New Character</MudButton>
     </MudStack>
-    @foreach (var group in CharacterList.GroupBy(character => character.Importance))
-    {
-        <ButtonList T="CharacterEntry" Label="@group.Key.ToString()" Items="group" PathPrefix="/characters" OnItemClick="OnCharacterSelected" />
+    @{
+        var groupings = CharacterList.GroupBy(character => character.Importance);
+        if (groupings.Count() > 0)
+        {
+            foreach (var group in groupings)
+            {
+                <ButtonList T="CharacterEntry" Label="@group.Key.ToString()" Items="group" PathPrefix="/characters" OnItemClick="OnCharacterSelected" />
+            }
+        }
+        else
+        {
+            <MudStack Justify="Justify.Center" AlignItems="AlignItems.Center" Class="my-4">
+                <MudText>Not available</MudText>
+            </MudStack>
+        }
     }
 </MudStack>
 
