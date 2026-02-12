@@ -7,15 +7,15 @@
 
 <MudStack Spacing="4">
     <MudStack Row="true" Justify="Justify.FlexEnd">
-        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">New Location</MudButton>
+        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary">New Setting</MudButton>
     </MudStack>
-    <ButtonList T="WorldEntry" Items="LocationList" PathPrefix="/world" OnItemClick="OnLocationSelected" />
+    <ButtonList T="StorySettingEntry" Items="SettingList" PathPrefix="/world" OnItemClick="OnLocationSelected" />
 </MudStack>
 
 @code {
     const string Title = "World";
 
-    List<WorldEntry> LocationList { get; } = [new WorldEntry(WorldSettingId.New(), "Gaia")];
+    List<StorySettingEntry> SettingList { get; } = [new StorySettingEntry(StorySettingId.New(), "Gaia")];
 
     protected override void OnInitialized()
     {
@@ -24,7 +24,7 @@
         crumbHandler.NavigationChange?.Invoke();
     }
 
-    void OnLocationSelected(WorldEntry plot)
+    void OnLocationSelected(StorySettingEntry plot)
     {
         
     }
