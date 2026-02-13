@@ -8,23 +8,28 @@ public interface IContentSection
     string ToText();
 }
 
-public class EmptySection : IContentSection
+public record EmptySection : IContentSection
 {
     public IContentSection AddSection(IContentSection newSection) => newSection;
     public string ToText() => string.Empty;
 }
 
-public class ContentSection(string Text) : IContentSection
+public record ContentSection(string Text) : IContentSection
 {
     public string Text { get; set; } = Text;
     public IContentSection AddSection(IContentSection newSection) =>
-        new MultipleSection { Sections = [this, newSection] };
+        new MultipleSection([this, newSection]);
     public string ToText() => Text;
 }
 
-public class MultipleSection : IContentSection
+public record MultipleSection : IContentSection
 {
-    public List<IContentSection> Sections { get; init; } = [];
+    public IList<IContentSection> Sections { get; init; } = [];
+
+    public MultipleSection(IList<IContentSection> sections)
+    {
+        Sections = sections;
+    }
 
     public IContentSection AddSection(IContentSection newSection)
     {
