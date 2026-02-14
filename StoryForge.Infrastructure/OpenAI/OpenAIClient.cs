@@ -3,6 +3,7 @@ using OpenAI;
 using OpenAI.Chat;
 using StoryForge.Application.Abstractions;
 using StoryForge.Core.Utils;
+using System.ClientModel;
 
 namespace StoryForge.Infrastructure.OpenAI;
 
@@ -38,7 +39,7 @@ public class OpenAIClient : IOpenAIClient
         var config = option.CurrentValue;
         //Console.WriteLine($"Key: {config.Key}, Url: {config.Url}, Model: {config.Model}");
 
-        client = new ChatClient(config.Model, config.Key,
+        client = new ChatClient(config.Model, new ApiKeyCredential(config.Key),
             new OpenAIClientOptions { Endpoint = new Uri(config.Url) });
     }
 }
