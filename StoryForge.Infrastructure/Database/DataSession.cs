@@ -7,9 +7,9 @@ namespace StoryForge.Infrastructure.Database;
 
 public class DataSession : IDataSession, IDisposable
 {
-    private readonly ApplicationDbContext context;
+    private readonly ProjectDbContext context;
 
-    public DataSession(ApplicationDbContext context)
+    public DataSession(ProjectDbContext context)
     {
         this.context = context;
 
