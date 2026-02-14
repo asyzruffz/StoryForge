@@ -1,0 +1,14 @@
+<Solution>
+  <Project Path="StoryForge.Application/StoryForge.Application.csproj" />
+  <Project Path="StoryForge.Containers/StoryForge.Containers.dcproj">
+    <Build />
+  </Project>
+  <Project Path="StoryForge.Core/StoryForge.Core.csproj" />
+  <Project Path="StoryForge.Desktop/StoryForge.Desktop.csproj">
+    <BuildDependency Project="StoryForge.Application/StoryForge.Application.csproj" />
+    <BuildDependency Project="StoryForge.Core/StoryForge.Core.csproj" />
+    <BuildDependency Project="StoryForge.Infrastructure/StoryForge.Infrastructure.csproj" />
+  </Project>
+  <Project Path="StoryForge.Infrastructure/StoryForge.Infrastructure.csproj" />
+  <Project Path="StoryForge.Simulator/StoryForge.Simulator.csproj" />
+</Solution>
