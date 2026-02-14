@@ -2,6 +2,4 @@
 
 namespace StoryForge.Core.Repositories;
 
-public interface IPlotRepository : IRepository<Plot>, IQueryableById<Plot, PlotId>
-{
-}
+public interface IPlotRepository : IRepository<Plot>, IQueryableById<Plot, PlotId>;

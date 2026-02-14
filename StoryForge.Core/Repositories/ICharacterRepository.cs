@@ -2,6 +2,4 @@
 
 namespace StoryForge.Core.Repositories;
 
-public interface ICharacterRepository : IRepository<Character>, IQueryableById<Character, CharacterId>
-{
-}
+public interface ICharacterRepository : IRepository<Character>, IQueryableById<Character, CharacterId>;

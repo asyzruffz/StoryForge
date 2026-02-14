@@ -2,6 +2,4 @@
 
 namespace StoryForge.Core.Repositories;
 
-public interface IChapterRepository : IRepository<Chapter>, IQueryableById<Chapter, ChapterId>
-{
-}
+public interface IChapterRepository : IRepository<Chapter>, IQueryableById<Chapter, ChapterId>;

@@ -2,6 +2,4 @@
 
 namespace StoryForge.Core.Repositories;
 
-public interface IStorySettingRepository : IRepository<StorySetting>, IQueryableById<StorySetting, StorySettingId>
-{
-}
+public interface IStorySettingRepository : IRepository<StorySetting>, IQueryableById<StorySetting, StorySettingId>;
