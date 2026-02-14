@@ -9,7 +9,7 @@ internal class ChapterRepository : IChapterRepository
     //protected readonly DbSet<Chapter> chapters;
     protected readonly List<Chapter> chapters;
 
-    public ChapterRepository(ApplicationDbContext context)
+    public ChapterRepository(ProjectDbContext context)
     {
         chapters = context.Chapters;
     }

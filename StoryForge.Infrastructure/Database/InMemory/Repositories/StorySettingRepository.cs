@@ -8,7 +8,7 @@ internal class StorySettingRepository : IStorySettingRepository
 {
     protected readonly List<StorySetting> settings;
 
-    public StorySettingRepository(ApplicationDbContext context)
+    public StorySettingRepository(ProjectDbContext context)
     {
         settings = context.StorySettings;
     }

@@ -9,7 +9,7 @@ internal class CharacterRepository : ICharacterRepository
     protected readonly List<Character> characters;
     protected readonly List<Summary> summaries;
 
-    public CharacterRepository(ApplicationDbContext context)
+    public CharacterRepository(ProjectDbContext context)
     {
         characters = context.Characters;
         summaries = context.Summaries;

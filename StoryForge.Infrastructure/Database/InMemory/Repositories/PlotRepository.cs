@@ -8,7 +8,7 @@ internal class PlotRepository : IPlotRepository
 {
     protected readonly List<Plot> plots;
 
-    public PlotRepository(ApplicationDbContext context)
+    public PlotRepository(ProjectDbContext context)
     {
         plots = context.Plots;
     }

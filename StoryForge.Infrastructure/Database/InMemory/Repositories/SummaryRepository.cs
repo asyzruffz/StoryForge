@@ -8,7 +8,7 @@ internal class SummaryRepository : ISummaryRepository
 {
     protected readonly List<Summary> summaries;
 
-    public SummaryRepository(ApplicationDbContext context)
+    public SummaryRepository(ProjectDbContext context)
     {
         summaries = context.Summaries;
     }
