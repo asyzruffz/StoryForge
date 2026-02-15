@@ -20,6 +20,9 @@ internal static class Extensions
     public static IServiceCollection AddInfrastructure(this IServiceCollection services) => services
         .AddDatabase();
 
+    public static IServiceProvider SetupInfrastructure(this IServiceProvider services) => services
+        .InitDatabase();
+
     private static IServiceCollection AddStoryForgeSystem(this IServiceCollection services) => services
         .AddSingleton<IRandomService, RandomService>()
         .AddScoped<IAIService, AIService>();
@@ -30,4 +33,9 @@ internal static class Extensions
         .AddSingleton<IDataSession, DataSession>()
         .AddSingleton<IDataSessionFactory, DataSessionFactory>()
         .AddSingleton<ITemporaryStorage, TemporaryStorage>();
+
+    private static IServiceProvider InitDatabase(this IServiceProvider services)
+    {
+        return services;
+}
 }

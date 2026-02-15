@@ -14,14 +14,17 @@ internal class Program
 
         builder.Services
             .AddLogging()
-            .AddMudServices()
-            .AddInfrastructure()
             .AddApplication()
-            .AddUIUtils();
+            .AddInfrastructure()
+            .AddUIUtils()
+            .AddMudServices();
 
         builder.RootComponents.Add<App>("app");
 
         var app = builder.Build();
+
+        app.Services
+            .SetupInfrastructure();
 
         app.MainWindow
             .SetUseOsDefaultSize(true)
