@@ -2,5 +2,5 @@
 
 public interface IDataSessionFactory
 {
-    IDataSession CreateSession();
+    IDataSession CreateSession(string filePath);
 }
