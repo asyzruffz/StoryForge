@@ -9,9 +9,9 @@ public sealed record GetAuthorOperation : IOperation<Author>;
 
 internal sealed class GetAuthorOperationHandler : IOperationHandler<GetAuthorOperation, Author>
 {
-    private readonly IDataSession data;
+    private readonly IApplicationDataSession data;
 
-    public GetAuthorOperationHandler(IDataSession dataSession)
+    public GetAuthorOperationHandler(IApplicationDataSession dataSession)
     {
         data = dataSession;
     }
@@ -19,7 +19,9 @@ internal sealed class GetAuthorOperationHandler : IOperationHandler<GetAuthorOpe
     public async Task<Result<Author>> Handle(GetAuthorOperation request, CancellationToken cancellationToken)
     {
         await Task.CompletedTask;
-        var result = data.Authors.Get();
+        var projectId = ProjectId.Empty; // TODO: Get the current project id from a service
+        var result = data.Projects.GetById(projectId)
+            .Then(project => Result<Author>.Ok(project.Author));
         return result;
     }
 }

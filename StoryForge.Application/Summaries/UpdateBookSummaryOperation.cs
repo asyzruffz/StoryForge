@@ -9,22 +9,30 @@ public sealed record UpdateBookSummaryOperation(BookSummary Summary) : IOperatio
 
 internal sealed class UpdateBookSummaryOperationHandler : IOperationHandler<UpdateBookSummaryOperation>
 {
+    private readonly IApplicationDataSession appData;
     private readonly IDataSession data;
 
-    public UpdateBookSummaryOperationHandler(IDataSession dataSession)
+    public UpdateBookSummaryOperationHandler(IApplicationDataSession appDataSession, IDataSession dataSession)
     {
+        appData = appDataSession;
         data = dataSession;
     }
 
     public async Task<Result> Handle(UpdateBookSummaryOperation request, CancellationToken cancellationToken)
     {
         await Task.CompletedTask;
-        data.Books.Get()
-            .Then(book =>
-            {
-                book.Extra = request.Summary;
-                data.Books.Update(book);
-            });
+        var projectId = ProjectId.Empty; // TODO: Get the current project id from a service
+
+        var projectResult = appData.Projects.GetById(projectId);
+        if (!projectResult.IsSuccess)
+        {
+            return Result.Fail(projectResult.ErrorMessage);
+        }
+
+        projectResult.Then(project => project.Book.Extra = request.Summary);
+        data.Summaries.Update(request.Summary.Summary);
+
+        appData.Save();
         data.Save();
         return Result.Ok();
     }

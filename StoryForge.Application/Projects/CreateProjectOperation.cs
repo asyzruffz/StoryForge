@@ -9,23 +9,35 @@ public sealed record CreateProjectOperation(string Name) : IOperation;
 
 internal sealed class CreateProjectOperationHandler : IOperationHandler<CreateProjectOperation>
 {
+    private readonly IApplicationDataSession appData;
     private readonly IDataSession data;
 
-    public CreateProjectOperationHandler(IDataSession dataSession)
+    public CreateProjectOperationHandler(IApplicationDataSession appDataSession, IDataSession dataSession)
     {
+        appData = appDataSession;
         data = dataSession;
     }
 
     public async Task<Result> Handle(CreateProjectOperation request, CancellationToken cancellationToken)
     {
         await Task.CompletedTask;
-        Book newBook = new Book
+        var extra = BookSummary.New();
+
+        Project newProject = new Project
         {
-            Title = request.Name,
-            Extra = BookSummary.New()
+            Id = ProjectId.New(),
+            Book = new Book
+            {
+                Title = request.Name,
+                Extra = extra
+            },
+            Author = new Author()
         };
 
-        data.Books.Update(newBook);
+        appData.Projects.Create(newProject);
+        data.Summaries.Create(extra.Summary);
+
+        appData.Save();
         data.Save();
         return Result.Ok();
     }

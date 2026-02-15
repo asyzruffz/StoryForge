@@ -9,9 +9,9 @@ public sealed record GetBookOperation() : IOperation<Book>;
 
 internal sealed class GetBookOperationHandler : IOperationHandler<GetBookOperation, Book>
 {
-    private readonly IDataSession data;
+    private readonly IApplicationDataSession data;
 
-    public GetBookOperationHandler(IDataSession dataSession)
+    public GetBookOperationHandler(IApplicationDataSession dataSession)
     {
         data = dataSession;
     }
@@ -19,7 +19,9 @@ internal sealed class GetBookOperationHandler : IOperationHandler<GetBookOperati
     public async Task<Result<Book>> Handle(GetBookOperation request, CancellationToken cancellationToken)
     {
         await Task.CompletedTask;
-        var result = data.Books.Get();
+        var projectId = ProjectId.Empty; // TODO: Get the current project id from a service
+        var result = data.Projects.GetById(projectId)
+            .Then(project => Result<Book>.Ok(project.Book));
         return result;
     }
 }
