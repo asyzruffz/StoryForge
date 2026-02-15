@@ -18,6 +18,7 @@ public class ApplicationDataSession : IApplicationDataSession, IDisposable
 
     public IProjectRepository Projects { get; init; }
 
+    public bool EnsureCreated() => context.Database.EnsureCreated();
     public int Save() => context.SaveChanges();
     public void Dispose() => context.Dispose();
 }

@@ -9,5 +9,7 @@ public interface IDataSession : IDisposable
     IPlotRepository Plots { get; }
     IStorySettingRepository StorySettings { get; }
     IChapterRepository Chapters { get; }
+
+    bool EnsureCreated();
     int Save();
 }

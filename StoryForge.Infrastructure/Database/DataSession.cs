@@ -26,6 +26,7 @@ public class DataSession : IDataSession, IDisposable
         Chapters = new ChapterRepository(context);
     }
 
+    public bool EnsureCreated() => context.Database.EnsureCreated();
     public int Save() => context.SaveChanges();
     public void Dispose() => context.Dispose();
 }

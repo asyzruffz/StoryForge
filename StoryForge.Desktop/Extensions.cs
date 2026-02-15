@@ -30,12 +30,13 @@ internal static class Extensions
     private static IServiceCollection AddDatabase(this IServiceCollection services) => services
         .AddSingleton<ApplicationDbContext>()
         .AddSingleton<IApplicationDataSession, ApplicationDataSession>()
-        .AddSingleton<IDataSession, DataSession>()
-        .AddSingleton<IDataSessionFactory, DataSessionFactory>()
+        .AddScoped<IDataSession, DataSession>()
         .AddSingleton<ITemporaryStorage, TemporaryStorage>();
 
     private static IServiceProvider InitDatabase(this IServiceProvider services)
     {
+        services.GetRequiredService<IApplicationDataSession>()
+            .EnsureCreated();
         return services;
 }
 }

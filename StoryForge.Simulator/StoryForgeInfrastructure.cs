@@ -18,7 +18,6 @@ public static class StoryForgeInfrastructure
     private static IServiceCollection AddDatabase(this IServiceCollection services) => services
         .AddSingleton<ApplicationDbContext>()
         .AddSingleton<IDataSession, DataSession>()
-        .AddSingleton<IDataSessionFactory, DataSessionFactory>()
         .AddSingleton<ITemporaryStorage, TemporaryStorage>();
 
     private static IServiceCollection AddOpenAI(this IServiceCollection services, IConfiguration config) => services
