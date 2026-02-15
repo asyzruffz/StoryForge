@@ -9,17 +9,24 @@ public sealed record GetBookOperation() : IOperation<Book>;
 
 internal sealed class GetBookOperationHandler : IOperationHandler<GetBookOperation, Book>
 {
+    private readonly IProjectSessionHandler projectSession;
     private readonly IApplicationDataSession data;
 
-    public GetBookOperationHandler(IApplicationDataSession dataSession)
+    public GetBookOperationHandler(IProjectSessionHandler projectSessionHandler, IApplicationDataSession dataSession)
     {
+        projectSession = projectSessionHandler;
         data = dataSession;
     }
 
     public async Task<Result<Book>> Handle(GetBookOperation request, CancellationToken cancellationToken)
     {
         await Task.CompletedTask;
-        var projectId = ProjectId.Empty; // TODO: Get the current project id from a service
+        if (!projectSession.IsActive)
+        {
+            return Result<Book>.Fail("No project is open");
+        }
+
+        var projectId = projectSession.CurrentProject!;
         var result = data.Projects.GetById(projectId)
             .Then(project => Result<Book>.Ok(project.Book));
         return result;

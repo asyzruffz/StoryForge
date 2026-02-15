@@ -9,17 +9,24 @@ public sealed record UpdateAuthorOperation(Author Author) : IOperation;
 
 internal sealed class UpdateAuthorOperationHandler : IOperationHandler<UpdateAuthorOperation>
 {
+    private readonly IProjectSessionHandler projectSession;
     private readonly IApplicationDataSession data;
 
-    public UpdateAuthorOperationHandler(IApplicationDataSession dataSession)
+    public UpdateAuthorOperationHandler(IProjectSessionHandler projectSessionHandler, IApplicationDataSession dataSession)
     {
+        projectSession = projectSessionHandler;
         data = dataSession;
     }
 
     public async Task<Result> Handle(UpdateAuthorOperation request, CancellationToken cancellationToken)
     {
         await Task.CompletedTask;
-        var projectId = ProjectId.Empty; // TODO: Get the current project id from a service
+        if (!projectSession.IsActive)
+        {
+            return Result.Fail("No project is open");
+        }
+
+        var projectId = projectSession.CurrentProject!;
         data.Projects.GetById(projectId)
             .Then(project => project.Author = request.Author);
         data.Save();

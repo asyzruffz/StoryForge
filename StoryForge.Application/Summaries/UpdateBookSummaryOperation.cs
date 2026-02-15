@@ -9,11 +9,13 @@ public sealed record UpdateBookSummaryOperation(BookSummary Summary) : IOperatio
 
 internal sealed class UpdateBookSummaryOperationHandler : IOperationHandler<UpdateBookSummaryOperation>
 {
+    private readonly IProjectSessionHandler projectSession;
     private readonly IApplicationDataSession appData;
     private readonly IDataSession data;
 
-    public UpdateBookSummaryOperationHandler(IApplicationDataSession appDataSession, IDataSession dataSession)
+    public UpdateBookSummaryOperationHandler(IProjectSessionHandler projectSessionHandler, IApplicationDataSession appDataSession, IDataSession dataSession)
     {
+        projectSession = projectSessionHandler;
         appData = appDataSession;
         data = dataSession;
     }
@@ -21,7 +23,12 @@ internal sealed class UpdateBookSummaryOperationHandler : IOperationHandler<Upda
     public async Task<Result> Handle(UpdateBookSummaryOperation request, CancellationToken cancellationToken)
     {
         await Task.CompletedTask;
-        var projectId = ProjectId.Empty; // TODO: Get the current project id from a service
+        if (!projectSession.IsActive)
+        {
+            return Result.Fail("No project is open");
+        }
+
+        var projectId = projectSession.CurrentProject!;
 
         var projectResult = appData.Projects.GetById(projectId);
         if (!projectResult.IsSuccess)

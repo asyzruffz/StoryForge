@@ -9,13 +9,13 @@ public sealed record CreateProjectOperation(string Name, string FilePath) : IOpe
 
 internal sealed class CreateProjectOperationHandler : IOperationHandler<CreateProjectOperation>
 {
-    private readonly IApplicationDataSession appData;
     private readonly IProjectSessionHandler projectSession;
+    private readonly IApplicationDataSession appData;
 
-    public CreateProjectOperationHandler(IApplicationDataSession appDataSession, IProjectSessionHandler projectSessionHandler)
+    public CreateProjectOperationHandler(IProjectSessionHandler projectSessionHandler, IApplicationDataSession appDataSession)
     {
-        appData = appDataSession;
         projectSession = projectSessionHandler;
+        appData = appDataSession;
     }
 
     public async Task<Result> Handle(CreateProjectOperation request, CancellationToken cancellationToken)
