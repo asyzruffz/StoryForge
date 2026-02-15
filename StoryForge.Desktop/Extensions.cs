@@ -3,7 +3,7 @@ using StoryForge.Application.Services;
 using StoryForge.Core.Services;
 using StoryForge.Desktop.Utils;
 using StoryForge.Infrastructure.Database;
-using StoryForge.Infrastructure.Database.InMemory;
+using StoryForge.Infrastructure.Database.SQLite;
 
 namespace StoryForge.Desktop;
 
@@ -26,6 +26,7 @@ internal static class Extensions
 
     private static IServiceCollection AddDatabase(this IServiceCollection services) => services
         .AddSingleton<ApplicationDbContext>()
+        .AddSingleton<IApplicationDataSession, ApplicationDataSession>()
         .AddSingleton<IDataSession, DataSession>()
         .AddSingleton<IDataSessionFactory, DataSessionFactory>()
         .AddSingleton<ITemporaryStorage, TemporaryStorage>();
