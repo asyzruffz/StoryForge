@@ -10,10 +10,12 @@ public sealed record CreateProjectOperation(string Name, string FilePath) : IOpe
 internal sealed class CreateProjectOperationHandler : IOperationHandler<CreateProjectOperation>
 {
     private readonly IApplicationDataSession appData;
+    private readonly IProjectSessionHandler projectSession;
 
-    public CreateProjectOperationHandler(IApplicationDataSession appDataSession)
+    public CreateProjectOperationHandler(IApplicationDataSession appDataSession, IProjectSessionHandler projectSessionHandler)
     {
         appData = appDataSession;
+        projectSession = projectSessionHandler;
     }
 
     public async Task<Result> Handle(CreateProjectOperation request, CancellationToken cancellationToken)
@@ -35,6 +37,7 @@ internal sealed class CreateProjectOperationHandler : IOperationHandler<CreatePr
         appData.Projects.Create(newProject);
         appData.Save();
 
-        return Result.Ok();
+        return projectSession
+            .StartSession(newProject);
     }
 }

@@ -24,12 +24,21 @@ internal static class Extensions
         .InitDatabase();
 
     private static IServiceCollection AddStoryForgeSystem(this IServiceCollection services) => services
+        .AddSingleton<IProjectSessionHandler, ProjectSessionHandler>()
         .AddSingleton<IRandomService, RandomService>()
         .AddScoped<IAIService, AIService>();
 
     private static IServiceCollection AddDatabase(this IServiceCollection services) => services
         .AddSingleton<ApplicationDbContext>()
         .AddSingleton<IApplicationDataSession, ApplicationDataSession>()
+        .AddScoped<IProjectScopeContext, ProjectScopeContext>()
+        .AddScoped<ProjectDbFactory>()
+        .AddScoped(provider =>
+        {
+            var ctx = provider.GetRequiredService<IProjectScopeContext>();
+            var factory = provider.GetRequiredService<ProjectDbFactory>();
+            return factory.CreateDbContext(ctx.ProjectFilePath);
+        })
         .AddScoped<IDataSession, DataSession>()
         .AddSingleton<ITemporaryStorage, TemporaryStorage>();
 
@@ -38,5 +47,5 @@ internal static class Extensions
         services.GetRequiredService<IApplicationDataSession>()
             .EnsureCreated();
         return services;
-}
+    }
 }
