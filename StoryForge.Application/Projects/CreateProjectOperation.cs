@@ -5,40 +5,36 @@ using StoryForge.Core.Utils;
 
 namespace StoryForge.Application.Projects;
 
-public sealed record CreateProjectOperation(string Name) : IOperation;
+public sealed record CreateProjectOperation(string Name, string FilePath) : IOperation;
 
 internal sealed class CreateProjectOperationHandler : IOperationHandler<CreateProjectOperation>
 {
     private readonly IApplicationDataSession appData;
-    private readonly IDataSession data;
 
-    public CreateProjectOperationHandler(IApplicationDataSession appDataSession, IDataSession dataSession)
+    public CreateProjectOperationHandler(IApplicationDataSession appDataSession)
     {
         appData = appDataSession;
-        data = dataSession;
     }
 
     public async Task<Result> Handle(CreateProjectOperation request, CancellationToken cancellationToken)
     {
         await Task.CompletedTask;
-        var extra = BookSummary.New();
 
         Project newProject = new Project
         {
             Id = ProjectId.New(),
+            FilePath = request.FilePath,
             Book = new Book
             {
                 Title = request.Name,
-                Extra = extra
+                Extra = BookSummary.New(),
             },
             Author = new Author()
         };
 
         appData.Projects.Create(newProject);
-        data.Summaries.Create(extra.Summary);
-
         appData.Save();
-        data.Save();
+
         return Result.Ok();
     }
 }

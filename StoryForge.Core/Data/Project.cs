@@ -2,7 +2,8 @@
 
 public class Project
 {
-    public ProjectId Id { get; set; } = ProjectId.Empty!;
+    public ProjectId Id { get; set; } = ProjectId.Empty;
+    public string FilePath { get; set; } = string.Empty;
     public Book Book { get; set; } = default!;
     public Author Author { get; set; } = default!;
 }

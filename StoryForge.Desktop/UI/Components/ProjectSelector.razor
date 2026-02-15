@@ -54,7 +54,7 @@
         projectName = projectName.Trim();
         if (string.IsNullOrEmpty(projectName)) return;
 
-        var projectResult = await sender.Send(new CreateProjectOperation(projectName));
+        var projectResult = await sender.Send(new CreateProjectOperation(projectName, $"./{projectName}.db"));
         projectResult.Then(() => navigationManager.NavigateTo("/general", true));
     }
 

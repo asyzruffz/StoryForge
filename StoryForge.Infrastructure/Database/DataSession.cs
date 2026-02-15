@@ -9,6 +9,12 @@ public class DataSession : IDataSession, IDisposable
 {
     private readonly ProjectDbContext context;
 
+    public ISummaryRepository Summaries { get; init; }
+    public ICharacterRepository Characters { get; init; }
+    public IPlotRepository Plots { get; init; }
+    public IStorySettingRepository StorySettings { get; init; }
+    public IChapterRepository Chapters { get; init; }
+
     public DataSession(ProjectDbContext context)
     {
         this.context = context;
@@ -19,12 +25,6 @@ public class DataSession : IDataSession, IDisposable
         StorySettings = new StorySettingRepository(context);
         Chapters = new ChapterRepository(context);
     }
-
-    public ISummaryRepository Summaries { get; init; }
-    public ICharacterRepository Characters { get; init; }
-    public IPlotRepository Plots { get; init; }
-    public IStorySettingRepository StorySettings { get; init; }
-    public IChapterRepository Chapters { get; init; }
 
     public int Save() => context.SaveChanges();
     public void Dispose() => context.Dispose();
