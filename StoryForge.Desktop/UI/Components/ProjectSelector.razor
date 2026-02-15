@@ -16,7 +16,7 @@
             <ChildContent>
                 <MudMenuItem OnClick="CreateNewProject">New Project</MudMenuItem>
                 <MudMenuItem OnClick="OpenFilePicker">
-                    <MudFileUpload T="IBrowserFile" @ref="@fileUpload" Accept=".zip" FilesChanged="OnFileSelected">
+                    <MudFileUpload T="IBrowserFile" @ref="@fileUpload" Accept=".db" FilesChanged="OnFileSelected">
                         <ActivatorContent>
                             <MudLink Typo="Typo.body2" Color="Color.Default" Underline="Underline.None">Open Project</MudLink>
                         </ActivatorContent>
@@ -60,7 +60,7 @@
 
     async Task OpenProject(IBrowserFile file)
     {
-        await sender.Send(new OpenProjectOperation());
+        await sender.Send(new OpenProjectOperation(file.Name));
     }
 
     async Task OpenFilePicker()
