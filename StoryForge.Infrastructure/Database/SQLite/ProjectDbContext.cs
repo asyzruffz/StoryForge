@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StoryForge.Core.Data;
+using StoryForge.Infrastructure.Database.SQLite.Configurations;
 
 namespace StoryForge.Infrastructure.Database.SQLite;
 
@@ -16,8 +17,10 @@ public class ProjectDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        //modelBuilder.ApplyConfiguration(new SummaryConfiguration());
-
-        Database.EnsureCreated();
+        modelBuilder.ApplyConfiguration(new SummaryConfiguration());
+        modelBuilder.ApplyConfiguration(new CharacterConfiguration());
+        modelBuilder.ApplyConfiguration(new PlotConfiguration());
+        modelBuilder.ApplyConfiguration(new StorySettingConfiguration());
+        modelBuilder.ApplyConfiguration(new ChapterConfiguration());
     }
 }
