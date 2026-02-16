@@ -7,6 +7,6 @@ public interface IProjectSessionHandler : IDisposable
 {
     bool IsActive { get; }
     string? CurrentProject { get; }
-    Result StartSession(Project project);
+    Result StartSession(Project project, bool newlyCreated = false);
     void StopSession();
 }

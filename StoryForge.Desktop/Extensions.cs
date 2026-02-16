@@ -25,6 +25,7 @@ internal static class Extensions
 
     private static IServiceCollection AddStoryForgeSystem(this IServiceCollection services) => services
         .AddSingleton<IProjectSessionHandler, ProjectSessionHandler>()
+        .AddScoped<IProjectFileStorage, ProjectFileStorage>()
         .AddSingleton<IRandomService, RandomService>()
         .AddScoped<IAIService, AIService>();
 

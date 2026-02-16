@@ -7,6 +7,7 @@ namespace StoryForge.Core.Services;
 public class ProjectSessionHandler : IProjectSessionHandler
 {
     private readonly IServiceScopeFactory scopeFactory;
+    private readonly IApplicationDataSession appData;
 
     public bool IsActive { get; private set; } = false;
 
@@ -14,12 +15,13 @@ public class ProjectSessionHandler : IProjectSessionHandler
 
     IServiceScope? projectScope;
 
-    public ProjectSessionHandler(IServiceScopeFactory serviceScopeFactory)
+    public ProjectSessionHandler(IServiceScopeFactory serviceScopeFactory, IApplicationDataSession appDataSession)
     {
         scopeFactory = serviceScopeFactory;
+        appData = appDataSession;
     }
 
-    public Result StartSession(Project project)
+    public Result StartSession(Project project, bool newlyCreated = false)
     {
         if (IsActive)
         {
@@ -35,8 +37,10 @@ public class ProjectSessionHandler : IProjectSessionHandler
         var dataSession = provider.GetRequiredService<IDataSession>();
         dataSession.EnsureCreated();
 
-        dataSession.Summaries.Create(project.Book.Extra.Summary);
-        dataSession.Save();
+        if (newlyCreated)
+        {
+            CreateNew(project, dataSession);
+        }
 
         IsActive = true;
         CurrentProject = project.FilePath;
@@ -49,6 +53,15 @@ public class ProjectSessionHandler : IProjectSessionHandler
         projectScope?.Dispose();
         projectScope = null;
         CurrentProject = null;
+    }
+
+    void CreateNew(Project project, IDataSession dataSession)
+    {
+        appData.Projects.Create(project);
+        dataSession.Summaries.Create(project.Book.Extra.Summary);
+
+        appData.Save();
+        dataSession.Save();
     }
 
     public void Dispose()
