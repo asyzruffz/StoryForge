@@ -14,7 +14,7 @@ public class ApplicationDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        connection = new SqliteConnection("DataSource=:memory:");
+        connection = new SqliteConnection("DataSource=./projects.db");
         connection.Open();
 
         optionsBuilder.UseSqlite(connection);
