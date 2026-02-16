@@ -19,6 +19,10 @@ public class ProjectFileStorage : IProjectFileStorage
         {
             EnsureDirectoryExist();
             var targetPath = Path.Combine(DefaultDirectory, fileName);
+            if (File.Exists(targetPath))
+            {
+                return Result<string>.Ok(Path.GetFullPath(targetPath));
+            }
 
             // If stream supports seeking and is at 0 position, ensure it's rewound
             if (stream.CanSeek && stream.Position != 0) stream.Seek(0, SeekOrigin.Begin);
