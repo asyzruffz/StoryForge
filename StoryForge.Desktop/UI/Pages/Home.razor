@@ -1,9 +1,13 @@
 ﻿@page "/"
 @inject NavigationManager navigationManager;
 
+<MudStack Class="mud-height-full justify-center align-center pb-8">
+    <StarterPanel />
+</MudStack>
+
 @code {
     protected override void OnInitialized()
     {
-        navigationManager.NavigateTo("/general");
+        //navigationManager.NavigateTo("/general");
     }
 }

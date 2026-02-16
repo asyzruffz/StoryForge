@@ -1,0 +1,71 @@
+﻿@using StoryForge.Application.Projects
+@inject IDialogService dialogService;
+@inject NavigationManager navigationManager;
+@inject ISender sender;
+
+<Box Height="400px" Width="600px">
+    <MudStack Row="true" Spacing="4" Class="mud-height-full align-stretch">
+        <MudTable Items="Elements" Hover="true" Dense="true" Height="100%" FixedHeader="true" Class="flex-grow-1">
+            <HeaderContent>
+                <MudTh><MudText Typo="Typo.h6">Recent projects</MudText></MudTh>
+                <MudTh></MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd>@context</MudTd>
+                <MudTd></MudTd>
+            </RowTemplate>
+        </MudTable>
+        <MudList T="string">
+            <MudListItem Text="Create a new project" OnClick="CreateNewProject" Icon="@Icons.Material.Filled.NoteAdd" IconColor="Color.Primary" />
+            <MudFileUpload T="IBrowserFile" @ref="@fileUpload" Accept=".db" FilesChanged="OnFileSelected">
+                <ActivatorContent>
+                    <MudListItem Text="Open a project" OnClick="OpenFilePicker" Icon="@Icons.Material.Filled.FileOpen" IconColor="Color.Primary" />
+                </ActivatorContent>
+            </MudFileUpload>
+        </MudList>
+    </MudStack>
+</Box>
+
+@code {
+    MudFileUpload<IBrowserFile>? fileUpload;
+
+    IEnumerable<string> Elements = new List<string>() { "Narnia", "Harry Potter" };
+
+    protected override async Task OnInitializedAsync()
+    {
+        
+    }
+
+    async Task CreateNewProject()
+    {
+        var options = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true, BackgroundClass = "blur-background" };
+        var param = new DialogParameters<NewNameDialog>();
+        param.Add(dlg => dlg.NameLabel, "Project Name");
+
+        var dialog = await dialogService.ShowAsync<NewNameDialog>("Create New Project", param, options);
+        DialogResult dialogResult = await dialog.Result ?? DialogResult.Cancel();
+        if (dialogResult.Canceled) return;
+
+        string projectName = dialogResult.Data?.ToString() ?? string.Empty;
+        projectName = projectName.Trim();
+        if (string.IsNullOrEmpty(projectName)) return;
+
+        var projectResult = await sender.Send(new CreateProjectOperation(projectName));
+        projectResult.Then(() => navigationManager.NavigateTo("/general", true));
+    }
+
+    async Task OpenProject(IBrowserFile file)
+    {
+        await sender.Send(new OpenProjectOperation(file.Name, file.OpenReadStream()));
+    }
+
+    async Task OpenFilePicker()
+    {
+        await (fileUpload?.OpenFilePickerAsync() ?? Task.CompletedTask);
+    }
+
+    void OnFileSelected(IBrowserFile file)
+    {
+        _ = OpenProject(file);
+    }
+}

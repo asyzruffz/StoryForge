@@ -1,4 +1,6 @@
-﻿@inherits LayoutComponentBase
+﻿@using StoryForge.Application.Projects
+@inherits LayoutComponentBase
+@inject ISender sender;
 
 <MudThemeProvider IsDarkMode="true" />
 <MudPopoverProvider />
@@ -7,7 +9,10 @@
 
 <MudLayout>
     <MudAppBar>
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        @if (projectActive)
+        {
+            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        }
         <NavCrumb />
     </MudAppBar>
     <MudDrawer @bind-Open="@drawerOpen">
@@ -21,7 +26,18 @@
 </MudLayout>
 
 @code {
-    bool drawerOpen = true;
+    bool drawerOpen { get; set; } = true;
+    bool projectActive { get; set; } = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await sender.Send(new GetProjectSessionStatus());
+        result.Then(isActive =>
+        {
+            drawerOpen = isActive;
+            projectActive = isActive;
+        });
+    }
 
     void DrawerToggle()
     {
