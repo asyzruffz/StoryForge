@@ -19,10 +19,10 @@ internal class ProjectRepository : IProjectRepository
         return projects.AsQueryable();
     }
 
-    public Result<Project> GetById(ProjectId id)
+    public Result<Project> GetById(string filePath)
     {
         return projects
-            .SingleOrDefault(project => project.Id == id)
+            .SingleOrDefault(project => project.FilePath == filePath)
             .AsOption().ToResult();
     }
 

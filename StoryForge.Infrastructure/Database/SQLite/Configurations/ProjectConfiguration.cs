@@ -8,10 +8,7 @@ internal class ProjectConfiguration : IEntityTypeConfiguration<Project>
 {
     public void Configure(EntityTypeBuilder<Project> builder)
     {
-        builder.HasKey(project => project.Id);
-
-        builder.Property(project => project.Id)
-            .HasConversion(id => id.Value, value => ProjectId.From(value));
+        builder.HasKey(project => project.FilePath);
 
         builder.Property(project => project.FilePath);
 

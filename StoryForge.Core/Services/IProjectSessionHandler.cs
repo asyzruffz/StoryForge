@@ -6,7 +6,7 @@ namespace StoryForge.Core.Services;
 public interface IProjectSessionHandler : IDisposable
 {
     bool IsActive { get; }
-    ProjectId? CurrentProject { get; }
+    string? CurrentProject { get; }
     Result StartSession(Project project);
     void StopSession();
 }

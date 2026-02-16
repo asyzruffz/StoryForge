@@ -10,7 +10,7 @@ public class ProjectSessionHandler : IProjectSessionHandler
 
     public bool IsActive { get; private set; } = false;
 
-    public ProjectId? CurrentProject { get; private set; }
+    public string? CurrentProject { get; private set; }
 
     IServiceScope? projectScope;
 
@@ -39,7 +39,7 @@ public class ProjectSessionHandler : IProjectSessionHandler
         dataSession.Save();
 
         IsActive = true;
-        CurrentProject = project.Id;
+        CurrentProject = project.FilePath;
         return Result.Ok();
     }
 
