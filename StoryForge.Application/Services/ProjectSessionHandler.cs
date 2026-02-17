@@ -23,28 +23,35 @@ public class ProjectSessionHandler : IProjectSessionHandler
 
     public Result StartSession(Project project, bool newlyCreated = false)
     {
-        if (IsActive)
+        try
         {
-            StopSession();
+            if (IsActive)
+            {
+                StopSession();
+            }
+
+            projectScope = scopeFactory.CreateScope();
+            var provider = projectScope.ServiceProvider;
+
+            var scopeCtx = provider.GetRequiredService<IProjectScopeContext>();
+            scopeCtx.ProjectFilePath = project.FilePath;
+
+            var dataSession = provider.GetRequiredService<IDataSession>();
+            dataSession.EnsureCreated();
+
+            if (newlyCreated)
+            {
+                CreateNew(project, dataSession);
+            }
+
+            IsActive = true;
+            CurrentProject = project.FilePath;
+            return Result.Ok();
         }
-
-        projectScope = scopeFactory.CreateScope();
-        var provider = projectScope.ServiceProvider;
-
-        var scopeCtx = provider.GetRequiredService<IProjectScopeContext>();
-        scopeCtx.ProjectFilePath = project.FilePath;
-
-        var dataSession = provider.GetRequiredService<IDataSession>();
-        dataSession.EnsureCreated();
-
-        if (newlyCreated)
+        catch (Exception ex)
         {
-            CreateNew(project, dataSession);
+            return Result.Fail(ex.InnerException?.Message ?? ex.Message);
         }
-
-        IsActive = true;
-        CurrentProject = project.FilePath;
-        return Result.Ok();
     }
 
     public void StopSession()

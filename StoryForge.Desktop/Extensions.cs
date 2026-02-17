@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using MudBlazor;
 using MudBlazor.Services;
 using Photino.Blazor;
 using StoryForge.Application.Services;
@@ -14,7 +15,10 @@ internal static class Extensions
 {
     public static IServiceCollection AddPresentation(this IServiceCollection services) => services
         .AddSingleton<BreadCrumbHandler>()
-        .AddMudServices();
+        .AddMudServices(config => 
+        {
+            config.SnackbarConfiguration.SnackbarVariant = Variant.Outlined;
+        });
 
     public static IServiceCollection AddApplication(this IServiceCollection services) => services
         .AddMediatR(config => config
@@ -45,7 +49,9 @@ internal static class Extensions
         {
             var ctx = provider.GetRequiredService<IProjectScopeContext>();
             var factory = provider.GetRequiredService<ProjectDbFactory>();
-            return factory.CreateDbContext(ctx.ProjectFilePath);
+            var sessionHandler = provider.GetService<IProjectSessionHandler>();
+            var effectivePath = ctx.ProjectFilePath ?? sessionHandler?.CurrentProject;
+            return factory.CreateDbContext(effectivePath);
         })
         .AddScoped<IDataSession, DataSession>()
         .AddSingleton<ITemporaryStorage, TemporaryStorage>();
