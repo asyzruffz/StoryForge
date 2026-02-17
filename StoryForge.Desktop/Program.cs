@@ -1,7 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using MudBlazor.Services;
 using Photino.Blazor;
-using StoryForge.Desktop.UI;
 
 namespace StoryForge.Desktop;
 
@@ -16,10 +14,9 @@ internal class Program
             .AddLogging()
             .AddApplication()
             .AddInfrastructure()
-            .AddUIUtils()
-            .AddMudServices();
+            .AddPresentation();
 
-        builder.RootComponents.Add<App>("app");
+        builder.AddAppComponent();
 
         var app = builder.Build();
 
