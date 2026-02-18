@@ -23,6 +23,7 @@
                         </ActivatorContent>
                     </MudFileUpload>
                 </MudMenuItem>
+                <MudMenuItem OnClick="CloseProject">Close Project</MudMenuItem>
             </ChildContent>
         </MudMenu>
         <MudButton Variant="Variant.Filled"
@@ -67,6 +68,14 @@
         projectResult
             .OnError(msg => snackbar.Add(msg, Severity.Error))
             .Then(() => navigationManager.NavigateTo("/general", true));
+    }
+
+    async Task CloseProject()
+    {
+        var projectResult = await sender.Send(new CloseProjectOperation());
+        projectResult
+            .OnError(msg => snackbar.Add(msg, Severity.Error))
+            .Then(() => navigationManager.NavigateTo("/", true));
     }
 
     async Task OpenFilePicker()
