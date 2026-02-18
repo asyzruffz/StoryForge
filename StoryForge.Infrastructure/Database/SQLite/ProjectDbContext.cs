@@ -6,6 +6,8 @@ namespace StoryForge.Infrastructure.Database.SQLite;
 
 public class ProjectDbContext : DbContext
 {
+    public DbSet<Book> Books { get; set; }
+    public DbSet<Author> Authors { get; set; }
     public DbSet<Summary> Summaries { get; set; }
     public DbSet<Character> Characters { get; set; }
     public DbSet<Plot> Plots { get; set; }
@@ -17,6 +19,8 @@ public class ProjectDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.ApplyConfiguration(new BookConfiguration());
+        modelBuilder.ApplyConfiguration(new AuthorConfiguration());
         modelBuilder.ApplyConfiguration(new SummaryConfiguration());
         modelBuilder.ApplyConfiguration(new CharacterConfiguration());
         modelBuilder.ApplyConfiguration(new PlotConfiguration());

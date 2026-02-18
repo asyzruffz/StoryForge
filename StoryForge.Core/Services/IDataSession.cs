@@ -4,6 +4,8 @@ namespace StoryForge.Core.Services;
 
 public interface IDataSession : IDisposable
 {
+    IBookRepository Books { get; }
+    IAuthorRepository Authors { get; }
     ISummaryRepository Summaries { get; }
     ICharacterRepository Characters { get; }
     IPlotRepository Plots { get; }

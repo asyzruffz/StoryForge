@@ -27,12 +27,6 @@ internal sealed class CreateProjectOperationHandler : IOperationHandler<CreatePr
         {
             FilePath = filePath,
             Name = request.Name,
-            Book = new Book
-            {
-                Title = request.Name,
-                Extra = BookSummary.New(),
-            },
-            Author = new Author()
         };
 
         return projectSession

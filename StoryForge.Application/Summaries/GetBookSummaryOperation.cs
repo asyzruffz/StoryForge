@@ -10,13 +10,11 @@ public sealed record GetBookSummaryOperation : IOperation<BookSummary>;
 internal sealed class GetBookSummaryOperationHandler : IOperationHandler<GetBookSummaryOperation, BookSummary>
 {
     private readonly IProjectSessionHandler projectSession;
-    private readonly IApplicationDataSession appData;
     private readonly IDataSession data;
 
-    public GetBookSummaryOperationHandler(IProjectSessionHandler projectSessionHandler, IApplicationDataSession appDataSession, IDataSession dataSession)
+    public GetBookSummaryOperationHandler(IProjectSessionHandler projectSessionHandler, IDataSession dataSession)
     {
         projectSession = projectSessionHandler;
-        appData = appDataSession;
         data = dataSession;
     }
 
@@ -28,21 +26,7 @@ internal sealed class GetBookSummaryOperationHandler : IOperationHandler<GetBook
             return Result<BookSummary>.Fail("No project is open");
         }
 
-        var projectId = projectSession.CurrentProject!;
-
-        return appData.Projects.GetById(projectId)
-            .Then(project =>
-            {
-                var extra = project.Book.Extra;
-
-                var summaryResult = data.Summaries.GetById(extra.SummaryId);
-                if (!summaryResult.IsSuccess)
-                {
-                    return Result<BookSummary>.Fail(summaryResult.ErrorMessage);
-                }
-                summaryResult.Then(summary => extra.Summary = summary);
-
-                return Result<BookSummary>.Ok(extra);
-            });
+        return data.Books.Get()
+            .Then(book => Result<BookSummary>.Ok(book.Extra));
     }
 }

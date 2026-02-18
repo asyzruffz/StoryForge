@@ -11,6 +11,7 @@ internal class SummaryConfiguration : IEntityTypeConfiguration<Summary>
         builder.HasKey(summary => summary.Id);
 
         builder.Property(summary => summary.Id)
-            .HasConversion(id => id.Value, value => SummaryId.From(value));
+            .HasConversion(id => id.Value, value => SummaryId.From(value))
+            .ValueGeneratedNever();
     }
 }

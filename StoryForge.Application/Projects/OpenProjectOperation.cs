@@ -38,17 +38,10 @@ internal sealed class OpenProjectOperationHandler : IOperationHandler<OpenProjec
             project => projectSession.StartSession(project),
             _ =>
             {
-                // Create a minimal Project entry
                 var project = new Project
                 {
                     FilePath = fullPath,
                     Name = Path.GetFileNameWithoutExtension(fullPath),
-                    Book = new Book
-                    {
-                        Title = Path.GetFileNameWithoutExtension(request.FileName),
-                        Extra = BookSummary.New()
-                    },
-                    Author = new Author()
                 };
 
                 appData.Projects.Create(project);

@@ -9,6 +9,8 @@ public class DataSession : IDataSession, IDisposable
 {
     private readonly ProjectDbContext context;
 
+    public IBookRepository Books { get; init; }
+    public IAuthorRepository Authors { get; init; }
     public ISummaryRepository Summaries { get; init; }
     public ICharacterRepository Characters { get; init; }
     public IPlotRepository Plots { get; init; }
@@ -19,6 +21,8 @@ public class DataSession : IDataSession, IDisposable
     {
         this.context = context;
 
+        Books = new BookRepository(context);
+        Authors = new AuthorRepository(context);
         Summaries = new SummaryRepository(context);
         Characters = new CharacterRepository(context);
         Plots = new PlotRepository(context);

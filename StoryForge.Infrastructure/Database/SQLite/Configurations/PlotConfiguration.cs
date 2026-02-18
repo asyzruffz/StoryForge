@@ -11,6 +11,7 @@ internal class PlotConfiguration : IEntityTypeConfiguration<Plot>
         builder.HasKey(plot => plot.Id);
 
         builder.Property(plot => plot.Id)
-            .HasConversion(id => id.Value, value => PlotId.From(value));
+            .HasConversion(id => id.Value, value => PlotId.From(value))
+            .ValueGeneratedNever();
     }
 }

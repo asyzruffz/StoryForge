@@ -65,7 +65,13 @@ public class ProjectSessionHandler : IProjectSessionHandler
     void CreateNew(Project project, IDataSession dataSession)
     {
         appData.Projects.Create(project);
-        dataSession.Summaries.Create(project.Book.Extra.Summary);
+        dataSession.Books.Update(new Book
+        {
+            Id = BookId.New(),
+            Title = Path.GetFileNameWithoutExtension(project.FilePath),
+            Extra = BookSummary.New()
+        });
+        dataSession.Authors.Update(new Author { Id = AuthorId.New() });
 
         appData.Save();
         dataSession.Save();

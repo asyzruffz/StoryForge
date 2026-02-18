@@ -10,9 +10,9 @@ public sealed record UpdateAuthorOperation(Author Author) : IOperation;
 internal sealed class UpdateAuthorOperationHandler : IOperationHandler<UpdateAuthorOperation>
 {
     private readonly IProjectSessionHandler projectSession;
-    private readonly IApplicationDataSession data;
+    private readonly IDataSession data;
 
-    public UpdateAuthorOperationHandler(IProjectSessionHandler projectSessionHandler, IApplicationDataSession dataSession)
+    public UpdateAuthorOperationHandler(IProjectSessionHandler projectSessionHandler, IDataSession dataSession)
     {
         projectSession = projectSessionHandler;
         data = dataSession;
@@ -26,9 +26,7 @@ internal sealed class UpdateAuthorOperationHandler : IOperationHandler<UpdateAut
             return Result.Fail("No project is open");
         }
 
-        var projectId = projectSession.CurrentProject!;
-        data.Projects.GetById(projectId)
-            .Then(project => project.Author = request.Author);
+        data.Authors.Update(request.Author);
         data.Save();
         return Result.Ok();
     }

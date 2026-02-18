@@ -10,9 +10,9 @@ public sealed record UpdateBookOperation(Book Book) : IOperation;
 internal sealed class UpdateBookOperationHandler : IOperationHandler<UpdateBookOperation>
 {
     private readonly IProjectSessionHandler projectSession;
-    private readonly IApplicationDataSession data;
+    private readonly IDataSession data;
 
-    public UpdateBookOperationHandler(IProjectSessionHandler projectSessionHandler, IApplicationDataSession dataSession)
+    public UpdateBookOperationHandler(IProjectSessionHandler projectSessionHandler, IDataSession dataSession)
     {
         projectSession = projectSessionHandler;
         data = dataSession;
@@ -26,9 +26,7 @@ internal sealed class UpdateBookOperationHandler : IOperationHandler<UpdateBookO
             return Result.Fail("No project is open");
         }
 
-        var projectId = projectSession.CurrentProject!;
-        data.Projects.GetById(projectId)
-            .Then(project => project.Book = request.Book);
+        data.Books.Update(request.Book);
         data.Save();
         return Result.Ok();
     }

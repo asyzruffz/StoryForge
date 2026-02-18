@@ -10,9 +10,9 @@ public sealed record GetAuthorOperation : IOperation<Author>;
 internal sealed class GetAuthorOperationHandler : IOperationHandler<GetAuthorOperation, Author>
 {
     private readonly IProjectSessionHandler projectSession;
-    private readonly IApplicationDataSession data;
+    private readonly IDataSession data;
 
-    public GetAuthorOperationHandler(IProjectSessionHandler projectSessionHandler, IApplicationDataSession dataSession)
+    public GetAuthorOperationHandler(IProjectSessionHandler projectSessionHandler, IDataSession dataSession)
     {
         projectSession = projectSessionHandler;
         data = dataSession;
@@ -26,9 +26,6 @@ internal sealed class GetAuthorOperationHandler : IOperationHandler<GetAuthorOpe
             return Result<Author>.Fail("No project is open");
         }
 
-        var projectId = projectSession.CurrentProject!;
-        var result = data.Projects.GetById(projectId)
-            .Then(project => Result<Author>.Ok(project.Author));
-        return result;
+        return data.Authors.Get();
     }
 }

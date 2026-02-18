@@ -11,7 +11,8 @@ internal class ChapterConfiguration : IEntityTypeConfiguration<Chapter>
         builder.HasKey(chapter => chapter.Id);
 
         builder.Property(chapter => chapter.Id)
-            .HasConversion(id => id.Value, value => ChapterId.From(value));
+            .HasConversion(id => id.Value, value => ChapterId.From(value))
+            .ValueGeneratedNever();
 
         builder.Property(chapter => chapter.Title)
             .HasConversion(title => title.Content, value => new Title(value));

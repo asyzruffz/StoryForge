@@ -11,6 +11,7 @@ internal class CharacterConfiguration : IEntityTypeConfiguration<Character>
         builder.HasKey(character => character.Id);
 
         builder.Property(character => character.Id)
-            .HasConversion(id => id.Value, value => CharacterId.From(value));
+            .HasConversion(id => id.Value, value => CharacterId.From(value))
+            .ValueGeneratedNever();
     }
 }

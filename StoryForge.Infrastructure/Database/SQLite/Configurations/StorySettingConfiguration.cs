@@ -11,7 +11,8 @@ internal class StorySettingConfiguration : IEntityTypeConfiguration<StorySetting
         builder.HasKey(setting => setting.Id);
 
         builder.Property(setting => setting.Id)
-            .HasConversion(id => id.Value, value => StorySettingId.From(value));
+            .HasConversion(id => id.Value, value => StorySettingId.From(value))
+            .ValueGeneratedNever();
 
         builder.Property(setting => setting.Category)
             .HasConversion(category => category.Name, value => new StorySettingCategory(value));
