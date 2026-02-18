@@ -36,7 +36,6 @@ internal sealed class UpdateBookSummaryOperationHandler : IOperationHandler<Upda
         {
             book.Extra = request.Summary;
             data.Books.Update(book);
-            data.Summaries.Update(request.Summary.Summary);
             data.Save();
         });
 
