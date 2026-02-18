@@ -64,7 +64,7 @@
 
     async Task OpenProject(IBrowserFile file)
     {
-        var projectResult = await sender.Send(new OpenProjectOperation(file.Name, file.OpenReadStream()));
+        var projectResult = await sender.Send(new OpenProjectFileOperation(file.Name, file.OpenReadStream()));
         projectResult
             .OnError(msg => snackbar.Add(msg, Severity.Error))
             .Then(() => navigationManager.NavigateTo("/general", true));

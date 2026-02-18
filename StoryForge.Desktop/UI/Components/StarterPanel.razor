@@ -7,16 +7,27 @@
 
 <Box Height="400px" Width="600px">
     <MudStack Row="true" Spacing="4" Class="mud-height-full align-stretch">
-        <MudTable Items="RecentProjects" Hover="true" Dense="true" Height="100%" FixedHeader="true" Class="flex-grow-1">
+        <MudTable T="Project" Items="@projects" GroupBy="@groupDefinition" OnRowClick="ProjectClicked"
+                  Hover="true" Dense="true" Height="100%" FixedHeader="true"
+                  Class="flex-grow-1" GroupHeaderClass="project-table-header">
+            <ColGroup><col class="project-expander" /><col /><col /></ColGroup>
             <HeaderContent>
-                <MudTh><MudText Typo="Typo.h6">Recent projects</MudText></MudTh>
-                <MudTh></MudTh>
+                <MudTh colspan="2"><MudText Typo="Typo.h6">Projects</MudText></MudTh>
             </HeaderContent>
+            <GroupHeaderTemplate>
+                <MudTh colspan="2" Class="project-group-label">@($"{((bool)context.Key! ? "Favourite" : "Recent")}")</MudTh>
+            </GroupHeaderTemplate>
             <RowTemplate>
                 <MudTd>@context.Name</MudTd>
-                <MudTd></MudTd>
+                <MudTd>
+                    <MudStack Spacing="0">
+                        <MudText Typo="Typo.body2">@context.LastActiveLocal.ToString("d")</MudText>
+                        <MudText Typo="Typo.body2">@context.LastActiveLocal.ToString("T")</MudText>
+                    </MudStack>
+                </MudTd>
             </RowTemplate>
         </MudTable>
+
         <MudList T="string">
             <MudListItem Text="Create a new project" OnClick="CreateNewProject" Icon="@Icons.Material.Filled.NoteAdd" IconColor="Color.Primary" />
             <MudFileUpload T="IBrowserFile" @ref="@fileUpload" Accept=".db" FilesChanged="OnFileSelected">
@@ -31,12 +42,19 @@
 @code {
     MudFileUpload<IBrowserFile>? fileUpload;
 
-    IEnumerable<Project> RecentProjects { get; set; } = [];
+    IEnumerable<Project> projects { get; set; } = [];
+
+    TableGroupDefinition<Project> groupDefinition = new()
+    {
+        Indentation = false,
+        Expandable = true,
+        Selector = project => project.IsFavourite,
+    };
 
     protected override async Task OnInitializedAsync()
     {
         var projectsResult = await sender.Send(new GetRecentProjectsOperation());
-        RecentProjects = projectsResult.Or([]);
+        projects = projectsResult.Or([]);
     }
 
     async Task CreateNewProject()
@@ -61,7 +79,7 @@
 
     async Task OpenProject(IBrowserFile file)
     {
-        var projectResult = await sender.Send(new OpenProjectOperation(file.Name, file.OpenReadStream()));
+        var projectResult = await sender.Send(new OpenProjectFileOperation(file.Name, file.OpenReadStream()));
         projectResult
             .OnError(msg => snackbar.Add(msg, Severity.Error))
             .Then(() => navigationManager.NavigateTo("/general", true));
@@ -75,5 +93,16 @@
     void OnFileSelected(IBrowserFile file)
     {
         _ = OpenProject(file);
+    }
+
+    async Task ProjectClicked(TableRowClickEventArgs<Project> evtArgs)
+    {
+        if (evtArgs.Item is null) return;
+        var filePath = evtArgs.Item.FilePath;
+
+        var projectResult = await sender.Send(new OpenProjectPathOperation(filePath));
+        projectResult
+            .OnError(msg => snackbar.Add(msg, Severity.Error))
+            .Then(() => navigationManager.NavigateTo("/general", true));
     }
 }

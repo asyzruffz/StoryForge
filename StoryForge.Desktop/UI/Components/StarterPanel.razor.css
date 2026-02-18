@@ -1,0 +1,11 @@
+.project-group-header {
+    background-color: var(--mud-palette-background-gray);
+}
+
+.project-group-label {
+    font-weight: 500;
+}
+
+.project-expander {
+    width: 20px;
+}
