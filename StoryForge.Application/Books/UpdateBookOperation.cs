@@ -3,7 +3,7 @@ using StoryForge.Core.Data;
 using StoryForge.Core.Services;
 using StoryForge.Core.Utils;
 
-namespace StoryForge.Application.Projects;
+namespace StoryForge.Application.Books;
 
 public sealed record UpdateBookOperation(Book Book) : IOperation;
 
