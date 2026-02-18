@@ -5,25 +5,39 @@
 @inject NavigationManager navigationManager;
 @inject ISender sender;
 
-<Box Height="400px" Width="600px">
+<Box Height="400px" Width="800px">
     <MudStack Row="true" Spacing="4" Class="mud-height-full align-stretch">
         <MudTable T="Project" Items="@projects" GroupBy="@groupDefinition" OnRowClick="ProjectClicked"
                   Hover="true" Dense="true" Height="100%" FixedHeader="true"
                   Class="flex-grow-1" GroupHeaderClass="project-table-header">
-            <ColGroup><col class="project-expander" /><col /><col /></ColGroup>
+            <ColGroup><col class="project-expander" /><col style="width:50%;" /><col /></ColGroup>
             <HeaderContent>
                 <MudTh colspan="2"><MudText Typo="Typo.h6">Projects</MudText></MudTh>
+                <MudTh></MudTh>
             </HeaderContent>
             <GroupHeaderTemplate>
-                <MudTh colspan="2" Class="project-group-label">@($"{((bool)context.Key! ? "Favourite" : "Recent")}")</MudTh>
+                <MudTh colspan="2" Class="project-group-label">
+                    <MudText Typo="Typo.subtitle2">@($"{((bool)context.Key! ? "Favourite" : "Recent")}")</MudText>
+                </MudTh>
+                <MudTh></MudTh>
             </GroupHeaderTemplate>
             <RowTemplate>
-                <MudTd>@context.Name</MudTd>
+                <MudTd>
+                    <MudStack Spacing="0">
+                        <MudText Typo="Typo.body1">@context.Name</MudText>
+                        <MudText Typo="Typo.body2">@(context.FilePath.EllipsisMiddle(36))</MudText>
+                    </MudStack>
+                </MudTd>
                 <MudTd>
                     <MudStack Spacing="0">
                         <MudText Typo="Typo.body2">@context.LastActiveLocal.ToString("d")</MudText>
                         <MudText Typo="Typo.body2">@context.LastActiveLocal.ToString("T")</MudText>
                     </MudStack>
+                </MudTd>
+                <MudTd>
+                    <MudToggleIconButton Toggled="@context.IsFavourite" Size="Size.Small"
+                                         Icon="@Icons.Material.Filled.FavoriteBorder" Color="Color.Default"
+                                         ToggledIcon="@Icons.Material.Filled.Favorite" ToggledColor="Color.Secondary" />
                 </MudTd>
             </RowTemplate>
         </MudTable>
