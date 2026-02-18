@@ -1,5 +1,6 @@
 ﻿@using StoryForge.Application.Projects
 @inject IDialogService dialogService;
+@inject ISnackbar snackbar;
 @inject NavigationManager navigationManager;
 @inject ISender sender;
 
@@ -55,12 +56,17 @@
         if (string.IsNullOrEmpty(projectName)) return;
 
         var projectResult = await sender.Send(new CreateProjectOperation(projectName));
-        projectResult.Then(() => navigationManager.NavigateTo("/general", true));
+        projectResult
+            .OnError(msg => snackbar.Add(msg, Severity.Error))
+            .Then(() => navigationManager.NavigateTo("/general", true));
     }
 
     async Task OpenProject(IBrowserFile file)
     {
-        await sender.Send(new OpenProjectOperation(file.Name, file.OpenReadStream()));
+        var projectResult = await sender.Send(new OpenProjectOperation(file.Name, file.OpenReadStream()));
+        projectResult
+            .OnError(msg => snackbar.Add(msg, Severity.Error))
+            .Then(() => navigationManager.NavigateTo("/general", true));
     }
 
     async Task OpenFilePicker()

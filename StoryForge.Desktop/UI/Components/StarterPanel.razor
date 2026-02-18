@@ -1,4 +1,5 @@
 ﻿@using StoryForge.Application.Projects
+@using StoryForge.Core.Data
 @inject IDialogService dialogService;
 @inject ISnackbar snackbar;
 @inject NavigationManager navigationManager;
@@ -6,13 +7,13 @@
 
 <Box Height="400px" Width="600px">
     <MudStack Row="true" Spacing="4" Class="mud-height-full align-stretch">
-        <MudTable Items="Elements" Hover="true" Dense="true" Height="100%" FixedHeader="true" Class="flex-grow-1">
+        <MudTable Items="RecentProjects" Hover="true" Dense="true" Height="100%" FixedHeader="true" Class="flex-grow-1">
             <HeaderContent>
                 <MudTh><MudText Typo="Typo.h6">Recent projects</MudText></MudTh>
                 <MudTh></MudTh>
             </HeaderContent>
             <RowTemplate>
-                <MudTd>@context</MudTd>
+                <MudTd>@context.Name</MudTd>
                 <MudTd></MudTd>
             </RowTemplate>
         </MudTable>
@@ -30,11 +31,12 @@
 @code {
     MudFileUpload<IBrowserFile>? fileUpload;
 
-    IEnumerable<string> Elements = new List<string>() { "Narnia", "Harry Potter" };
+    IEnumerable<Project> RecentProjects { get; set; } = [];
 
     protected override async Task OnInitializedAsync()
     {
-        
+        var projectsResult = await sender.Send(new GetRecentProjectsOperation());
+        RecentProjects = projectsResult.Or([]);
     }
 
     async Task CreateNewProject()
@@ -59,7 +61,10 @@
 
     async Task OpenProject(IBrowserFile file)
     {
-        await sender.Send(new OpenProjectOperation(file.Name, file.OpenReadStream()));
+        var projectResult = await sender.Send(new OpenProjectOperation(file.Name, file.OpenReadStream()));
+        projectResult
+            .OnError(msg => snackbar.Add(msg, Severity.Error))
+            .Then(() => navigationManager.NavigateTo("/general", true));
     }
 
     async Task OpenFilePicker()
