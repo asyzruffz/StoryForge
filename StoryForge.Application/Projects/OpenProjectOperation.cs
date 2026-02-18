@@ -35,7 +35,14 @@ internal sealed class OpenProjectOperationHandler : IOperationHandler<OpenProjec
         var existing = appData.Projects.GetById(fullPath);
 
         return existing.Match(
-            project => projectSession.StartSession(project),
+            project =>
+            {
+                project.SetActive();
+                appData.Projects.Update(project);
+                appData.Save();
+
+                return projectSession.StartSession(project);
+            },
             _ =>
             {
                 var project = new Project
