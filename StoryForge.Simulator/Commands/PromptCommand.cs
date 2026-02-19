@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using StoryForge.Application.AIGeneration;
+using StoryForge.Application.AI.Operations;
 using StoryForge.Core.Utils;
 using StoryForge.Simulator.Utils;
 using StoryForge.Simulator.Utils.Commands;

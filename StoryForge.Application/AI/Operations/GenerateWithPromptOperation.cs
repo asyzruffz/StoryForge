@@ -2,16 +2,16 @@
 using StoryForge.Core.AI.Services;
 using StoryForge.Core.Utils;
 
-namespace StoryForge.Application.AIGeneration;
+namespace StoryForge.Application.AI.Operations;
 
 public sealed record GenerateWithPromptOperation(string Prompt) : IOperation<string>;
 
 internal sealed class GenerateWithPromptOperationHandler
     : IOperationHandler<GenerateWithPromptOperation, string>
 {
-    private readonly IAIManager ai;
+    private readonly IAIService ai;
 
-    public GenerateWithPromptOperationHandler(IAIManager aiService)
+    public GenerateWithPromptOperationHandler(IAIService aiService)
     {
         ai = aiService;
     }
