@@ -1,6 +1,6 @@
 ﻿using StoryForge.Core.Utils;
 
-namespace StoryForge.Core.Repositories;
+namespace StoryForge.Core.Storage.Repositories;
 
 public interface IRepository<T> where T : class
 {

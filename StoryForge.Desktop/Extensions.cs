@@ -4,6 +4,7 @@ using MudBlazor.Services;
 using Photino.Blazor;
 using StoryForge.Application.Services;
 using StoryForge.Core.Services;
+using StoryForge.Core.Storage;
 using StoryForge.Desktop.UI;
 using StoryForge.Desktop.Utils;
 using StoryForge.Infrastructure.Database;

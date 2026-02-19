@@ -1,6 +1,6 @@
-﻿using StoryForge.Core.Repositories;
+﻿using StoryForge.Core.Storage.Repositories;
 
-namespace StoryForge.Core.Services;
+namespace StoryForge.Core.Storage;
 
 public interface IDataSession : IDisposable
 {

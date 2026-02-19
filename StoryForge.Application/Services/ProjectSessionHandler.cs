@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using StoryForge.Core.Data;
+using StoryForge.Core.Storage;
 using StoryForge.Core.Utils;
 
 namespace StoryForge.Core.Services;

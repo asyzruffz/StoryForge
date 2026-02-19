@@ -1,6 +1,6 @@
 ﻿using StoryForge.Core.Utils;
 
-namespace StoryForge.Core.Services;
+namespace StoryForge.Core.Storage;
 
 public interface ITemporaryStorage
 {
