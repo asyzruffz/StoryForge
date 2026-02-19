@@ -1,5 +1,5 @@
 ﻿using StoryForge.Application.Abstractions;
-using StoryForge.Core.Services;
+using StoryForge.Core.Storage;
 using StoryForge.Core.Utils;
 
 namespace StoryForge.Application.Chapters;

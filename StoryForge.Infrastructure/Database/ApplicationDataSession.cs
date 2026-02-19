@@ -1,5 +1,5 @@
-﻿using StoryForge.Core.Repositories;
-using StoryForge.Core.Services;
+﻿using StoryForge.Core.Storage;
+using StoryForge.Core.Storage.Repositories;
 using StoryForge.Infrastructure.Database.SQLite;
 using StoryForge.Infrastructure.Database.SQLite.Repositories;
 
