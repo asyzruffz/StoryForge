@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using StoryForge.Application.Abstractions;
 using StoryForge.Application.Services;
+using StoryForge.Core.AI.Providers;
 using StoryForge.Core.Services;
 using StoryForge.Infrastructure.Database;
 using StoryForge.Infrastructure.Database.InMemory;
@@ -22,5 +22,5 @@ public static class StoryForgeInfrastructure
 
     private static IServiceCollection AddOpenAI(this IServiceCollection services, IConfiguration config) => services
         .Configure<OpenAIConfig>(config.GetSection("OpenAI"))
-        .AddScoped<IOpenAIClient, OpenAIClient>();
+        .AddScoped<ILLMClient, OpenAIClient>();
 }

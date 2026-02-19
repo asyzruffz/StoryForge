@@ -1,4 +1,4 @@
-﻿namespace StoryForge.Core.Services;
+﻿namespace StoryForge.Core.AI.Services;
 
 public interface IAIService
 {

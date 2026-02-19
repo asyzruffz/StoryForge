@@ -12,6 +12,5 @@ public static class StoryForgeApplication
         .AddStoryForgeSystem();
 
     private static IServiceCollection AddStoryForgeSystem(this IServiceCollection services) => services
-        .AddSingleton<IRandomService, RandomService>()
-        .AddScoped<IAIService, AIService>();
+        .AddSingleton<IRandomService, RandomService>();
 }

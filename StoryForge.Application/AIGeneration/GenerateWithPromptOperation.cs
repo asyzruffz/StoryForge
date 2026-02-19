@@ -1,5 +1,5 @@
 ﻿using StoryForge.Application.Abstractions;
-using StoryForge.Core.Services;
+using StoryForge.Core.AI.Services;
 using StoryForge.Core.Utils;
 
 namespace StoryForge.Application.AIGeneration;
@@ -9,9 +9,9 @@ public sealed record GenerateWithPromptOperation(string Prompt) : IOperation<str
 internal sealed class GenerateWithPromptOperationHandler
     : IOperationHandler<GenerateWithPromptOperation, string>
 {
-    private readonly IAIService ai;
+    private readonly IAIManager ai;
 
-    public GenerateWithPromptOperationHandler(IAIService aiService)
+    public GenerateWithPromptOperationHandler(IAIManager aiService)
     {
         ai = aiService;
     }
