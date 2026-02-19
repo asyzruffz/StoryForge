@@ -3,9 +3,7 @@ using MudBlazor;
 using MudBlazor.Services;
 using Photino.Blazor;
 using StoryForge.Application.Projects;
-using StoryForge.Application.Services;
 using StoryForge.Core.Projects;
-using StoryForge.Core.Services;
 using StoryForge.Core.Storage;
 using StoryForge.Desktop.UI;
 using StoryForge.Desktop.Utils;
@@ -39,8 +37,7 @@ internal static class Extensions
 
     private static IServiceCollection AddStoryForgeSystem(this IServiceCollection services) => services
         .AddSingleton<IProjectSessionHandler, ProjectSessionHandler>()
-        .AddScoped<IProjectFileStorage, ProjectFileStorage>()
-        .AddScoped<IAIService, AIService>();
+        .AddScoped<IProjectFileStorage, ProjectFileStorage>();
 
     private static IServiceCollection AddDatabase(this IServiceCollection services) => services
         .AddSingleton<ApplicationDbContext>()
