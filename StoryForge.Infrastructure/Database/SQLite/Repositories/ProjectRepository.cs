@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using StoryForge.Core.Data;
+using StoryForge.Core.Projects;
 using StoryForge.Core.Storage.Repositories;
 using StoryForge.Core.Utils;
 

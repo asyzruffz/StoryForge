@@ -1,4 +1,4 @@
-﻿@using StoryForge.Application.Projects
+﻿@using StoryForge.Application.Projects.Operations
 @inherits LayoutComponentBase
 @inject ISender sender;
 
@@ -31,7 +31,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var result = await sender.Send(new GetProjectSessionStatus());
+        var result = await sender.Send(new GetProjectSessionStatusOperation());
         result.Then(isActive =>
         {
             drawerOpen = isActive;

@@ -1,4 +1,4 @@
-﻿namespace StoryForge.Core.Data;
+﻿namespace StoryForge.Core.Projects;
 
 public class Project
 {

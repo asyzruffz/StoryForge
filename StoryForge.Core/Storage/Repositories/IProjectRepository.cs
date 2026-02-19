@@ -1,4 +1,4 @@
-﻿using StoryForge.Core.Data;
+﻿using StoryForge.Core.Projects;
 
 namespace StoryForge.Core.Storage.Repositories;
 

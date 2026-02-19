@@ -1,9 +1,9 @@
 ﻿using StoryForge.Application.Abstractions;
-using StoryForge.Core.Data;
+using StoryForge.Core.Projects;
 using StoryForge.Core.Storage;
 using StoryForge.Core.Utils;
 
-namespace StoryForge.Application.Projects;
+namespace StoryForge.Application.Projects.Operations;
 
 public record GetRecentProjectsOperation : IOperation<IEnumerable<Project>>;
 

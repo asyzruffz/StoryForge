@@ -1,7 +1,7 @@
-using StoryForge.Core.Services;
+using StoryForge.Core.Projects;
 using StoryForge.Core.Utils;
 
-namespace StoryForge.Application.Services;
+namespace StoryForge.Application.Projects;
 
 public class ProjectFileStorage : IProjectFileStorage
 {

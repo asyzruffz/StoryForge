@@ -1,11 +1,11 @@
 ﻿using MediatR;
 using StoryForge.Application.Abstractions;
 using StoryForge.Core.Data;
-using StoryForge.Core.Services;
+using StoryForge.Core.Projects;
 using StoryForge.Core.Storage;
 using StoryForge.Core.Utils;
 
-namespace StoryForge.Application.Projects;
+namespace StoryForge.Application.Projects.Operations;
 
 public sealed record OpenProjectFileOperation(string FileName, Stream FileStream) : IOperation;
 

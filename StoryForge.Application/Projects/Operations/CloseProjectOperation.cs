@@ -1,8 +1,8 @@
 ﻿using StoryForge.Application.Abstractions;
-using StoryForge.Core.Services;
+using StoryForge.Core.Projects;
 using StoryForge.Core.Utils;
 
-namespace StoryForge.Application.Projects;
+namespace StoryForge.Application.Projects.Operations;
 
 public sealed record CloseProjectOperation : IOperation;
 

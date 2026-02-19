@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using StoryForge.Core.Data;
+using StoryForge.Core.Projects;
 using StoryForge.Infrastructure.Database.SQLite.Configurations;
 using System.Data.Common;
 

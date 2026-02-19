@@ -1,9 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using StoryForge.Core.Data;
+using StoryForge.Core.Projects;
 using StoryForge.Core.Storage;
 using StoryForge.Core.Utils;
 
-namespace StoryForge.Core.Services;
+namespace StoryForge.Application.Projects;
 
 public class ProjectSessionHandler : IProjectSessionHandler
 {
@@ -34,7 +35,7 @@ public class ProjectSessionHandler : IProjectSessionHandler
             projectScope = scopeFactory.CreateScope();
             var provider = projectScope.ServiceProvider;
 
-            var scopeCtx = provider.GetRequiredService<IProjectScopeContext>();
+            var scopeCtx = provider.GetRequiredService<ProjectScopeContext>();
             scopeCtx.ProjectFilePath = project.FilePath;
 
             var dataSession = provider.GetRequiredService<IDataSession>();

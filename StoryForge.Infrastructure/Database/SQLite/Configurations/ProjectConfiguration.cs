@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using StoryForge.Core.Data;
+using StoryForge.Core.Projects;
 
 namespace StoryForge.Infrastructure.Database.SQLite.Configurations;
 
