@@ -4,7 +4,6 @@ using MudBlazor.Services;
 using Photino.Blazor;
 using StoryForge.Application.Projects;
 using StoryForge.Application.Services;
-using StoryForge.Application.Storage;
 using StoryForge.Core.Projects;
 using StoryForge.Core.Services;
 using StoryForge.Core.Storage;
@@ -41,7 +40,6 @@ internal static class Extensions
     private static IServiceCollection AddStoryForgeSystem(this IServiceCollection services) => services
         .AddSingleton<IProjectSessionHandler, ProjectSessionHandler>()
         .AddScoped<IProjectFileStorage, ProjectFileStorage>()
-        .AddSingleton<IRandomService, RandomService>()
         .AddScoped<IAIService, AIService>();
 
     private static IServiceCollection AddDatabase(this IServiceCollection services) => services
@@ -57,8 +55,7 @@ internal static class Extensions
             var effectivePath = ctx.ProjectFilePath ?? sessionHandler?.CurrentProject;
             return factory.CreateDbContext(effectivePath);
         })
-        .AddScoped<IDataSession, DataSession>()
-        .AddSingleton<ITemporaryStorage, TemporaryStorage>();
+        .AddScoped<IDataSession, DataSession>();
 
     private static IServiceProvider InitDatabase(this IServiceProvider services)
     {

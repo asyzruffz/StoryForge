@@ -1,4 +1,4 @@
-﻿namespace StoryForge.Core.Services;
+﻿namespace StoryForge.Core.Misc;
 
 public interface IRandomService
 {

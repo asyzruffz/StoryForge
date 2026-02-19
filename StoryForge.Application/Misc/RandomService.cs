@@ -1,6 +1,6 @@
-﻿using StoryForge.Core.Services;
+﻿using StoryForge.Core.Misc;
 
-namespace StoryForge.Application.Services;
+namespace StoryForge.Application.Misc;
 
 public class RandomService : IRandomService
 {
