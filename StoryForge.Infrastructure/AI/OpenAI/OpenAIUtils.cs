@@ -1,7 +1,7 @@
 ﻿using StoryForge.Core.Utils;
 using System.ClientModel;
 
-namespace StoryForge.Infrastructure.OpenAI;
+namespace StoryForge.Infrastructure.AI.OpenAI;
 
 internal static class OpenAIUtils
 {

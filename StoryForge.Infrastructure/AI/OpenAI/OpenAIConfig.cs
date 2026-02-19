@@ -1,4 +1,4 @@
-﻿namespace StoryForge.Infrastructure.OpenAI;
+﻿namespace StoryForge.Infrastructure.AI.OpenAI;
 
 public class OpenAIConfig
 {

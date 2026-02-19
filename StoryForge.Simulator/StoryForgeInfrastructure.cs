@@ -3,9 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 using StoryForge.Application.Services;
 using StoryForge.Core.AI.Providers;
 using StoryForge.Core.Services;
+using StoryForge.Infrastructure.AI.OpenAI;
 using StoryForge.Infrastructure.Database;
 using StoryForge.Infrastructure.Database.InMemory;
-using StoryForge.Infrastructure.OpenAI;
 
 namespace StoryForge.Simulator;
 

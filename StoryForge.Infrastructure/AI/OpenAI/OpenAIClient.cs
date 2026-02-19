@@ -9,7 +9,7 @@ using StoryForge.Core.Utils;
 using System.ClientModel;
 using System.Text;
 
-namespace StoryForge.Infrastructure.OpenAI;
+namespace StoryForge.Infrastructure.AI.OpenAI;
 
 public class OpenAIClient : ILLMClient
 {

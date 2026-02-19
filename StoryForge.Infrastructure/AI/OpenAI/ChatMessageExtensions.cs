@@ -1,7 +1,7 @@
 ﻿using OpenAI.Chat;
 using StoryForge.Core.AI.Chat;
 
-namespace StoryForge.Infrastructure.OpenAI;
+namespace StoryForge.Infrastructure.AI.OpenAI;
 
 internal static class ChatMessageExtensions
 {
