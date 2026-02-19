@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StoryForge.Application.Abstractions;
-using StoryForge.Application.Services;
+using StoryForge.Application.Storage;
 using StoryForge.Core.Storage;
 using StoryForge.Infrastructure.Database;
 using StoryForge.Infrastructure.Database.InMemory;

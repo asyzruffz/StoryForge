@@ -1,7 +1,7 @@
 ﻿using StoryForge.Core.Storage;
 using StoryForge.Core.Utils;
 
-namespace StoryForge.Application.Services;
+namespace StoryForge.Application.Storage;
 
 public class TemporaryStorage : ITemporaryStorage
 {
