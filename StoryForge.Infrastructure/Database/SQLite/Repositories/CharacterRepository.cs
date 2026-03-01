@@ -22,6 +22,7 @@ internal class CharacterRepository : ICharacterRepository
     public Result<Character> GetById(CharacterId id)
     {
         return characters
+            .Include(character => character.Summary)
             .SingleOrDefault(character => character.Id == id)
             .AsOption().ToResult();
     }
