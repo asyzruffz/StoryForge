@@ -56,7 +56,7 @@
         {
             if (characterData is null) return;
             characterData.Name = value;
-            SaveCharacter();
+            _ = sender.Send(new UpdateCharacterNameOperation(characterData.Id, value));
         }
     }
 
@@ -67,7 +67,7 @@
         {
             if (characterData is null) return;
             characterData.Importance = (Importance)value;
-            SaveCharacter();
+            _ = sender.Send(new UpdateCharacterImportanceOperation(characterData.Id, characterData.Importance));
         }
     }
     string Importance => characterData?.Importance.ToString() ?? string.Empty;
@@ -79,7 +79,7 @@
         {
             if (characterData is null) return;
             characterData.Motivation = value;
-            SaveCharacter();
+            _ = sender.Send(new UpdateCharacterMotivationOperation(characterData.Id, value));
         }
     }
 
@@ -90,7 +90,7 @@
         {
             if (characterData is null) return;
             characterData.Goal = value;
-            SaveCharacter();
+            _ = sender.Send(new UpdateCharacterGoalOperation(characterData.Id, value));
         }
     }
 
@@ -101,7 +101,7 @@
         {
             if (characterData is null) return;
             characterData.Conflict = value;
-            SaveCharacter();
+            _ = sender.Send(new UpdateCharacterConflictOperation(characterData.Id, value));
         }
     }
 
@@ -112,7 +112,7 @@
         {
             if (characterData is null) return;
             characterData.Epiphany = value;
-            SaveCharacter();
+            _ = sender.Send(new UpdateCharacterEpiphanyOperation(characterData.Id, value));
         }
     }
 
@@ -123,7 +123,7 @@
         {
             if (characterData is null) return;
             characterData.Summary.Sentence = value;
-            SaveSummary();
+            _ = sender.Send(new UpdateSummarySentenceOperation(characterData.Summary.Id, value));
         }
     }
 
@@ -134,7 +134,7 @@
         {
             if (characterData is null) return;
             characterData.Summary.Paragraph = value;
-            SaveSummary();
+            _ = sender.Send(new UpdateSummaryParagraphOperation(characterData.Summary.Id, value));
 }
     }
 
@@ -145,7 +145,7 @@
         {
             if (characterData is null) return;
             characterData.Summary.Page = value;
-            SaveSummary();
+            _ = sender.Send(new UpdateSummaryPageOperation(characterData.Summary.Id, value));
         }
     }
 
@@ -155,8 +155,15 @@
         set
         {
             if (characterData is null) return;
-            characterData.Notes = value;
-            SaveCharacter();
+            if (string.IsNullOrEmpty(value))
+            {
+                characterData.Notes = null;
+            }
+            else
+            {
+                characterData.Notes = value;
+            }
+            _ = sender.Send(new UpdateCharacterNotesOperation(characterData.Id, characterData.Notes));
         }
     }
 
@@ -166,8 +173,15 @@
         set
         {
             if (characterData is null) return;
-            characterData.Details = value;
-            SaveCharacter();
+            if (string.IsNullOrEmpty(value))
+            {
+                characterData.Details = null;
+            }
+            else
+            {
+                characterData.Details = value;
+            }
+            _ = sender.Send(new UpdateCharacterDetailsOperation(characterData.Id, characterData.Details));
         }
     }
 
@@ -188,17 +202,5 @@
                 return Result<Character>.Ok(character);
             })
             .OnError(msg => navigationManager.NavigateTo("/error"));
-    }
-
-    void SaveCharacter()
-    {
-        if (characterData is null) return;
-        _ = sender.Send(new UpdateCharacterOperation(characterData));
-    }
-
-    void SaveSummary()
-    {
-        if (characterData is null) return;
-        _ = sender.Send(new UpdateSummaryOperation(characterData.Summary));
     }
 }

@@ -35,7 +35,7 @@
         {
             if (bookData is null) return;
             bookData.Situation = value;
-            SaveData();
+            _ = sender.Send(new UpdateBookSummarySituationOperation(value));
         }
     }
 
@@ -46,7 +46,7 @@
         {
             if (bookData is null) return;
             bookData.Summary.Sentence = value;
-            SaveData();
+            _ = sender.Send(new UpdateSummarySentenceOperation(bookData.Summary.Id, value));
         }
     }
 
@@ -57,7 +57,7 @@
         {
             if (bookData is null) return;
             bookData.Summary.Paragraph = value;
-            SaveData();
+            _ = sender.Send(new UpdateSummaryParagraphOperation(bookData.Summary.Id, value));
         }
     }
 
@@ -68,7 +68,7 @@
         {
             if (bookData is null) return;
             bookData.Summary.Page = value;
-            SaveData();
+            _ = sender.Send(new UpdateSummaryPageOperation(bookData.Summary.Id, value));
         }
     }
 
@@ -90,12 +90,6 @@
         SentenceWordCount = SentenceSummary.WordCount();
         ParagraphWordCount = ParagraphSummary.WordCount();
         PageWordCount = PageSummary.WordCount();
-    }
-
-    void SaveData()
-    {
-        if (bookData is null) return;
-        _ = sender.Send(new UpdateBookSummaryOperation(bookData));
     }
 
     void SentenceUpdated(string sentence)
