@@ -37,7 +37,7 @@
         {
             if (settingData is null) return;
             settingData.Category = new StorySettingCategory(value);
-            SaveData();
+            _ = sender.Send(new UpdateStorySettingCategoryOperation(settingData.Id, settingData.Category));
         }
     }
 
@@ -48,7 +48,7 @@
         {
             if (settingData is null) return;
             settingData.Name = value;
-            SaveData();
+            _ = sender.Send(new UpdateStorySettingNameOperation(settingData.Id, value));
         }
     }
 
@@ -59,7 +59,7 @@
         {
             if (settingData is null) return;
             settingData.Description = value;
-            SaveData();
+            _ = sender.Send(new UpdateStorySettingDescriptionOperation(settingData.Id, value));
         }
     }
 
@@ -70,7 +70,7 @@
         {
             if (settingData is null) return;
             settingData.Details = value;
-            SaveData();
+            _ = sender.Send(new UpdateStorySettingDetailsOperation(settingData.Id, value));
         }
     }
 

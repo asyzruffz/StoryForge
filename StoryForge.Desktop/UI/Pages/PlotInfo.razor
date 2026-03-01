@@ -44,7 +44,7 @@
         {
             if (plotData is null) return;
             plotData.Name = value;
-            SaveData();
+            _ = sender.Send(new UpdatePlotNameOperation(plotData.Id, value));
         }
     }
 
@@ -55,7 +55,7 @@
         {
             if (plotData is null) return;
             plotData.Importance = (Importance)value;
-            SaveData();
+            _ = sender.Send(new UpdatePlotImportanceOperation(plotData.Id, plotData.Importance));
         }
     }
     string Importance => plotData?.Importance.ToString() ?? string.Empty;
@@ -67,7 +67,7 @@
         {
             if (plotData is null) return;
             plotData.Characters = value;
-            SaveData();
+            _ = sender.Send(new UpdatePlotCharactersOperation(plotData.Id, value));
         }
     }
 
@@ -78,7 +78,7 @@
         {
             if (plotData is null) return;
             plotData.Description = value;
-            SaveData();
+            _ = sender.Send(new UpdatePlotDescriptionOperation(plotData.Id, value));
         }
     }
 
@@ -89,7 +89,7 @@
         {
             if (plotData is null) return;
             plotData.Result = value;
-            SaveData();
+            _ = sender.Send(new UpdatePlotResultOperation(plotData.Id, value));
         }
     }
 
@@ -100,7 +100,7 @@
         {
             if (plotData is null) return;
             plotData.ResolutionSteps = value;
-            SaveData();
+            _ = sender.Send(new UpdatePlotResolutionStepsOperation(plotData.Id, value));
         }
     }
 
@@ -121,11 +121,5 @@
                 return Result<Plot>.Ok(plot);
             })
             .OnError(msg => navigationManager.NavigateTo("/error"));
-    }
-
-    void SaveData()
-    {
-        if (plotData is null) return;
-        _ = sender.Send(new UpdatePlotOperation(plotData));
     }
 }
