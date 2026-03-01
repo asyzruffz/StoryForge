@@ -24,7 +24,7 @@
         set {
             if (bookData is null) return;
             bookData.Title = value;
-            SaveData();
+            _ = sender.Send(new UpdateBookTitleOperation(value));
         }
     }
 
@@ -35,7 +35,7 @@
         {
             if (bookData is null) return;
             bookData.Subtitle = value;
-            SaveData();
+            _ = sender.Send(new UpdateBookSubtitleOperation(value));
         }
     }
 
@@ -46,7 +46,7 @@
         {
             if (bookData is null) return;
             bookData.Series = value;
-            SaveData();
+            _ = sender.Send(new UpdateBookSeriesOperation(value));
         }
     }
 
@@ -57,7 +57,7 @@
         {
             if (bookData is null) return;
             bookData.Volume = value;
-            SaveData();
+            _ = sender.Send(new UpdateBookVolumeOperation(value));
         }
     }
 
@@ -68,7 +68,7 @@
         {
             if (bookData is null) return;
             bookData.Genre = value;
-            SaveData();
+            _ = sender.Send(new UpdateBookGenreOperation(value));
         }
     }
 
@@ -83,11 +83,5 @@
 
         var bookResult = await sender.Send(new GetBookOperation());
         bookData = bookResult.Or(Book.Invalid);
-    }
-
-    void SaveData()
-    {
-        if (bookData is null) return;
-        _ = sender.Send(new UpdateBookOperation(bookData));
     }
 }

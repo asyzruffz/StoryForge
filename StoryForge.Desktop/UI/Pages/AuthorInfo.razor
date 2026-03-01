@@ -22,7 +22,7 @@
         {
             if (authorData is null) return;
             authorData.Name = value;
-            SaveData();
+            _ = sender.Send(new UpdateAuthorNameOperation(value));
         }
     }
 
@@ -40,7 +40,7 @@
             {
                 authorData.Email = value;
             }
-            SaveData();
+            _ = sender.Send(new UpdateAuthorEmailOperation(authorData.Email));
         }
     }
 
@@ -55,11 +55,5 @@
 
         var authorResult = await sender.Send(new GetAuthorOperation());
         authorData = authorResult.Or(Author.Invalid);
-    }
-
-    void SaveData()
-    {
-        if (authorData is null) return;
-        _ = sender.Send(new UpdateAuthorOperation(authorData));
     }
 }
