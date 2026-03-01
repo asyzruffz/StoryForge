@@ -10,7 +10,5 @@
     <BuildDependency Project="StoryForge.Infrastructure/StoryForge.Infrastructure.csproj" />
   </Project>
   <Project Path="StoryForge.Infrastructure/StoryForge.Infrastructure.csproj" />
-  <Project Path="StoryForge.Tests/StoryForge.Tests.csproj" Id="908734c9-41ee-4bf2-92ee-0305e8982376">
-    <Build Solution="Debug|*" Project="false" />
-  </Project>
+  <Project Path="StoryForge.Tests/StoryForge.Tests.csproj" />
 </Solution>
