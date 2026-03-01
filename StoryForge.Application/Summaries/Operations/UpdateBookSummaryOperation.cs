@@ -1,0 +1,39 @@
+﻿using StoryForge.Application.Abstractions;
+using StoryForge.Core.Data;
+using StoryForge.Core.Projects;
+using StoryForge.Core.Storage;
+using StoryForge.Core.Utils;
+
+namespace StoryForge.Application.Summaries.Operations;
+
+public sealed record UpdateBookSummaryOperation(BookSummary Summary) : IOperation;
+
+internal sealed class UpdateBookSummaryOperationHandler : IOperationHandler<UpdateBookSummaryOperation>
+{
+    private readonly IProjectSessionHandler projectSession;
+    private readonly IDataSession data;
+
+    public UpdateBookSummaryOperationHandler(IProjectSessionHandler projectSessionHandler, IDataSession dataSession)
+    {
+        projectSession = projectSessionHandler;
+        data = dataSession;
+    }
+
+    public async Task<Result> Handle(UpdateBookSummaryOperation request, CancellationToken cancellationToken)
+    {
+        await Task.CompletedTask;
+        if (!projectSession.IsActive)
+        {
+            return Result.Fail("No project is open");
+        }
+
+        return data.Books.Get()
+            .Then(book =>
+            {
+                book.Extra = request.Summary;
+                data.Books.Update(book);
+                data.Save();
+                return Result.Ok();
+            });
+    }
+}
