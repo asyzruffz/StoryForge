@@ -21,6 +21,12 @@ public class Result
     public Result<TResult> Then<TResult>(Func<Result<TResult>> action) =>
         IsSuccess ? action() : Result<TResult>.Fail(ErrorMessage);
     public void Then(Action action) { if (IsSuccess) action(); }
+
+    public Task<Result> ThenAsync(Func<Task<Result>> action) =>
+        IsSuccess ? action() : Task.FromResult(this);
+    public Task<Result<TResult>> ThenAsync<TResult>(Func<Task<Result<TResult>>> action) =>
+        IsSuccess ? action() : Task.FromResult(Result<TResult>.Fail(ErrorMessage));
+    public Task ThenAsync(Func<Task> action) => IsSuccess ? action() : Task.CompletedTask;
 }
 
 public class Result<T>
@@ -49,6 +55,12 @@ public class Result<T>
     public Result<TResult> Then<TResult>(Func<T, Result<TResult>> action) =>
         IsSuccess ? action(Value) : Result<TResult>.Fail(ErrorMessage);
     public void Then(Action<T> action) { if (IsSuccess) action(Value); }
+
+    public Task<Result> ThenAsync(Func<T, Task<Result>> action) =>
+        IsSuccess ? action(Value) : Task.FromResult(Result.Fail(ErrorMessage));
+    public Task<Result<TResult>> ThenAsync<TResult>(Func<T, Task<Result<TResult>>> action) =>
+        IsSuccess ? action(Value) : Task.FromResult(Result<TResult>.Fail(ErrorMessage));
+    public Task ThenAsync(Func<T, Task> action) => IsSuccess ? action(Value) : Task.CompletedTask;
 
     public TResult Match<TResult>(Func<T, TResult> onSuccess, Func<string, TResult> onFailure) =>
         IsSuccess ? onSuccess(Value) : onFailure(ErrorMessage);
