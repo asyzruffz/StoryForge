@@ -50,7 +50,7 @@ internal sealed class OpenProjectFileOperationHandler : IOperationHandler<OpenPr
         };
 
         appData.Projects.Create(project);
-        appData.Save();
+        await appData.SaveAsync(cancellationToken).ConfigureAwait(false);
 
         return await projectSession
             .StartSession(project, true, cancellationToken)

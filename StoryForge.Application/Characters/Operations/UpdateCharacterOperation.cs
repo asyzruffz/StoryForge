@@ -18,9 +18,8 @@ internal sealed class UpdateCharacterOperationHandler : IOperationHandler<Update
 
     public async Task<Result> Handle(UpdateCharacterOperation request, CancellationToken cancellationToken)
     {
-        await Task.CompletedTask;
         data.Characters.Update(request.Character);
-        data.Save();
+        await data.SaveAsync(cancellationToken).ConfigureAwait(false);
         return Result.Ok();
     }
 }

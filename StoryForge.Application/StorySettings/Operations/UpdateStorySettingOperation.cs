@@ -18,9 +18,8 @@ internal sealed class UpdateStorySettingHandler : IOperationHandler<UpdateStoryS
 
     public async Task<Result> Handle(UpdateStorySettingOperation request, CancellationToken cancellationToken)
     {
-        await Task.CompletedTask;
         data.StorySettings.Update(request.Setting);
-        data.Save();
+        await data.SaveAsync(cancellationToken).ConfigureAwait(false);
         return Result.Ok();
     }
 }

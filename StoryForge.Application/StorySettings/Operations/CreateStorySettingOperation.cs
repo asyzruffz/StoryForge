@@ -18,10 +18,9 @@ internal sealed class CreateStorySettingOperationHandler : IOperationHandler<Cre
 
     public async Task<Result> Handle(CreateStorySettingOperation request, CancellationToken cancellationToken)
     {
-        await Task.CompletedTask;
         var newSetting = StorySetting.New(request.Name);
         data.StorySettings.Create(newSetting);
-        data.Save();
+        await data.SaveAsync(cancellationToken).ConfigureAwait(false);
         return Result.Ok();
     }
 }

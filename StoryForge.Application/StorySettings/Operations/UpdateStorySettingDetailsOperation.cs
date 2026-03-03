@@ -18,14 +18,14 @@ internal sealed class UpdateStorySettingDetailsOperationHandler : IOperationHand
 
     public async Task<Result> Handle(UpdateStorySettingDetailsOperation request, CancellationToken cancellationToken)
     {
-        await Task.CompletedTask;
-        return data.StorySettings.GetById(request.SettingId)
-            .Then(settings =>
+        return await data.StorySettings.GetById(request.SettingId)
+            .ThenAsync(async settings =>
             {
                 settings.Details = request.Details;
                 data.StorySettings.Update(settings);
-                data.Save();
+                await data.SaveAsync(cancellationToken).ConfigureAwait(false);
                 return Result.Ok();
-            });
+            })
+            .ConfigureAwait(false);
     }
 }

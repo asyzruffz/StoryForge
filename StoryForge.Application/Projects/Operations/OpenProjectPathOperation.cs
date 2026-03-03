@@ -31,7 +31,7 @@ internal sealed class OpenProjectPathOperationHandler : IOperationHandler<OpenPr
             {
                 project.SetActive();
                 appData.Projects.Update(project);
-                appData.Save();
+                await appData.SaveAsync(cancellationToken).ConfigureAwait(false);
 
                 return await projectSession
                     .StartSession(project, ct: cancellationToken)

@@ -18,10 +18,9 @@ internal sealed class CreatePlotOperationHandler : IOperationHandler<CreatePlotO
 
     public async Task<Result> Handle(CreatePlotOperation request, CancellationToken cancellationToken)
     {
-        await Task.CompletedTask;
         var newPlot = Plot.New(request.Name);
         data.Plots.Create(newPlot);
-        data.Save();
+        await data.SaveAsync(cancellationToken).ConfigureAwait(false);
         return Result.Ok();
     }
 }

@@ -18,9 +18,8 @@ internal sealed class UpdatePlotOperationHandler : IOperationHandler<UpdatePlotO
 
     public async Task<Result> Handle(UpdatePlotOperation request, CancellationToken cancellationToken)
     {
-        await Task.CompletedTask;
         data.Plots.Update(request.Plot);
-        data.Save();
+        await data.SaveAsync(cancellationToken).ConfigureAwait(false);
         return Result.Ok();
     }
 }

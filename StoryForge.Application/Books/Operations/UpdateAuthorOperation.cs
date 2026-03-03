@@ -21,14 +21,13 @@ internal sealed class UpdateAuthorOperationHandler : IOperationHandler<UpdateAut
 
     public async Task<Result> Handle(UpdateAuthorOperation request, CancellationToken cancellationToken)
     {
-        await Task.CompletedTask;
         if (!projectSession.IsActive)
         {
             return Result.Fail("No project is open");
         }
 
         data.Authors.Update(request.Author);
-        data.Save();
+        await data.SaveAsync(cancellationToken).ConfigureAwait(false);
         return Result.Ok();
     }
 }

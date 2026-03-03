@@ -18,14 +18,14 @@ internal sealed class UpdateCharacterGoalOperationHandler : IOperationHandler<Up
 
     public async Task<Result> Handle(UpdateCharacterGoalOperation request, CancellationToken cancellationToken)
     {
-        await Task.CompletedTask;
-        return data.Characters.GetById(request.CharacterId)
-            .Then(character =>
+        return await data.Characters.GetById(request.CharacterId)
+            .ThenAsync(async character =>
             {
                 character.Goal = request.Goal;
                 data.Characters.Update(character);
-                data.Save();
+                await data.SaveAsync(cancellationToken).ConfigureAwait(false);
                 return Result.Ok();
-            });
+            })
+            .ConfigureAwait(false);
     }
 }

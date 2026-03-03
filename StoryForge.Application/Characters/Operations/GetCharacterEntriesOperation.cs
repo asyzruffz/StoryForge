@@ -2,7 +2,6 @@
 using StoryForge.Core.Data;
 using StoryForge.Core.Storage;
 using StoryForge.Core.Utils;
-using System.Collections.Generic;
 
 namespace StoryForge.Application.Characters.Operations;
 

@@ -18,9 +18,8 @@ internal sealed class UpdateSummaryOperationHandler : IOperationHandler<UpdateSu
 
     public async Task<Result> Handle(UpdateSummaryOperation request, CancellationToken cancellationToken)
     {
-        await Task.CompletedTask;
         data.Summaries.Update(request.Summary);
-        data.Save();
+        await data.SaveAsync(cancellationToken).ConfigureAwait(false);
         return Result.Ok();
     }
 }

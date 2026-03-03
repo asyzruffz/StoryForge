@@ -18,14 +18,14 @@ internal sealed class UpdatePlotResolutionStepsOperationHandler : IOperationHand
 
     public async Task<Result> Handle(UpdatePlotResolutionStepsOperation request, CancellationToken cancellationToken)
     {
-        await Task.CompletedTask;
-        return data.Plots.GetById(request.PlotId)
-            .Then(plot =>
+        return await data.Plots.GetById(request.PlotId)
+            .ThenAsync(async plot =>
             {
                 plot.ResolutionSteps = request.ResolutionSteps;
                 data.Plots.Update(plot);
-                data.Save();
+                await data.SaveAsync(cancellationToken).ConfigureAwait(false);
                 return Result.Ok();
-            });
+            })
+            .ConfigureAwait(false);
     }
 }

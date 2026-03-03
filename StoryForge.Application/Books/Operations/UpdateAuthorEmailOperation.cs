@@ -20,19 +20,19 @@ internal sealed class UpdateAuthorEmailOperationHandler : IOperationHandler<Upda
 
     public async Task<Result> Handle(UpdateAuthorEmailOperation request, CancellationToken cancellationToken)
     {
-        await Task.CompletedTask;
         if (!projectSession.IsActive)
         {
             return Result.Fail("No project is open");
         }
 
-        return data.Authors.Get()
-            .Then(author =>
+        return await data.Authors.Get()
+            .ThenAsync(async author =>
             {
                 author.Email = request.Email;
                 data.Authors.Update(author);
-                data.Save();
+                await data.SaveAsync(cancellationToken).ConfigureAwait(false);
                 return Result.Ok();
-            });
+            })
+            .ConfigureAwait(false);
     }
 }

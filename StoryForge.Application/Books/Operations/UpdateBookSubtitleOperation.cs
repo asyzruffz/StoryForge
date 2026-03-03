@@ -20,19 +20,19 @@ internal sealed class UpdateBookSubtitleOperationHandler : IOperationHandler<Upd
 
     public async Task<Result> Handle(UpdateBookSubtitleOperation request, CancellationToken cancellationToken)
     {
-        await Task.CompletedTask;
         if (!projectSession.IsActive)
         {
             return Result.Fail("No project is open");
         }
 
-        return data.Books.Get()
-            .Then(book =>
+        return await data.Books.Get()
+            .ThenAsync(async book =>
             {
                 book.Subtitle = request.Subtitle;
                 data.Books.Update(book);
-                data.Save();
+                await data.SaveAsync(cancellationToken).ConfigureAwait(false);
                 return Result.Ok();
-            });
+            })
+            .ConfigureAwait(false);
     }
 }

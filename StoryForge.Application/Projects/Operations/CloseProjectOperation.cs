@@ -17,7 +17,7 @@ internal sealed class CloseProjectOperationHandler : IOperationHandler<CloseProj
 
     public async Task<Result> Handle(CloseProjectOperation request, CancellationToken cancellationToken)
     {
-        await projectSession.StopSession();
+        await projectSession.StopSession().ConfigureAwait(false);
         return Result.Ok();
     }
 }

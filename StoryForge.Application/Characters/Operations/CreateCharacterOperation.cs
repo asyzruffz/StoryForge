@@ -18,10 +18,9 @@ internal sealed class CreateCharacterOperationHandler : IOperationHandler<Create
 
     public async Task<Result> Handle(CreateCharacterOperation request, CancellationToken cancellationToken)
     {
-        await Task.CompletedTask;
         var newCharacter = Character.New(request.Name);
         data.Characters.Create(newCharacter);
-        data.Save();
+        await data.SaveAsync(cancellationToken).ConfigureAwait(false);
         return Result.Ok();
     }
 }

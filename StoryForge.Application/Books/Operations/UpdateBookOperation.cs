@@ -21,14 +21,13 @@ internal sealed class UpdateBookOperationHandler : IOperationHandler<UpdateBookO
 
     public async Task<Result> Handle(UpdateBookOperation request, CancellationToken cancellationToken)
     {
-        await Task.CompletedTask;
         if (!projectSession.IsActive)
         {
             return Result.Fail("No project is open");
         }
 
         data.Books.Update(request.Book);
-        data.Save();
+        await data.SaveAsync(cancellationToken).ConfigureAwait(false);
         return Result.Ok();
     }
 }

@@ -18,14 +18,14 @@ internal sealed class UpdateSummaryPageOperationHandler : IOperationHandler<Upda
 
     public async Task<Result> Handle(UpdateSummaryPageOperation request, CancellationToken cancellationToken)
     {
-        await Task.CompletedTask;
-        return data.Summaries.GetById(request.SummaryId)
-            .Then(summary =>
+        return await data.Summaries.GetById(request.SummaryId)
+            .ThenAsync(async summary =>
             {
                 summary.Page = request.Page;
                 data.Summaries.Update(summary);
-                data.Save();
+                await data.SaveAsync(cancellationToken).ConfigureAwait(false);
                 return Result.Ok();
-            });
+            })
+            .ConfigureAwait(false);
     }
 }
