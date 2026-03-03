@@ -27,7 +27,9 @@ internal sealed class OpenProjectFileOperationHandler : IOperationHandler<OpenPr
     public async Task<Result> Handle(OpenProjectFileOperation request, CancellationToken cancellationToken)
     {
         // Save incoming stream to disk
-        var saveResult = await fileStorage.SaveProjectFileAsync(request.FileName, request.FileStream, cancellationToken);
+        var saveResult = await fileStorage
+            .SaveProjectFileAsync(request.FileName, request.FileStream, cancellationToken)
+            .ConfigureAwait(false);
         if (!saveResult.IsSuccess)
         {
             return Result.Fail(saveResult.ErrorMessage);
@@ -50,6 +52,8 @@ internal sealed class OpenProjectFileOperationHandler : IOperationHandler<OpenPr
         appData.Projects.Create(project);
         appData.Save();
 
-        return projectSession.StartSession(project, true);
+        return await projectSession
+            .StartSession(project, true, cancellationToken)
+            .ConfigureAwait(false);
     }
 }

@@ -26,13 +26,17 @@ internal sealed class OpenProjectPathOperationHandler : IOperationHandler<OpenPr
             return Result.Fail($"No valid project found on {request.FilePath}");
         }
 
-        return projectResult.Then(project =>
-        {
-            project.SetActive();
-            appData.Projects.Update(project);
-            appData.Save();
+        return await projectResult
+            .ThenAsync(async project =>
+            {
+                project.SetActive();
+                appData.Projects.Update(project);
+                appData.Save();
 
-            return projectSession.StartSession(project);
-        });
+                return await projectSession
+                    .StartSession(project, ct: cancellationToken)
+                    .ConfigureAwait(false);
+            })
+            .ConfigureAwait(false);
     }
 }

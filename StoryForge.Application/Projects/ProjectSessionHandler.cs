@@ -23,13 +23,13 @@ public class ProjectSessionHandler : IProjectSessionHandler
         appData = appDataSession;
     }
 
-    public Result StartSession(Project project, bool newlyCreated = false)
+    public async Task<Result> StartSession(Project project, bool newlyCreated = false, CancellationToken ct = default)
     {
         try
         {
             if (IsActive)
             {
-                StopSession();
+                await StopSession().ConfigureAwait(false);
             }
 
             projectScope = scopeFactory.CreateScope();
@@ -56,12 +56,13 @@ public class ProjectSessionHandler : IProjectSessionHandler
         }
     }
 
-    public void StopSession()
+    public Task StopSession(CancellationToken ct = default)
     {
         IsActive = false;
         projectScope?.Dispose();
         projectScope = null;
         CurrentProject = null;
+        return Task.CompletedTask;
     }
 
     void CreateNew(Project project, IDataSession dataSession)
@@ -79,8 +80,8 @@ public class ProjectSessionHandler : IProjectSessionHandler
         dataSession.Save();
     }
 
-    public void Dispose()
+    public async ValueTask DisposeAsync()
     {
-        StopSession();
+        await StopSession().ConfigureAwait(false);
     }
 }

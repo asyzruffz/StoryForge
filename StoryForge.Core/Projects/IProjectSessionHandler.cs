@@ -2,10 +2,11 @@
 
 namespace StoryForge.Core.Projects;
 
-public interface IProjectSessionHandler : IDisposable
+public interface IProjectSessionHandler : IAsyncDisposable
 {
     bool IsActive { get; }
     string? CurrentProject { get; }
-    Result StartSession(Project project, bool newlyCreated = false);
-    void StopSession();
+
+    Task<Result> StartSession(Project project, bool newlyCreated = false, CancellationToken ct = default);
+    Task StopSession(CancellationToken ct = default);
 }

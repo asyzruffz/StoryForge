@@ -19,7 +19,6 @@ internal sealed class CreateProjectOperationHandler : IOperationHandler<CreatePr
 
     public async Task<Result> Handle(CreateProjectOperation request, CancellationToken cancellationToken)
     {
-        await Task.CompletedTask;
         var filePath = fileStorage.CreateProjectPath(request.Name);
 
         Project newProject = new Project
@@ -28,7 +27,8 @@ internal sealed class CreateProjectOperationHandler : IOperationHandler<CreatePr
             Name = request.Name,
         };
 
-        return projectSession
-            .StartSession(newProject, true);
+        return await projectSession
+            .StartSession(newProject, true, cancellationToken)
+            .ConfigureAwait(false);
     }
 }
