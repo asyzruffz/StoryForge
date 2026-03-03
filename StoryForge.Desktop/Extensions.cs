@@ -57,7 +57,8 @@ internal static class Extensions
     private static IServiceProvider InitDatabase(this IServiceProvider services)
     {
         services.GetRequiredService<IApplicationDataSession>()
-            .EnsureCreated();
+            .EnsureCreatedAsync(default)
+            .Wait();
         return services;
     }
 }

@@ -15,7 +15,7 @@ public class ProjectSessionHandler : IProjectSessionHandler
 
     public string? CurrentProject { get; private set; }
 
-    IServiceScope? projectScope;
+    AsyncServiceScope? projectScope;
 
     public ProjectSessionHandler(IServiceScopeFactory serviceScopeFactory, IApplicationDataSession appDataSession)
     {
@@ -32,18 +32,19 @@ public class ProjectSessionHandler : IProjectSessionHandler
                 await StopSession().ConfigureAwait(false);
             }
 
-            projectScope = scopeFactory.CreateScope();
-            var provider = projectScope.ServiceProvider;
+            projectScope = scopeFactory.CreateAsyncScope();
+            var provider = projectScope!.Value.ServiceProvider;
 
             var scopeCtx = provider.GetRequiredService<ProjectScopeContext>();
             scopeCtx.ProjectFilePath = project.FilePath;
 
             var dataSession = provider.GetRequiredService<IDataSession>();
-            dataSession.EnsureCreated();
+            await dataSession.EnsureCreatedAsync(ct).ConfigureAwait(false);
 
             if (newlyCreated)
             {
-                CreateNew(project, dataSession);
+                await CreateNew(project, dataSession, ct)
+                    .ConfigureAwait(false);
             }
 
             IsActive = true;
@@ -56,16 +57,16 @@ public class ProjectSessionHandler : IProjectSessionHandler
         }
     }
 
-    public Task StopSession(CancellationToken ct = default)
+    public async Task StopSession()
     {
+        await (projectScope?.DisposeAsync() ?? ValueTask.CompletedTask)
+            .ConfigureAwait(false);
         IsActive = false;
-        projectScope?.Dispose();
         projectScope = null;
         CurrentProject = null;
-        return Task.CompletedTask;
     }
 
-    void CreateNew(Project project, IDataSession dataSession)
+    async Task CreateNew(Project project, IDataSession dataSession, CancellationToken ct)
     {
         appData.Projects.Create(project);
         dataSession.Books.Update(new Book
@@ -76,8 +77,8 @@ public class ProjectSessionHandler : IProjectSessionHandler
         });
         dataSession.Authors.Update(new Author { Id = AuthorId.New() });
 
-        appData.Save();
-        dataSession.Save();
+        await appData.SaveAsync(ct).ConfigureAwait(false);
+        await dataSession.SaveAsync(ct).ConfigureAwait(false);
     }
 
     public async ValueTask DisposeAsync()

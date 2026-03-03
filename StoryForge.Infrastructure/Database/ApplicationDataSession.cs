@@ -5,7 +5,7 @@ using StoryForge.Infrastructure.Database.SQLite.Repositories;
 
 namespace StoryForge.Infrastructure.Database;
 
-public class ApplicationDataSession : IApplicationDataSession, IDisposable
+public class ApplicationDataSession : IApplicationDataSession
 {
     private readonly ApplicationDbContext context;
 
@@ -18,7 +18,11 @@ public class ApplicationDataSession : IApplicationDataSession, IDisposable
 
     public IProjectRepository Projects { get; init; }
 
-    public bool EnsureCreated() => context.Database.EnsureCreated();
-    public int Save() => context.SaveChanges();
-    public void Dispose() => context.Dispose();
+    public Task<bool> EnsureCreatedAsync(CancellationToken ct) =>
+        context.Database.EnsureCreatedAsync(ct);
+
+    public Task<int> SaveAsync(CancellationToken ct) =>
+        context.SaveChangesAsync(ct);
+
+    public ValueTask DisposeAsync() => context.DisposeAsync();
 }

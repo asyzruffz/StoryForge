@@ -5,7 +5,7 @@ using StoryForge.Infrastructure.Database.SQLite.Repositories;
 
 namespace StoryForge.Infrastructure.Database;
 
-public class DataSession : IDataSession, IDisposable
+public class DataSession : IDataSession
 {
     private readonly ProjectDbContext context;
 
@@ -30,7 +30,11 @@ public class DataSession : IDataSession, IDisposable
         Chapters = new ChapterRepository(context);
     }
 
-    public bool EnsureCreated() => context.Database.EnsureCreated();
-    public int Save() => context.SaveChanges();
-    public void Dispose() => context.Dispose();
+    public Task<bool> EnsureCreatedAsync(CancellationToken ct) =>
+        context.Database.EnsureCreatedAsync(ct);
+
+    public Task<int> SaveAsync(CancellationToken ct) =>
+        context.SaveChangesAsync(ct);
+
+    public ValueTask DisposeAsync() => context.DisposeAsync();
 }

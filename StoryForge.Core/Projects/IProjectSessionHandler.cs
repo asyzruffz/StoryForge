@@ -8,5 +8,5 @@ public interface IProjectSessionHandler : IAsyncDisposable
     string? CurrentProject { get; }
 
     Task<Result> StartSession(Project project, bool newlyCreated = false, CancellationToken ct = default);
-    Task StopSession(CancellationToken ct = default);
+    Task StopSession();
 }

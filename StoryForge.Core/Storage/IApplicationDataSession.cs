@@ -2,10 +2,10 @@
 
 namespace StoryForge.Core.Storage;
 
-public interface IApplicationDataSession : IDisposable
+public interface IApplicationDataSession : IAsyncDisposable
 {
     IProjectRepository Projects { get; }
 
-    bool EnsureCreated();
-    int Save();
+    Task<bool> EnsureCreatedAsync(CancellationToken ct);
+    Task<int> SaveAsync(CancellationToken ct);
 }

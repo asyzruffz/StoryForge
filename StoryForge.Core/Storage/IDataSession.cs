@@ -2,7 +2,7 @@
 
 namespace StoryForge.Core.Storage;
 
-public interface IDataSession : IDisposable
+public interface IDataSession : IAsyncDisposable
 {
     IBookRepository Books { get; }
     IAuthorRepository Authors { get; }
@@ -12,6 +12,6 @@ public interface IDataSession : IDisposable
     IStorySettingRepository StorySettings { get; }
     IChapterRepository Chapters { get; }
 
-    bool EnsureCreated();
-    int Save();
+    Task<bool> EnsureCreatedAsync(CancellationToken ct);
+    Task<int> SaveAsync(CancellationToken ct);
 }
