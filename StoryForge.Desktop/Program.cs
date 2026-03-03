@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Photino.Blazor;
 
 namespace StoryForge.Desktop;
@@ -11,7 +12,7 @@ internal class Program
         var builder = PhotinoBlazorAppBuilder.CreateDefault(args);
 
         builder.Services
-            .AddLogging()
+            .AddLogging(config => config.AddConsole())
             .AddApplication()
             .AddInfrastructure()
             .AddPresentation();

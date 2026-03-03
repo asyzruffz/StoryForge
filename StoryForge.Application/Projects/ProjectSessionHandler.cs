@@ -35,8 +35,7 @@ public class ProjectSessionHandler : IProjectSessionHandler
             projectScope = scopeFactory.CreateAsyncScope();
             var provider = projectScope!.Value.ServiceProvider;
 
-            var scopeCtx = provider.GetRequiredService<ProjectScopeContext>();
-            scopeCtx.ProjectFilePath = project.FilePath;
+            CurrentProject = project.FilePath;
 
             var dataSession = provider.GetRequiredService<IDataSession>();
             await dataSession.EnsureCreatedAsync(ct).ConfigureAwait(false);
@@ -48,7 +47,6 @@ public class ProjectSessionHandler : IProjectSessionHandler
             }
 
             IsActive = true;
-            CurrentProject = project.FilePath;
             return Result.Ok();
         }
         catch (Exception ex)

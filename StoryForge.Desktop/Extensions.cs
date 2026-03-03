@@ -42,16 +42,10 @@ internal static class Extensions
     private static IServiceCollection AddDatabase(this IServiceCollection services) => services
         .AddSingleton<ApplicationDbContext>()
         .AddSingleton<IApplicationDataSession, ApplicationDataSession>()
-        .AddScoped<ProjectScopeContext>()
         .AddScoped<ProjectDbFactory>()
-        .AddScoped(provider =>
-        {
-            var ctx = provider.GetRequiredService<ProjectScopeContext>();
-            var factory = provider.GetRequiredService<ProjectDbFactory>();
-            var sessionHandler = provider.GetService<IProjectSessionHandler>();
-            var effectivePath = ctx.ProjectFilePath ?? sessionHandler?.CurrentProject;
-            return factory.CreateDbContext(effectivePath);
-        })
+        .AddScoped(provider => provider
+            .GetRequiredService<ProjectDbFactory>()
+            .CreateDbContext(provider))
         .AddScoped<IDataSession, DataSession>();
 
     private static IServiceProvider InitDatabase(this IServiceProvider services)
