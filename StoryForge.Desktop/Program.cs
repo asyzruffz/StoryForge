@@ -24,6 +24,7 @@ internal class Program
             .SetupInfrastructure();
 
         app.MainWindow
+            .SetLogVerbosity(0)
             .SetUseOsDefaultSize(true)
             .SetUseOsDefaultLocation(true)
             .SetIconFile("favicon.ico")
