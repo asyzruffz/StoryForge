@@ -1,12 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using MudBlazor;
-using MudBlazor.Services;
 using Photino.Blazor;
+using Photino.NET;
 using StoryForge.Application.Projects;
+using StoryForge.Core.Misc;
 using StoryForge.Core.Projects;
 using StoryForge.Core.Storage;
-using StoryForge.Desktop.UI;
-using StoryForge.Desktop.Utils;
+using StoryForge.Desktop.Services;
 using StoryForge.Infrastructure.Database;
 using StoryForge.Infrastructure.Database.SQLite;
 
@@ -14,12 +13,8 @@ namespace StoryForge.Desktop;
 
 internal static class Extensions
 {
-    public static IServiceCollection AddPresentation(this IServiceCollection services) => services
-        .AddSingleton<BreadCrumbHandler>()
-        .AddMudServices(config => 
-        {
-            config.SnackbarConfiguration.SnackbarVariant = Variant.Outlined;
-        });
+    public static IServiceCollection AddWindowsService(this IServiceCollection services) => services
+        .AddTransient<IFileDialogService, FileDialogService>();
 
     public static IServiceCollection AddApplication(this IServiceCollection services) => services
         .AddMediatR(config => config
@@ -31,6 +26,28 @@ internal static class Extensions
 
     public static void AddAppComponent(this PhotinoBlazorAppBuilder builder) => builder
         .RootComponents.Add<App>("app");
+
+    public static PhotinoWindow SetupDefault(this PhotinoWindow window, string title)
+    {
+        window
+            .SetLogVerbosity(0)
+            .SetUseOsDefaultSize(true)
+            .SetUseOsDefaultLocation(true)
+            .SetFileSystemAccessEnabled(true)
+            .SetTitle(title);
+
+        /*window.WebMessageReceivedHandler += (sender, message) =>
+        {
+            Console.WriteLine($"Received message from web: {message}");
+        };*/
+
+        AppDomain.CurrentDomain.UnhandledException += (sender, error) =>
+        {
+            window.ShowMessage("Fatal exception", error.ExceptionObject.ToString());
+        };
+
+        return window;
+    }
 
     public static IServiceProvider SetupInfrastructure(this IServiceProvider services) => services
         .InitDatabase();

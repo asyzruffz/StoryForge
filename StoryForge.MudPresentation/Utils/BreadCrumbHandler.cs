@@ -1,4 +1,4 @@
-﻿namespace StoryForge.Desktop.Utils;
+﻿namespace StoryForge.MudPresentation.Utils;
 
 internal class BreadCrumbHandler
 {
