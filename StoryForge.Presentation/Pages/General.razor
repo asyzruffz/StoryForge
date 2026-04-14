@@ -1,0 +1,29 @@
+﻿@page "/general"
+@inject BreadCrumbHandler crumbHandler
+
+<PageTitle>@Title</PageTitle>
+<BbTypographyH2 Class="mb-4">General Information</BbTypographyH2>
+
+<BbDashboardGrid Editable="false">
+    <BbDashboardWidget Id="book-info" Title="Book"
+                       Column="1" Row="1" ColumnSpan="12" RowSpan="6">
+        <BookInfoCard />
+    </BbDashboardWidget>
+    <BbDashboardWidget Id="author-info" Title="Author"
+                       Column="13" Row="1" ColumnSpan="12" RowSpan="6">
+        <div class="flex items-center justify-center h-full text-muted-foreground">
+            Author Info
+        </div>
+    </BbDashboardWidget>
+</BbDashboardGrid>
+
+@code {
+    const string Title = "General";
+
+    protected override void OnInitialized()
+    {
+        crumbHandler.Items.Clear();
+        crumbHandler.Items.Add(new(Title, "/general", "layout-dashboard"));
+        crumbHandler.NavigationChange?.Invoke();
+    }
+}
