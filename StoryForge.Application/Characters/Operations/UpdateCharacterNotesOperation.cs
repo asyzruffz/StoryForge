@@ -19,13 +19,13 @@ internal sealed class UpdateCharacterNotesOperationHandler : IOperationHandler<U
     public async Task<Result> Handle(UpdateCharacterNotesOperation request, CancellationToken cancellationToken)
     {
         return await data.Characters.GetById(request.CharacterId)
-            .ThenAsync(async character =>
+            .ThenAsync(async (character, ct) =>
             {
                 character.Notes = request.Notes;
                 data.Characters.Update(character);
-                await data.SaveAsync(cancellationToken).ConfigureAwait(false);
+                await data.SaveAsync(ct).ConfigureAwait(false);
                 return Result.Ok();
-            })
+            }, cancellationToken)
             .ConfigureAwait(false);
     }
 }

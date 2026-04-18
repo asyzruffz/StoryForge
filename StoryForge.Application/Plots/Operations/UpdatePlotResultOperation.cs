@@ -19,13 +19,13 @@ internal sealed class UpdatePlotResultOperationHandler : IOperationHandler<Updat
     public async Task<Result> Handle(UpdatePlotResultOperation request, CancellationToken cancellationToken)
     {
         return await data.Plots.GetById(request.PlotId)
-            .ThenAsync(async plot =>
+            .ThenAsync(async (plot, ct) =>
             {
                 plot.Result = request.Result;
                 data.Plots.Update(plot);
-                await data.SaveAsync(cancellationToken).ConfigureAwait(false);
+                await data.SaveAsync(ct).ConfigureAwait(false);
                 return Result.Ok();
-            })
+            }, cancellationToken)
             .ConfigureAwait(false);
     }
 }

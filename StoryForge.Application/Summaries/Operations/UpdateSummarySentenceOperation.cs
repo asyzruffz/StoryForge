@@ -19,13 +19,13 @@ internal sealed class UpdateSummarySentenceOperationHandler : IOperationHandler<
     public async Task<Result> Handle(UpdateSummarySentenceOperation request, CancellationToken cancellationToken)
     {
         return await data.Summaries.GetById(request.SummaryId)
-            .ThenAsync(async summary =>
+            .ThenAsync(async (summary, ct) =>
             {
                 summary.Sentence = request.Sentence;
                 data.Summaries.Update(summary);
-                await data.SaveAsync(cancellationToken).ConfigureAwait(false);
+                await data.SaveAsync(ct).ConfigureAwait(false);
                 return Result.Ok();
-            })
+            }, cancellationToken)
             .ConfigureAwait(false);
     }
 }

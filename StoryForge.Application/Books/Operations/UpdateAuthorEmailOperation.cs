@@ -26,13 +26,13 @@ internal sealed class UpdateAuthorEmailOperationHandler : IOperationHandler<Upda
         }
 
         return await data.Authors.Get()
-            .ThenAsync(async author =>
+            .ThenAsync(async (author, ct) =>
             {
                 author.Email = request.Email;
                 data.Authors.Update(author);
-                await data.SaveAsync(cancellationToken).ConfigureAwait(false);
+                await data.SaveAsync(ct).ConfigureAwait(false);
                 return Result.Ok();
-            })
+            }, cancellationToken)
             .ConfigureAwait(false);
     }
 }

@@ -22,11 +22,19 @@ public class Result
         IsSuccess ? action() : Result<TResult>.Fail(ErrorMessage);
     public void Then(Action action) { if (IsSuccess) action(); }
 
-    public Task<Result> ThenAsync(Func<Task<Result>> action) =>
-        IsSuccess ? action() : Task.FromResult(this);
-    public Task<Result<TResult>> ThenAsync<TResult>(Func<Task<Result<TResult>>> action) =>
-        IsSuccess ? action() : Task.FromResult(Result<TResult>.Fail(ErrorMessage));
-    public Task ThenAsync(Func<Task> action) => IsSuccess ? action() : Task.CompletedTask;
+    public Task<Result> ThenAsync(Func<CancellationToken, Task<Result>> action, CancellationToken ct = default) =>
+        IsSuccess ? action(ct) : Task.FromResult(this);
+    public Task<Result<TResult>> ThenAsync<TResult>(Func<CancellationToken, Task<Result<TResult>>> action, CancellationToken ct = default) =>
+        IsSuccess ? action(ct) : Task.FromResult(Result<TResult>.Fail(ErrorMessage));
+    public Task ThenAsync(Func<CancellationToken, Task> action, CancellationToken ct = default) => IsSuccess ? action(ct) : Task.CompletedTask;
+
+    public TResult Match<TResult>(Func<TResult> onSuccess, Func<string, TResult> onFailure) =>
+        IsSuccess ? onSuccess() : onFailure(ErrorMessage);
+    public Task<TResult> MatchAsync<TResult>(
+        Func<Task<TResult>> onSuccess,
+        Func<string, Task<TResult>> onFailure,
+        CancellationToken ct = default) =>
+        IsSuccess ? onSuccess() : onFailure(ErrorMessage);
 }
 
 public class Result<T>
@@ -56,12 +64,17 @@ public class Result<T>
         IsSuccess ? action(Value) : Result<TResult>.Fail(ErrorMessage);
     public void Then(Action<T> action) { if (IsSuccess) action(Value); }
 
-    public Task<Result> ThenAsync(Func<T, Task<Result>> action) =>
-        IsSuccess ? action(Value) : Task.FromResult(Result.Fail(ErrorMessage));
-    public Task<Result<TResult>> ThenAsync<TResult>(Func<T, Task<Result<TResult>>> action) =>
-        IsSuccess ? action(Value) : Task.FromResult(Result<TResult>.Fail(ErrorMessage));
-    public Task ThenAsync(Func<T, Task> action) => IsSuccess ? action(Value) : Task.CompletedTask;
+    public Task<Result> ThenAsync(Func<T, CancellationToken, Task<Result>> action, CancellationToken ct = default) =>
+        IsSuccess ? action(Value, ct) : Task.FromResult(Result.Fail(ErrorMessage));
+    public Task<Result<TResult>> ThenAsync<TResult>(Func<T, CancellationToken, Task<Result<TResult>>> action, CancellationToken ct = default) =>
+        IsSuccess ? action(Value, ct) : Task.FromResult(Result<TResult>.Fail(ErrorMessage));
+    public Task ThenAsync(Func<T, CancellationToken, Task> action, CancellationToken ct = default) => IsSuccess ? action(Value, ct) : Task.CompletedTask;
 
     public TResult Match<TResult>(Func<T, TResult> onSuccess, Func<string, TResult> onFailure) =>
         IsSuccess ? onSuccess(Value) : onFailure(ErrorMessage);
+    public Task<TResult> MatchAsync<TResult>(
+        Func<T, CancellationToken, Task<TResult>> onSuccess,
+        Func<string, CancellationToken, Task<TResult>> onFailure,
+        CancellationToken ct = default) =>
+        IsSuccess ? onSuccess(Value, ct) : onFailure(ErrorMessage, ct);
 }

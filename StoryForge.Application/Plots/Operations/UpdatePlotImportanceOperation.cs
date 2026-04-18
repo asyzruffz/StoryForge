@@ -19,13 +19,13 @@ internal sealed class UpdatePlotImportanceOperationHandler : IOperationHandler<U
     public async Task<Result> Handle(UpdatePlotImportanceOperation request, CancellationToken cancellationToken)
     {
         return await data.Plots.GetById(request.PlotId)
-            .ThenAsync(async plot =>
+            .ThenAsync(async (plot, ct) =>
             {
                 plot.Importance = request.Importance;
                 data.Plots.Update(plot);
-                await data.SaveAsync(cancellationToken).ConfigureAwait(false);
+                await data.SaveAsync(ct).ConfigureAwait(false);
                 return Result.Ok();
-            })
+            }, cancellationToken)
             .ConfigureAwait(false);
     }
 }

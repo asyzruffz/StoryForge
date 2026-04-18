@@ -1,4 +1,5 @@
 ﻿using StoryForge.Application.Abstractions;
+using StoryForge.Core.Data;
 using StoryForge.Core.Projects;
 using StoryForge.Core.Storage;
 using StoryForge.Core.Utils;
@@ -26,13 +27,13 @@ internal sealed class UpdateBookSummarySituationOperationHandler : IOperationHan
         }
 
         return await data.Books.Get()
-            .ThenAsync(async book =>
+            .ThenAsync(async (book, ct) =>
             {
                 book.Extra.Situation = request.Situation;
                 data.Books.Update(book);
-                await data.SaveAsync(cancellationToken).ConfigureAwait(false);
+                await data.SaveAsync(ct).ConfigureAwait(false);
                 return Result.Ok();
-            })
+            }, cancellationToken)
             .ConfigureAwait(false);
     }
 }

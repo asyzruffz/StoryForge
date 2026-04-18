@@ -26,13 +26,13 @@ internal sealed class UpdateBookSeriesOperationHandler : IOperationHandler<Updat
         }
 
         return await data.Books.Get()
-            .ThenAsync(async book =>
+            .ThenAsync(async (book, ct) =>
             {
                 book.Series = request.Series;
                 data.Books.Update(book);
-                await data.SaveAsync(cancellationToken).ConfigureAwait(false);
+                await data.SaveAsync(ct).ConfigureAwait(false);
                 return Result.Ok();
-            })
+            }, cancellationToken)
             .ConfigureAwait(false);
     }
 }
