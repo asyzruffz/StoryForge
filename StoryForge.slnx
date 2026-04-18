@@ -1,8 +1,5 @@
 <Solution>
   <Project Path="StoryForge.Application/StoryForge.Application.csproj" />
-  <Project Path="StoryForge.Containers/StoryForge.Containers.dcproj">
-    <Build />
-  </Project>
   <Project Path="StoryForge.Core/StoryForge.Core.csproj" />
   <Project Path="StoryForge.Desktop/StoryForge.Desktop.csproj">
     <BuildDependency Project="StoryForge.Application/StoryForge.Application.csproj" />
