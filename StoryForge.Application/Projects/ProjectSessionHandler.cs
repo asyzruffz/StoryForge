@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using StoryForge.Core.Data;
 using StoryForge.Core.Projects;
 using StoryForge.Core.Storage;
 using StoryForge.Core.Utils;
@@ -33,7 +32,7 @@ public class ProjectSessionHandler : IProjectSessionHandler
 
             var project = new Project { FilePath = filePath, Name = projectName };
 
-            await RegisterProject(project, ct)
+            await project.RegisterToAppAsync(appData, ct)
                 .ConfigureAwait(false);
         }, ct);
     }
@@ -42,9 +41,9 @@ public class ProjectSessionHandler : IProjectSessionHandler
     {
         return SetupSession(project.FilePath, async (dataSession, ct) =>
         {
-            await RegisterProject(project, ct)
+            await project.RegisterToAppAsync(appData, ct)
                 .ConfigureAwait(false);
-            await CreateNew(project, dataSession, ct)
+            await project.InitializeAsync(dataSession, ct)
                 .ConfigureAwait(false);
         }, ct);
     }
@@ -95,26 +94,6 @@ public class ProjectSessionHandler : IProjectSessionHandler
         IsActive = false;
         projectScope = null;
         CurrentProject = null;
-    }
-
-    async Task RegisterProject(Project project, CancellationToken ct)
-    {
-        appData.Projects.Create(project);
-        await appData.SaveAsync(ct).ConfigureAwait(false);
-    }
-
-    async Task CreateNew(Project project, IDataSession dataSession, CancellationToken ct)
-    {
-        dataSession.Meta.Set(ProjectMeta.Name, project.Name);
-        dataSession.Books.Update(new Book
-        {
-            Id = BookId.New(),
-            Title = Path.GetFileNameWithoutExtension(project.FilePath),
-            Extra = BookSummary.New()
-        });
-        dataSession.Authors.Update(new Author { Id = AuthorId.New() });
-
-        await dataSession.SaveAsync(ct).ConfigureAwait(false);
     }
 
     public async ValueTask DisposeAsync()
