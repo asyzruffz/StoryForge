@@ -30,6 +30,12 @@ public class Result
 
     public TResult Match<TResult>(Func<TResult> onSuccess, Func<string, TResult> onFailure) =>
         IsSuccess ? onSuccess() : onFailure(ErrorMessage);
+
+    public Task MatchAsync(
+        Func<Task> onSuccess,
+        Func<string, Task> onFailure,
+        CancellationToken ct = default) =>
+        IsSuccess ? onSuccess() : onFailure(ErrorMessage);
     public Task<TResult> MatchAsync<TResult>(
         Func<Task<TResult>> onSuccess,
         Func<string, Task<TResult>> onFailure,
@@ -72,6 +78,12 @@ public class Result<T>
 
     public TResult Match<TResult>(Func<T, TResult> onSuccess, Func<string, TResult> onFailure) =>
         IsSuccess ? onSuccess(Value) : onFailure(ErrorMessage);
+
+    public Task MatchAsync(
+        Func<T, CancellationToken, Task> onSuccess,
+        Func<string, CancellationToken, Task> onFailure,
+        CancellationToken ct = default) =>
+        IsSuccess ? onSuccess(Value, ct) : onFailure(ErrorMessage, ct);
     public Task<TResult> MatchAsync<TResult>(
         Func<T, CancellationToken, Task<TResult>> onSuccess,
         Func<string, CancellationToken, Task<TResult>> onFailure,
