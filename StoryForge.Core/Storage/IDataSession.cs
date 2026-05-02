@@ -4,6 +4,7 @@ namespace StoryForge.Core.Storage;
 
 public interface IDataSession : IAsyncDisposable
 {
+    IProjectInfoRepository Meta { get; }
     IBookRepository Books { get; }
     IAuthorRepository Authors { get; }
     ISummaryRepository Summaries { get; }

@@ -1,11 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StoryForge.Core.Data;
+using StoryForge.Core.Projects;
 using StoryForge.Infrastructure.Database.SQLite.Configurations;
 
 namespace StoryForge.Infrastructure.Database.SQLite;
 
 public class ProjectDbContext : DbContext
 {
+    public DbSet<ProjectInfo> Meta { get; set; }
     public DbSet<Book> Books { get; set; }
     public DbSet<Author> Authors { get; set; }
     public DbSet<Summary> Summaries { get; set; }
@@ -19,6 +21,7 @@ public class ProjectDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.ApplyConfiguration(new ProjectInfoConfiguration());
         modelBuilder.ApplyConfiguration(new BookConfiguration());
         modelBuilder.ApplyConfiguration(new AuthorConfiguration());
         modelBuilder.ApplyConfiguration(new SummaryConfiguration());

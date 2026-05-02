@@ -9,6 +9,7 @@ public class DataSession : IDataSession
 {
     private readonly ProjectDbContext context;
 
+    public IProjectInfoRepository Meta { get; init; }
     public IBookRepository Books { get; init; }
     public IAuthorRepository Authors { get; init; }
     public ISummaryRepository Summaries { get; init; }
@@ -21,6 +22,7 @@ public class DataSession : IDataSession
     {
         this.context = context;
 
+        Meta = new ProjectInfoRepository(context);
         Books = new BookRepository(context);
         Authors = new AuthorRepository(context);
         Summaries = new SummaryRepository(context);

@@ -70,14 +70,14 @@ public class ProjectSessionHandler : IProjectSessionHandler
 
             await projectResult.MatchAsync(
                 onSuccess: async (project, ct) =>
-            {
+                {
                     project.SetActive();
                     appData.Projects.Update(project);
                     await appData.SaveAsync(ct).ConfigureAwait(false);
                 },
                 onFailure: (_, ct) => onProjectNotRegistered(dataSession, ct),
                 ct)
-                    .ConfigureAwait(false);
+                .ConfigureAwait(false);
 
             IsActive = true;
             return Result.Ok();
@@ -105,6 +105,7 @@ public class ProjectSessionHandler : IProjectSessionHandler
 
     async Task CreateNew(Project project, IDataSession dataSession, CancellationToken ct)
     {
+        dataSession.Meta.Set(ProjectMeta.Name, project.Name);
         dataSession.Books.Update(new Book
         {
             Id = BookId.New(),
