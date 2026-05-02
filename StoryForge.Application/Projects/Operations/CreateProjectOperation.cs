@@ -4,7 +4,7 @@ using StoryForge.Core.Utils;
 
 namespace StoryForge.Application.Projects.Operations;
 
-public sealed record CreateProjectOperation(string Name) : IOperation;
+public sealed record CreateProjectOperation(string Name, string FilePath) : IOperation;
 
 internal sealed class CreateProjectOperationHandler : IOperationHandler<CreateProjectOperation>
 {
@@ -19,7 +19,11 @@ internal sealed class CreateProjectOperationHandler : IOperationHandler<CreatePr
 
     public async Task<Result> Handle(CreateProjectOperation request, CancellationToken cancellationToken)
     {
-        var filePath = fileStorage.CreateProjectPath(request.Name);
+        var filePath = request.FilePath;
+        if (string.IsNullOrWhiteSpace(request.FilePath))
+        {
+            filePath = fileStorage.CreateProjectPath(request.Name);
+        }
 
         Project newProject = new Project
         {
