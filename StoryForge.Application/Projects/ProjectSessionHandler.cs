@@ -23,7 +23,33 @@ public class ProjectSessionHandler : IProjectSessionHandler
         appData = appDataSession;
     }
 
-    public async Task<Result> StartSession(Project project, bool newlyCreated = false, CancellationToken ct = default)
+    public Task<Result> LoadSession(string filePath, CancellationToken ct = default)
+    {
+        return SetupSession(filePath, async (dataSession, ct) =>
+        {
+            var projectName = dataSession.Meta
+                .Get(ProjectMeta.Name)
+                .Or(Path.GetFileNameWithoutExtension(filePath));
+
+            var project = new Project { FilePath = filePath, Name = projectName };
+
+            await RegisterProject(project, ct)
+                .ConfigureAwait(false);
+        }, ct);
+    }
+
+    public Task<Result> StartSession(Project project, CancellationToken ct = default)
+    {
+        return SetupSession(project.FilePath, async (dataSession, ct) =>
+        {
+            await RegisterProject(project, ct)
+                .ConfigureAwait(false);
+            await CreateNew(project, dataSession, ct)
+                .ConfigureAwait(false);
+        }, ct);
+    }
+
+    async Task<Result> SetupSession(string filePath, Func<IDataSession, CancellationToken, Task> onProjectNotRegistered, CancellationToken ct)
     {
         try
         {
@@ -35,16 +61,23 @@ public class ProjectSessionHandler : IProjectSessionHandler
             projectScope = scopeFactory.CreateAsyncScope();
             var provider = projectScope!.Value.ServiceProvider;
 
-            CurrentProject = project.FilePath;
+            CurrentProject = filePath;
 
             var dataSession = provider.GetRequiredService<IDataSession>();
             await dataSession.EnsureCreatedAsync(ct).ConfigureAwait(false);
 
-            if (newlyCreated)
+            var projectResult = appData.Projects.GetById(filePath);
+
+            await projectResult.MatchAsync(
+                onSuccess: async (project, ct) =>
             {
-                await CreateNew(project, dataSession, ct)
+                    project.SetActive();
+                    appData.Projects.Update(project);
+                    await appData.SaveAsync(ct).ConfigureAwait(false);
+                },
+                onFailure: (_, ct) => onProjectNotRegistered(dataSession, ct),
+                ct)
                     .ConfigureAwait(false);
-            }
 
             IsActive = true;
             return Result.Ok();
@@ -64,9 +97,14 @@ public class ProjectSessionHandler : IProjectSessionHandler
         CurrentProject = null;
     }
 
-    async Task CreateNew(Project project, IDataSession dataSession, CancellationToken ct)
+    async Task RegisterProject(Project project, CancellationToken ct)
     {
         appData.Projects.Create(project);
+        await appData.SaveAsync(ct).ConfigureAwait(false);
+    }
+
+    async Task CreateNew(Project project, IDataSession dataSession, CancellationToken ct)
+    {
         dataSession.Books.Update(new Book
         {
             Id = BookId.New(),
@@ -75,7 +113,6 @@ public class ProjectSessionHandler : IProjectSessionHandler
         });
         dataSession.Authors.Update(new Author { Id = AuthorId.New() });
 
-        await appData.SaveAsync(ct).ConfigureAwait(false);
         await dataSession.SaveAsync(ct).ConfigureAwait(false);
     }
 

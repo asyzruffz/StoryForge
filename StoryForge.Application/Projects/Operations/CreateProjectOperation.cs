@@ -28,7 +28,7 @@ internal sealed class CreateProjectOperationHandler : IOperationHandler<CreatePr
         };
 
         return await projectSession
-            .StartSession(newProject, true, cancellationToken)
+            .StartSession(newProject, cancellationToken)
             .ConfigureAwait(false);
     }
 }

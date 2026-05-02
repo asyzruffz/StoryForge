@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using StoryForge.Application.Abstractions;
-using StoryForge.Core.Data;
 using StoryForge.Core.Projects;
 using StoryForge.Core.Storage;
 using StoryForge.Core.Utils;
@@ -30,30 +29,11 @@ internal sealed class OpenProjectFileOperationHandler : IOperationHandler<OpenPr
         var saveResult = await fileStorage
             .SaveProjectFileAsync(request.FileName, request.FileStream, cancellationToken)
             .ConfigureAwait(false);
-        if (!saveResult.IsSuccess)
-        {
-            return Result.Fail(saveResult.ErrorMessage);
-        }
 
-        var fullPath = saveResult.Or(string.Empty);
-
-        var projectResult = await sender.Send(new OpenProjectPathOperation(fullPath));
-        if (projectResult.IsSuccess || !projectResult.ErrorMessage.StartsWith("No valid project"))
-        {
-            return projectResult;
-        }
-
-        var project = new Project
-        {
-            FilePath = fullPath,
-            Name = Path.GetFileNameWithoutExtension(fullPath),
-        };
-
-        appData.Projects.Create(project);
-        await appData.SaveAsync(cancellationToken).ConfigureAwait(false);
-
-        return await projectSession
-            .StartSession(project, true, cancellationToken)
+        return await saveResult
+            .ThenAsync(async (fullPath, ct) => 
+                await sender.Send(new OpenProjectPathOperation(fullPath), ct),
+                cancellationToken)
             .ConfigureAwait(false);
     }
 }
