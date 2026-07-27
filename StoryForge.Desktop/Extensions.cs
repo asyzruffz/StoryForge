@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Keystone.Application;
+using Microsoft.Extensions.DependencyInjection;
 using Photino.Blazor;
 using Photino.NET;
 using StoryForge.Application.Projects;
@@ -17,8 +18,8 @@ internal static class Extensions
         .AddTransient<IFileDialogService, FileDialogService>();
 
     public static IServiceCollection AddApplication(this IServiceCollection services) => services
-        .AddMediatR(config => config
-            .RegisterServicesFromAssembly(Application.AssemblyReference.Assembly))
+        .AddKeystoneApplication()
+        .RegisterOperationHandlers(Application.AssemblyReference.Assembly)
         .AddStoryForgeSystem();
 
     public static IServiceCollection AddInfrastructure(this IServiceCollection services) => services

@@ -1,7 +1,7 @@
-﻿using StoryForge.Application.Abstractions;
+﻿using Keystone;
+using Keystone.Application;
 using StoryForge.Core.Data;
 using StoryForge.Core.Storage;
-using StoryForge.Core.Utils;
 
 namespace StoryForge.Application.Plots.Operations;
 
@@ -16,9 +16,10 @@ internal sealed class UpdatePlotResultOperationHandler : IOperationHandler<Updat
         data = dataSession;
     }
 
-    public async Task<Result> Handle(UpdatePlotResultOperation request, CancellationToken cancellationToken)
+    public async ValueTask<Result> Handle(UpdatePlotResultOperation request, CancellationToken cancellationToken)
     {
         return await data.Plots.GetById(request.PlotId)
+            .ToResult("Couldn't find plot in database.")
             .ThenAsync(async (plot, ct) =>
             {
                 plot.Result = request.Result;

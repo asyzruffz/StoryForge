@@ -1,7 +1,7 @@
-﻿using StoryForge.Application.Abstractions;
+﻿using Keystone;
+using Keystone.Application;
 using StoryForge.Core.Data;
 using StoryForge.Core.Storage;
-using StoryForge.Core.Utils;
 
 namespace StoryForge.Application.Characters.Operations;
 
@@ -16,7 +16,7 @@ internal sealed class GetCharacterEntriesOperationHandler : IOperationHandler<Ge
         data = dataSession;
     }
 
-    public async Task<Result<IEnumerable<CharacterEntry>>> Handle(GetCharacterEntriesOperation request, CancellationToken cancellationToken)
+    public async ValueTask<Result<IEnumerable<CharacterEntry>>> Handle(GetCharacterEntriesOperation request, CancellationToken cancellationToken)
     {
         await Task.CompletedTask;
         var entries = data.Characters.GetAll()

@@ -1,7 +1,7 @@
-﻿using StoryForge.Application.Abstractions;
+﻿using Keystone;
+using Keystone.Application;
 using StoryForge.Core.Data;
 using StoryForge.Core.Storage;
-using StoryForge.Core.Utils;
 
 namespace StoryForge.Application.Characters.Operations;
 
@@ -16,7 +16,7 @@ internal sealed class UpdateCharacterOperationHandler : IOperationHandler<Update
         data = dataSession;
     }
 
-    public async Task<Result> Handle(UpdateCharacterOperation request, CancellationToken cancellationToken)
+    public async ValueTask<Result> Handle(UpdateCharacterOperation request, CancellationToken cancellationToken)
     {
         data.Characters.Update(request.Character);
         await data.SaveAsync(cancellationToken).ConfigureAwait(false);

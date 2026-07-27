@@ -1,7 +1,7 @@
-﻿using StoryForge.Application.Abstractions;
+﻿using Keystone;
+using Keystone.Application;
 using StoryForge.Core.Data;
 using StoryForge.Core.Storage;
-using StoryForge.Core.Utils;
 
 namespace StoryForge.Application.Characters.Operations;
 
@@ -16,9 +16,10 @@ internal sealed class UpdateCharacterConflictOperationHandler : IOperationHandle
         data = dataSession;
     }
 
-    public async Task<Result> Handle(UpdateCharacterConflictOperation request, CancellationToken cancellationToken)
+    public async ValueTask<Result> Handle(UpdateCharacterConflictOperation request, CancellationToken cancellationToken)
     {
         return await data.Characters.GetById(request.CharacterId)
+            .ToResult("Couldn't find character in database.")
             .ThenAsync(async (character, ct) =>
             {
                 character.Conflict = request.Conflict;

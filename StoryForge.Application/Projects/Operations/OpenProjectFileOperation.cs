@@ -1,8 +1,7 @@
-﻿using MediatR;
-using StoryForge.Application.Abstractions;
+﻿using Keystone;
+using Keystone.Application;
 using StoryForge.Core.Projects;
 using StoryForge.Core.Storage;
-using StoryForge.Core.Utils;
 
 namespace StoryForge.Application.Projects.Operations;
 
@@ -23,7 +22,7 @@ internal sealed class OpenProjectFileOperationHandler : IOperationHandler<OpenPr
         this.sender = sender;
     }
 
-    public async Task<Result> Handle(OpenProjectFileOperation request, CancellationToken cancellationToken)
+    public async ValueTask<Result> Handle(OpenProjectFileOperation request, CancellationToken cancellationToken)
     {
         // Save incoming stream to disk
         var saveResult = await fileStorage

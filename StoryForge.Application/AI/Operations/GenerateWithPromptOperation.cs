@@ -1,6 +1,6 @@
-﻿using StoryForge.Application.Abstractions;
+﻿using Keystone;
+using Keystone.Application;
 using StoryForge.Core.AI.Services;
-using StoryForge.Core.Utils;
 
 namespace StoryForge.Application.AI.Operations;
 
@@ -16,13 +16,13 @@ internal sealed class GenerateWithPromptOperationHandler
         ai = aiService;
     }
 
-    public async Task<Result<string>> Handle(GenerateWithPromptOperation request, CancellationToken cancellationToken)
+    public async ValueTask<Result<string>> Handle(GenerateWithPromptOperation request, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(request.Prompt))
-            return await Task.FromResult(Result<string>.Fail("Prompt is empty"));
+            return Result<string>.Fail("Prompt is empty");
 
         //var generated = $"This is an AI generated response from the prompt: \"{request.Prompt}\"";
         var generated = await ai.Complete(request.Prompt, cancellationToken);
-        return await Task.FromResult(Result<string>.Ok(generated));
+        return Result<string>.Ok(generated);
     }
 }

@@ -1,7 +1,7 @@
-﻿using StoryForge.Application.Abstractions;
+﻿using Keystone;
+using Keystone.Application;
 using StoryForge.Core.Data;
 using StoryForge.Core.Storage;
-using StoryForge.Core.Utils;
 
 namespace StoryForge.Application.Plots.Operations;
 
@@ -16,7 +16,7 @@ internal sealed class UpdatePlotOperationHandler : IOperationHandler<UpdatePlotO
         data = dataSession;
     }
 
-    public async Task<Result> Handle(UpdatePlotOperation request, CancellationToken cancellationToken)
+    public async ValueTask<Result> Handle(UpdatePlotOperation request, CancellationToken cancellationToken)
     {
         data.Plots.Update(request.Plot);
         await data.SaveAsync(cancellationToken).ConfigureAwait(false);

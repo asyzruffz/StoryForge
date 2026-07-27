@@ -1,6 +1,6 @@
-﻿using StoryForge.Application.Abstractions;
+﻿using Keystone;
+using Keystone.Application;
 using StoryForge.Core.Projects;
-using StoryForge.Core.Utils;
 
 namespace StoryForge.Application.Projects.Operations;
 
@@ -15,7 +15,7 @@ internal sealed class OpenProjectPathOperationHandler : IOperationHandler<OpenPr
         projectSession = projectSessionHandler;
     }
 
-    public Task<Result> Handle(OpenProjectPathOperation request, CancellationToken cancellationToken)
+    public ValueTask<Result> Handle(OpenProjectPathOperation request, CancellationToken cancellationToken)
     {
         return projectSession.LoadSession(request.FilePath, cancellationToken);
     }

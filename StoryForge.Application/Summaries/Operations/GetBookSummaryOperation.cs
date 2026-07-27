@@ -1,8 +1,8 @@
-﻿using StoryForge.Application.Abstractions;
+﻿using Keystone;
+using Keystone.Application;
 using StoryForge.Core.Data;
 using StoryForge.Core.Projects;
 using StoryForge.Core.Storage;
-using StoryForge.Core.Utils;
 
 namespace StoryForge.Application.Summaries.Operations;
 
@@ -19,7 +19,7 @@ internal sealed class GetBookSummaryOperationHandler : IOperationHandler<GetBook
         data = dataSession;
     }
 
-    public async Task<Result<BookSummary>> Handle(GetBookSummaryOperation request, CancellationToken cancellationToken)
+    public async ValueTask<Result<BookSummary>> Handle(GetBookSummaryOperation request, CancellationToken cancellationToken)
     {
         await Task.CompletedTask;
         if (!projectSession.IsActive)

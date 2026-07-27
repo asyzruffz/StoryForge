@@ -1,6 +1,6 @@
-﻿using StoryForge.Core.Data;
+﻿using Keystone;
+using StoryForge.Core.Data;
 using StoryForge.Core.Storage.Repositories;
-using StoryForge.Core.Utils;
 
 namespace StoryForge.Infrastructure.Database.InMemory.Repositories;
 
@@ -18,12 +18,15 @@ internal class StorySettingRepository : IStorySettingRepository
         return settings.AsQueryable();
     }
 
-    public Result<StorySetting> GetById(StorySettingId id)
+    public Option<StorySetting> GetById(StorySettingId id)
     {
         return settings
             .SingleOrDefault(setting => setting.Id == id)
-            .AsOption().ToResult();
+            .AsOption();
     }
+
+    public bool HasWithId(StorySettingId id) =>
+        settings.Any(setting => setting.Id == id);
 
     public void Create(StorySetting setting)
     {

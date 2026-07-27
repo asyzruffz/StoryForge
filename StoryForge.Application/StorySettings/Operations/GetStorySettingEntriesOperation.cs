@@ -1,7 +1,7 @@
-﻿using StoryForge.Application.Abstractions;
+﻿using Keystone;
+using Keystone.Application;
 using StoryForge.Core.Data;
 using StoryForge.Core.Storage;
-using StoryForge.Core.Utils;
 
 namespace StoryForge.Application.StorySettings.Operations;
 
@@ -16,7 +16,7 @@ internal sealed class GetStorySettingEntriesOperationHandler : IOperationHandler
         data = dataSession;
     }
 
-    public async Task<Result<IEnumerable<StorySettingEntry>>> Handle(GetStorySettingEntriesOperation request, CancellationToken cancellationToken)
+    public async ValueTask<Result<IEnumerable<StorySettingEntry>>> Handle(GetStorySettingEntriesOperation request, CancellationToken cancellationToken)
     {
         await Task.CompletedTask;
         var entries = data.StorySettings.GetAll()

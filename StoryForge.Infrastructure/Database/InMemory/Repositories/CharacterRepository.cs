@@ -1,6 +1,6 @@
-﻿using StoryForge.Core.Data;
+﻿using Keystone;
+using StoryForge.Core.Data;
 using StoryForge.Core.Storage.Repositories;
-using StoryForge.Core.Utils;
 
 namespace StoryForge.Infrastructure.Database.InMemory.Repositories;
 
@@ -20,12 +20,15 @@ internal class CharacterRepository : ICharacterRepository
         return characters.AsQueryable();
     }
 
-    public Result<Character> GetById(CharacterId id)
+    public Option<Character> GetById(CharacterId id)
     {
         return characters
             .SingleOrDefault(character => character.Id == id)
-            .AsOption().ToResult();
+            .AsOption();
     }
+
+    public bool HasWithId(CharacterId id) =>
+        characters.Any(character => character.Id == id);
 
     public void Create(Character character)
     {

@@ -1,6 +1,6 @@
-﻿using StoryForge.Application.Abstractions;
+﻿using Keystone;
+using Keystone.Application;
 using StoryForge.Core.Projects;
-using StoryForge.Core.Utils;
 
 namespace StoryForge.Application.Projects.Operations;
 
@@ -15,7 +15,7 @@ internal sealed class CloseProjectOperationHandler : IOperationHandler<CloseProj
         projectSession = projectSessionHandler;
     }
 
-    public async Task<Result> Handle(CloseProjectOperation request, CancellationToken cancellationToken)
+    public async ValueTask<Result> Handle(CloseProjectOperation request, CancellationToken cancellationToken)
     {
         await projectSession.StopSession().ConfigureAwait(false);
         return Result.Ok();

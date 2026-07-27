@@ -1,7 +1,7 @@
-﻿using StoryForge.Application.Abstractions;
+﻿using Keystone;
+using Keystone.Application;
 using StoryForge.Core.Data;
 using StoryForge.Core.Storage;
-using StoryForge.Core.Utils;
 
 namespace StoryForge.Application.Summaries.Operations;
 
@@ -16,7 +16,7 @@ internal sealed class UpdateSummaryOperationHandler : IOperationHandler<UpdateSu
         data = dataSession;
     }
 
-    public async Task<Result> Handle(UpdateSummaryOperation request, CancellationToken cancellationToken)
+    public async ValueTask<Result> Handle(UpdateSummaryOperation request, CancellationToken cancellationToken)
     {
         data.Summaries.Update(request.Summary);
         await data.SaveAsync(cancellationToken).ConfigureAwait(false);

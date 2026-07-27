@@ -1,7 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Keystone;
+using Microsoft.Extensions.DependencyInjection;
 using StoryForge.Core.Projects;
 using StoryForge.Core.Storage;
-using StoryForge.Core.Utils;
 
 namespace StoryForge.Application.Projects;
 
@@ -22,7 +22,7 @@ public class ProjectSessionHandler : IProjectSessionHandler
         appData = appDataSession;
     }
 
-    public Task<Result> LoadSession(string filePath, CancellationToken ct = default)
+    public ValueTask<Result> LoadSession(string filePath, CancellationToken ct = default)
     {
         return SetupSession(filePath, async (dataSession, ct) =>
         {
@@ -37,7 +37,7 @@ public class ProjectSessionHandler : IProjectSessionHandler
         }, ct);
     }
 
-    public Task<Result> StartSession(Project project, CancellationToken ct = default)
+    public ValueTask<Result> StartSession(Project project, CancellationToken ct = default)
     {
         return SetupSession(project.FilePath, async (dataSession, ct) =>
         {
@@ -48,7 +48,7 @@ public class ProjectSessionHandler : IProjectSessionHandler
         }, ct);
     }
 
-    async Task<Result> SetupSession(string filePath, Func<IDataSession, CancellationToken, Task> onProjectNotRegistered, CancellationToken ct)
+    async ValueTask<Result> SetupSession(string filePath, Func<IDataSession, CancellationToken, Task> onProjectNotRegistered, CancellationToken ct)
     {
         try
         {
@@ -65,7 +65,8 @@ public class ProjectSessionHandler : IProjectSessionHandler
             var dataSession = provider.GetRequiredService<IDataSession>();
             await dataSession.EnsureCreatedAsync(ct).ConfigureAwait(false);
 
-            var projectResult = appData.Projects.GetById(filePath);
+            var projectResult = appData.Projects.GetById(filePath)
+            .ToResult($"Couldn't find project at {filePath}");
 
             await projectResult.MatchAsync(
                 onSuccess: async (project, ct) =>
@@ -87,7 +88,7 @@ public class ProjectSessionHandler : IProjectSessionHandler
         }
     }
 
-    public async Task StopSession()
+    public async ValueTask StopSession()
     {
         await (projectScope?.DisposeAsync() ?? ValueTask.CompletedTask)
             .ConfigureAwait(false);

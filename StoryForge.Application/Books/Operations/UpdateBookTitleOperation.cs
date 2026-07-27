@@ -1,7 +1,7 @@
-﻿using StoryForge.Application.Abstractions;
+﻿using Keystone;
+using Keystone.Application;
 using StoryForge.Core.Projects;
 using StoryForge.Core.Storage;
-using StoryForge.Core.Utils;
 
 namespace StoryForge.Application.Books.Operations;
 
@@ -18,7 +18,7 @@ internal sealed class UpdateBookTitleOperationHandler : IOperationHandler<Update
         data = dataSession;
     }
 
-    public async Task<Result> Handle(UpdateBookTitleOperation request, CancellationToken cancellationToken)
+    public async ValueTask<Result> Handle(UpdateBookTitleOperation request, CancellationToken cancellationToken)
     {
         if (!projectSession.IsActive)
         {

@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Keystone;
+using Microsoft.EntityFrameworkCore;
 using StoryForge.Core.Data;
 using StoryForge.Core.Storage.Repositories;
-using StoryForge.Core.Utils;
 
 namespace StoryForge.Infrastructure.Database.SQLite.Repositories;
 
@@ -19,13 +19,15 @@ internal class CharacterRepository : ICharacterRepository
         return characters.AsQueryable();
     }
 
-    public Result<Character> GetById(CharacterId id)
+    public Option<Character> GetById(CharacterId id)
     {
         return characters
             .Include(character => character.Summary)
             .SingleOrDefault(character => character.Id == id)
-            .AsOption().ToResult();
+            .AsOption();
     }
+
+    public bool HasWithId(CharacterId id) => characters.Find(id) != null;
 
     public void Create(Character character)
     {

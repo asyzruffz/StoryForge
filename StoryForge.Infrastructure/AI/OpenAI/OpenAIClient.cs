@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Keystone;
+using Microsoft.Extensions.Options;
 using OpenAI;
 using OpenAI.Chat;
 using StoryForge.Core.AI.Auxiliaries;
 using StoryForge.Core.AI.Chat;
 using StoryForge.Core.AI.Providers;
-using StoryForge.Core.Utils;
 using System.ClientModel;
 using System.Text;
 

@@ -1,12 +1,11 @@
-﻿using StoryForge.Core.Data;
+﻿using Keystone;
+using StoryForge.Core.Data;
 using StoryForge.Core.Storage.Repositories;
-using StoryForge.Core.Utils;
 
 namespace StoryForge.Infrastructure.Database.InMemory.Repositories;
 
 internal class ChapterRepository : IChapterRepository
 {
-    //protected readonly DbSet<Chapter> chapters;
     protected readonly List<Chapter> chapters;
 
     public ChapterRepository(ProjectDbContext context)
@@ -19,12 +18,15 @@ internal class ChapterRepository : IChapterRepository
         return chapters.AsQueryable();
     }
 
-    public Result<Chapter> GetById(ChapterId id)
+    public Option<Chapter> GetById(ChapterId id)
     {
         return chapters
             .SingleOrDefault(chapter => chapter.Id == id)
-            .AsOption().ToResult();
+            .AsOption();
     }
+
+    public bool HasWithId(ChapterId id) =>
+        chapters.Any(chapter => chapter.Id == id);
 
     public void Create(Chapter chapter)
     {

@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Keystone;
+using Microsoft.EntityFrameworkCore;
 using StoryForge.Core.Data;
 using StoryForge.Core.Storage.Repositories;
-using StoryForge.Core.Utils;
 
 namespace StoryForge.Infrastructure.Database.SQLite.Repositories;
 
@@ -19,12 +19,14 @@ internal class SummaryRepository : ISummaryRepository
         return summaries.AsQueryable();
     }
 
-    public Result<Summary> GetById(SummaryId id)
+    public Option<Summary> GetById(SummaryId id)
     {
         return summaries
             .SingleOrDefault(summary => summary.Id == id)
-            .AsOption().ToResult();
+            .AsOption();
     }
+
+    public bool HasWithId(SummaryId id) => summaries.Find(id) != null;
 
     public void Create(Summary summary)
     {

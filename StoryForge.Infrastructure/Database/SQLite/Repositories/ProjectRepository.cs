@@ -1,7 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Keystone;
+using Microsoft.EntityFrameworkCore;
+using StoryForge.Core.Data;
 using StoryForge.Core.Projects;
 using StoryForge.Core.Storage.Repositories;
-using StoryForge.Core.Utils;
 
 namespace StoryForge.Infrastructure.Database.SQLite.Repositories;
 
@@ -19,12 +20,14 @@ internal class ProjectRepository : IProjectRepository
         return projects.AsQueryable();
     }
 
-    public Result<Project> GetById(string filePath)
+    public Option<Project> GetById(string filePath)
     {
         return projects
             .SingleOrDefault(project => project.FilePath == filePath)
-            .AsOption().ToResult();
+            .AsOption();
     }
+
+    public bool HasWithId(string filePath) => projects.Find(filePath) != null;
 
     public void Create(Project project)
     {

@@ -1,6 +1,6 @@
-﻿using StoryForge.Application.Abstractions;
+﻿using Keystone;
+using Keystone.Application;
 using StoryForge.Core.Projects;
-using StoryForge.Core.Utils;
 
 namespace StoryForge.Application.Projects.Operations;
 
@@ -17,7 +17,7 @@ internal sealed class CreateProjectOperationHandler : IOperationHandler<CreatePr
         fileStorage = projectFileStorage;
     }
 
-    public async Task<Result> Handle(CreateProjectOperation request, CancellationToken cancellationToken)
+    public async ValueTask<Result> Handle(CreateProjectOperation request, CancellationToken cancellationToken)
     {
         var filePath = request.FilePath;
         if (string.IsNullOrWhiteSpace(request.FilePath))

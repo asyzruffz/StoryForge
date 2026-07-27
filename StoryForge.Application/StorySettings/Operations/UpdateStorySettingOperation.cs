@@ -1,7 +1,7 @@
-﻿using StoryForge.Application.Abstractions;
+﻿using Keystone;
+using Keystone.Application;
 using StoryForge.Core.Data;
 using StoryForge.Core.Storage;
-using StoryForge.Core.Utils;
 
 namespace StoryForge.Application.StorySettings.Operations;
 
@@ -16,7 +16,7 @@ internal sealed class UpdateStorySettingHandler : IOperationHandler<UpdateStoryS
         data = dataSession;
     }
 
-    public async Task<Result> Handle(UpdateStorySettingOperation request, CancellationToken cancellationToken)
+    public async ValueTask<Result> Handle(UpdateStorySettingOperation request, CancellationToken cancellationToken)
     {
         data.StorySettings.Update(request.Setting);
         await data.SaveAsync(cancellationToken).ConfigureAwait(false);

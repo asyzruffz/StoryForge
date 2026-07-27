@@ -1,7 +1,7 @@
-﻿using StoryForge.Application.Abstractions;
+﻿using Keystone;
+using Keystone.Application;
 using StoryForge.Core.Data;
 using StoryForge.Core.Storage;
-using StoryForge.Core.Utils;
 
 namespace StoryForge.Application.Characters.Operations;
 
@@ -16,10 +16,11 @@ internal sealed class GetCharacterOperationHandler : IOperationHandler<GetCharac
         data = dataSession;
     }
 
-    public async Task<Result<Character>> Handle(GetCharacterOperation request, CancellationToken cancellationToken)
+    public async ValueTask<Result<Character>> Handle(GetCharacterOperation request, CancellationToken cancellationToken)
     {
         await Task.CompletedTask;
-        var result = data.Characters.GetById(request.Id);
+        var result = data.Characters.GetById(request.Id)
+            .ToResult("Couldn't find character in database.");
         return result;
     }
 }

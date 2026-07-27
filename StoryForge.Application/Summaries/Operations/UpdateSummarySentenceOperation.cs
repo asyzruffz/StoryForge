@@ -1,7 +1,7 @@
-﻿using StoryForge.Application.Abstractions;
+﻿using Keystone;
+using Keystone.Application;
 using StoryForge.Core.Data;
 using StoryForge.Core.Storage;
-using StoryForge.Core.Utils;
 
 namespace StoryForge.Application.Summaries.Operations;
 
@@ -16,9 +16,10 @@ internal sealed class UpdateSummarySentenceOperationHandler : IOperationHandler<
         data = dataSession;
     }
 
-    public async Task<Result> Handle(UpdateSummarySentenceOperation request, CancellationToken cancellationToken)
+    public async ValueTask<Result> Handle(UpdateSummarySentenceOperation request, CancellationToken cancellationToken)
     {
         return await data.Summaries.GetById(request.SummaryId)
+            .ToResult("Couldn't find summary in database.")
             .ThenAsync(async (summary, ct) =>
             {
                 summary.Sentence = request.Sentence;

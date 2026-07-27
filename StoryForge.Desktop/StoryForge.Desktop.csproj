@@ -9,7 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-	<PackageReference Include="MediatR" />
     <PackageReference Include="MudBlazor" />
     <PackageReference Include="Photino.Blazor" />
   </ItemGroup>

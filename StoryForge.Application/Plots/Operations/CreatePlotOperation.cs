@@ -1,7 +1,7 @@
-﻿using StoryForge.Application.Abstractions;
+﻿using Keystone;
+using Keystone.Application;
 using StoryForge.Core.Data;
 using StoryForge.Core.Storage;
-using StoryForge.Core.Utils;
 
 namespace StoryForge.Application.Plots.Operations;
 
@@ -16,7 +16,7 @@ internal sealed class CreatePlotOperationHandler : IOperationHandler<CreatePlotO
         data = dataSession;
     }
 
-    public async Task<Result> Handle(CreatePlotOperation request, CancellationToken cancellationToken)
+    public async ValueTask<Result> Handle(CreatePlotOperation request, CancellationToken cancellationToken)
     {
         var newPlot = Plot.New(request.Name);
         data.Plots.Create(newPlot);

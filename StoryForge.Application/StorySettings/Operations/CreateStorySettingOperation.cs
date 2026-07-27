@@ -1,7 +1,7 @@
-﻿using StoryForge.Application.Abstractions;
+﻿using Keystone;
+using Keystone.Application;
 using StoryForge.Core.Data;
 using StoryForge.Core.Storage;
-using StoryForge.Core.Utils;
 
 namespace StoryForge.Application.StorySettings.Operations;
 
@@ -16,7 +16,7 @@ internal sealed class CreateStorySettingOperationHandler : IOperationHandler<Cre
         data = dataSession;
     }
 
-    public async Task<Result> Handle(CreateStorySettingOperation request, CancellationToken cancellationToken)
+    public async ValueTask<Result> Handle(CreateStorySettingOperation request, CancellationToken cancellationToken)
     {
         var newSetting = StorySetting.New(request.Name);
         data.StorySettings.Create(newSetting);

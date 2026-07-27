@@ -1,4 +1,4 @@
-﻿using StoryForge.Core.Utils;
+﻿using Keystone;
 using System.ClientModel;
 
 namespace StoryForge.Infrastructure.AI.OpenAI;

@@ -1,7 +1,7 @@
-﻿using StoryForge.Application.Abstractions;
+﻿using Keystone;
+using Keystone.Application;
 using StoryForge.Core.Data;
 using StoryForge.Core.Storage;
-using StoryForge.Core.Utils;
 
 namespace StoryForge.Application.StorySettings.Operations;
 
@@ -16,10 +16,11 @@ internal sealed class GetStorySettingOperationHandler : IOperationHandler<GetSto
         data = dataSession;
     }
 
-    public async Task<Result<StorySetting>> Handle(GetStorySettingOperation request, CancellationToken cancellationToken)
+    public async ValueTask<Result<StorySetting>> Handle(GetStorySettingOperation request, CancellationToken cancellationToken)
     {
         await Task.CompletedTask;
-        var result = data.StorySettings.GetById(request.Id);
+        var result = data.StorySettings.GetById(request.Id)
+            .ToResult("Couldn't find setting in database.");
         return result;
     }
 }

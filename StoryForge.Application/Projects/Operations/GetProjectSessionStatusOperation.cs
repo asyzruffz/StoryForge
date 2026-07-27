@@ -1,6 +1,6 @@
-﻿using StoryForge.Application.Abstractions;
+﻿using Keystone;
+using Keystone.Application;
 using StoryForge.Core.Projects;
-using StoryForge.Core.Utils;
 
 namespace StoryForge.Application.Projects.Operations;
 
@@ -15,8 +15,8 @@ internal sealed class GetProjectSessionStatusHandler : IOperationHandler<GetProj
         projectSession = projectSessionHandler;
     }
 
-    public Task<Result<bool>> Handle(GetProjectSessionStatusOperation request, CancellationToken cancellationToken)
+    public ValueTask<Result<bool>> Handle(GetProjectSessionStatusOperation request, CancellationToken cancellationToken)
     {
-        return Task.FromResult(Result<bool>.Ok(projectSession.IsActive));
+        return ValueTask.FromResult(Result<bool>.Ok(projectSession.IsActive));
     }
 }
