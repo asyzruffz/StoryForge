@@ -1,0 +1,27 @@
+@using StoryForge.Application.Books.Operations
+@using StoryForge.Core.Data
+@inject ISender sender
+
+<BbCard Class="h-full">
+    <BbCardHeader>
+        <BbCardTitle>@(authorData?.Name ?? "Unnamed Author")</BbCardTitle>
+        <BbCardAction>
+            <BbButton Href="/general/author" Variant="ButtonVariant.Ghost" Size="ButtonSize.Icon" AriaLabel="Edit author information">
+                <LucideIcon Name="square-pen" Class="h-4 w-4" />
+            </BbButton>
+        </BbCardAction>
+    </BbCardHeader>
+    <BbCardContent Class="text-sm text-muted-foreground">
+        @(authorData?.Email ?? string.Empty)
+    </BbCardContent>
+</BbCard>
+
+@code {
+    Author? authorData;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authorResult = await sender.Send(new GetAuthorOperation());
+        authorData = authorResult.Or(Author.Invalid);
+    }
+}

@@ -1,0 +1,12 @@
+﻿@page "/error/{StatusCode}"
+
+<Center Class="flex-col min-h-[400px] gap-4">
+    <h1 class="text-4xl font-bold">@StatusCode</h1>
+    <p class="text-muted-foreground">Sorry, there's nothing here.</p>
+    <a href="/" class="text-primary underline">Go home</a>
+</Center>
+
+@code {
+    [Parameter]
+    public string StatusCode { get; set; } = "404";
+}
