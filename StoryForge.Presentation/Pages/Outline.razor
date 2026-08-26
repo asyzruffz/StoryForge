@@ -1,0 +1,40 @@
+@page "/outline"
+@using StoryForge.Application.Plots.Operations
+@using StoryForge.Core.Data
+@inject BreadCrumbHandler crumbHandler
+@inject ISender sender
+
+<PageTitle>@Title</PageTitle>
+<BbTypographyH2 Class="mb-4">@Title</BbTypographyH2>
+
+@if (!plots.Any())
+{
+    <BbEmpty Title="No plots yet" Description="Create plots to build your story outline."><Icon><LucideIcon Name="chart-network" Class="h-12 w-12" /></Icon></BbEmpty>
+}
+else
+{
+    <div class="space-y-4">
+        @foreach (var group in plots.GroupBy(plot => plot.Importance))
+        {
+            <BbCard><BbCardHeader><BbCardTitle>@group.Key</BbCardTitle></BbCardHeader><BbCardContent Class="space-y-2">
+                @foreach (var plot in group)
+                {
+                    <BbItem AsChild="a" Href="@($"/plots/{plot.IdString}")" Variant="ItemVariant.Outline"><BbItemContent><BbItemTitle>@plot.Name</BbItemTitle></BbItemContent></BbItem>
+                }
+            </BbCardContent></BbCard>
+        }
+    </div>
+}
+
+@code {
+    const string Title = "Outline";
+    IEnumerable<PlotEntry> plots = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        crumbHandler.Items.Clear();
+        crumbHandler.Items.Add(new(Title, "/outline", "chart-network"));
+        crumbHandler.NavigationChange?.Invoke();
+        plots = (await sender.Send(new GetPlotEntriesOperation())).Or([]);
+    }
+}

@@ -1,0 +1,41 @@
+@page "/plots/{Id}"
+@using StoryForge.Application.Plots.Operations
+@using StoryForge.Core.Data
+@inject BreadCrumbHandler crumbHandler
+@inject NavigationManager navigationManager
+@inject ISender sender
+
+<PageTitle>@Title</PageTitle>
+<BbTypographyH2 Class="mb-4">@Title</BbTypographyH2>
+
+<BbTabs DefaultValue="basic" Class="max-w-4xl">
+    <BbTabsList><BbTabsTrigger Value="basic">Basic info</BbTabsTrigger><BbTabsTrigger Value="resolution">Resolution steps</BbTabsTrigger></BbTabsList>
+    <BbTabsContent Value="basic" Class="pt-4"><BbCard><BbCardContent Class="pt-6 space-y-4">
+        <div class="space-y-2"><BbLabel For="plot-name">Plot</BbLabel><BbInput Id="plot-name" @bind-Value="PlotName" /></div>
+        <div class="space-y-2"><BbLabel>Importance</BbLabel><div class="flex items-center gap-4"><BbSlider @bind-Value="ImportanceValue" Min="0" Max="2" Step="1" Class="flex-1" /><span class="w-24 text-sm text-muted-foreground">@Importance</span></div></div>
+        <div class="space-y-2"><BbLabel For="plot-characters">Character(s)</BbLabel><BbTextarea Id="plot-characters" @bind-Value="PlotCharacters" rows="2" /></div>
+        <div class="space-y-2"><BbLabel For="plot-description">Description</BbLabel><BbTextarea Id="plot-description" @bind-Value="PlotDescription" rows="4" /></div>
+        <div class="space-y-2"><BbLabel For="plot-result">Result</BbLabel><BbTextarea Id="plot-result" @bind-Value="PlotResult" rows="4" /></div>
+    </BbCardContent></BbCard></BbTabsContent>
+    <BbTabsContent Value="resolution" Class="pt-4"><BbCard><BbCardContent Class="pt-6"><BbLabel For="plot-resolution">Details</BbLabel><BbTextarea Id="plot-resolution" @bind-Value="ResolutionSteps" rows="18" Class="mt-2" /></BbCardContent></BbCard></BbTabsContent>
+</BbTabs>
+
+@code {
+    const string Title = "Plot Information";
+    [Parameter] public string Id { get; set; } = default!;
+    Plot? plotData;
+    string PlotName { get => plotData?.Name ?? string.Empty; set { if (plotData is not null) { plotData.Name = value; _ = sender.Send(new UpdatePlotNameOperation(plotData.Id, value)); } } }
+    double ImportanceValue { get => plotData?.Importance.Tier() ?? 0; set { if (plotData is not null) { plotData.Importance = (Importance)(int)value; _ = sender.Send(new UpdatePlotImportanceOperation(plotData.Id, plotData.Importance)); } } }
+    string Importance => plotData?.Importance.ToString() ?? string.Empty;
+    string PlotCharacters { get => plotData?.Characters ?? string.Empty; set { if (plotData is not null) { plotData.Characters = value; _ = sender.Send(new UpdatePlotCharactersOperation(plotData.Id, value)); } } }
+    string PlotDescription { get => plotData?.Description ?? string.Empty; set { if (plotData is not null) { plotData.Description = value; _ = sender.Send(new UpdatePlotDescriptionOperation(plotData.Id, value)); } } }
+    string PlotResult { get => plotData?.Result ?? string.Empty; set { if (plotData is not null) { plotData.Result = value; _ = sender.Send(new UpdatePlotResultOperation(plotData.Id, value)); } } }
+    string ResolutionSteps { get => plotData?.ResolutionSteps ?? string.Empty; set { if (plotData is not null) { plotData.ResolutionSteps = value; _ = sender.Send(new UpdatePlotResolutionStepsOperation(plotData.Id, value)); } } }
+
+    protected override async Task OnInitializedAsync()
+    {
+        crumbHandler.Items.Clear(); crumbHandler.Items.Add(new("Plots", "/plots", "waypoints")); crumbHandler.Items.Add(new(Title, $"/plots/{Id}", null)); crumbHandler.NavigationChange?.Invoke();
+        var result = await sender.Send(new GetPlotOperation(PlotId.From(Id)));
+        if (result.IsSuccess) plotData = result.Or(null!); else navigationManager.NavigateTo("/error/404");
+    }
+}

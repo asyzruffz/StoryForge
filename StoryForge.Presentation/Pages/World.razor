@@ -1,0 +1,52 @@
+@page "/world"
+@using StoryForge.Application.StorySettings.Operations
+@using StoryForge.Core.Data
+@inject BreadCrumbHandler crumbHandler
+@inject DialogService dialog
+@inject ISender sender
+
+<PageTitle>@Title</PageTitle>
+<div class="flex items-center justify-between mb-4"><BbTypographyH2>@Title</BbTypographyH2><BbButton OnClick="CreateSettingAsync"><LucideIcon Name="plus" Class="mr-2 h-4 w-4" />New setting</BbButton></div>
+
+@if (!settings.Any())
+{
+    <BbEmpty Title="No settings yet" Description="Create a setting to build your story world."><Icon><LucideIcon Name="earth" Class="h-12 w-12" /></Icon><ChildContent><BbButton OnClick="CreateSettingAsync">New setting</BbButton></ChildContent></BbEmpty>
+}
+else
+{
+    <div class="space-y-4">
+        @foreach (var group in settings.GroupBy(setting => setting.Category))
+        {
+            <BbCard><BbCardHeader><BbCardTitle>@group.Key</BbCardTitle></BbCardHeader><BbCardContent Class="space-y-2">
+                @foreach (var setting in group)
+                {
+                    <BbItem AsChild="a" Href="@($"/world/{setting.IdString}")" Variant="ItemVariant.Outline"><BbItemContent><BbItemTitle>@setting.Name</BbItemTitle></BbItemContent></BbItem>
+                }
+            </BbCardContent></BbCard>
+        }
+    </div>
+}
+
+@code {
+    const string Title = "World";
+    IEnumerable<StorySettingEntry> settings = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        crumbHandler.Items.Clear();
+        crumbHandler.Items.Add(new(Title, "/world", "earth"));
+        crumbHandler.NavigationChange?.Invoke();
+        await LoadSettingsAsync();
+    }
+
+    async Task LoadSettingsAsync() => settings = (await sender.Send(new GetStorySettingEntriesOperation())).Or([]);
+
+    async Task CreateSettingAsync()
+    {
+        var result = await dialog.OpenAsync<NewNameDialog>(new Dictionary<string, object?> { [nameof(NewNameDialog.NameLabel)] = "Setting name" }, new DialogOpenOptions { Title = "Create New Setting", Size = DialogSize.Small });
+        var name = result.Cancelled ? null : result.GetData<string>()?.Trim();
+        if (string.IsNullOrEmpty(name)) return;
+        await sender.Send(new CreateStorySettingOperation(name));
+        await LoadSettingsAsync();
+    }
+}

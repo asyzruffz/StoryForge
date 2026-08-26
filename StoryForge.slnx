@@ -12,5 +12,6 @@
   </Project>
   <Project Path="StoryForge.Infrastructure/StoryForge.Infrastructure.csproj" />
   <Project Path="StoryForge.MudPresentation/StoryForge.MudPresentation.csproj" />
+  <Project Path="StoryForge.Presentation/StoryForge.Presentation.csproj" />
   <Project Path="StoryForge.Tests/StoryForge.Tests.csproj" />
 </Solution>

@@ -1,0 +1,17 @@
+﻿@inherits LayoutComponentBase
+
+<BbSidebarProvider HeightClass="h-screen bg-sidebar" Variant="SidebarVariant.Inset">
+    <SideBar />
+
+    <BbSidebarInset Class="min-w-0">
+        <TopBar />
+
+        <div class="flex-1 min-h-0 overflow-auto px-4 py-4 space-y-8">
+            @Body
+        </div>
+    </BbSidebarInset>
+</BbSidebarProvider>
+
+<BbToastProvider Position="ToastPosition.BottomRight" />
+<BbDialogProvider />
+<BbPortalHost />

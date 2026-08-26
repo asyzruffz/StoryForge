@@ -1,0 +1,16 @@
+﻿<div class="@GetClassNames()">
+    @ChildContent
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public string? Class { get; set; }
+
+    string GetClassNames()
+    {
+        return string.Join(" ", "flex justify-center items-center h-full", Class);
+    }
+}

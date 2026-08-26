@@ -1,0 +1,66 @@
+@page "/about"
+@using StoryForge.Application.About
+@using StoryForge.Core.Data
+@inject BreadCrumbHandler crumbHandler
+@inject ISender sender
+
+<PageTitle>@Title</PageTitle>
+<BbTypographyH2 Class="mb-4">@Title</BbTypographyH2>
+
+<div class="space-y-4 max-w-3xl">
+    <BbCard>
+        <BbCardContent Class="pt-6">
+            <div class="flex items-center gap-4">
+                <LucideIcon Name="book-open-text" Class="h-10 w-10 text-primary" />
+                <div>
+                    <BbTypographyH3>@appInfo.Name</BbTypographyH3>
+                    <p class="text-sm text-muted-foreground">Version @appInfo.Version</p>
+                </div>
+            </div>
+            <p class="mt-4">@appInfo.Description</p>
+        </BbCardContent>
+    </BbCard>
+
+    <BbCard>
+        <BbCardHeader><BbCardTitle>System information</BbCardTitle></BbCardHeader>
+        <BbCardContent>
+            <dl class="grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 text-sm">
+                <dt class="text-muted-foreground">Runtime</dt><dd>@appInfo.Runtime</dd>
+                <dt class="text-muted-foreground">Platform</dt><dd>@appInfo.Platform</dd>
+            </dl>
+        </BbCardContent>
+    </BbCard>
+
+    <BbCard>
+        <BbCardHeader><BbCardTitle>Technologies</BbCardTitle></BbCardHeader>
+        <BbCardContent Class="flex flex-wrap gap-2">
+            @foreach (var technology in appInfo.Technologies)
+            {
+                <BbBadge Variant="BadgeVariant.Outline">@technology</BbBadge>
+            }
+        </BbCardContent>
+    </BbCard>
+
+    <BbCard>
+        <BbCardHeader><BbCardTitle>Credits</BbCardTitle></BbCardHeader>
+        <BbCardContent>
+            <p>@appInfo.Name is built with open-source technologies and powered by AI to help writers craft their stories.</p>
+            <a class="inline-flex mt-4 text-primary underline" href="@appInfo.SourceLink" target="_blank" rel="noopener noreferrer">View source on GitHub</a>
+        </BbCardContent>
+    </BbCard>
+</div>
+
+@code {
+    const string Title = "About";
+    AppInfo appInfo = AppInfo.Default;
+
+    protected override async Task OnInitializedAsync()
+    {
+        crumbHandler.Items.Clear();
+        crumbHandler.Items.Add(new(Title, "/about", "info"));
+        crumbHandler.NavigationChange?.Invoke();
+
+        var result = await sender.Send(new GetAppInfoOperation());
+        appInfo = result.Or(AppInfo.Default);
+    }
+}

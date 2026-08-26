@@ -1,0 +1,39 @@
+﻿@inject BreadCrumbHandler handler
+
+<BbBreadcrumb>
+    <BbBreadcrumbList AutoSeparator>
+        @for (int i = 0; i < items.Count; i++)
+        {
+            var item = items[i];
+            <BbBreadcrumbItem>
+                @if (item.Icon is not null)
+                {
+                    <LucideIcon Name="@item.Icon" class="h-3.5 w-3.5 mr-1" />
+                }
+                @if (item.Path is null)
+                {
+                    <BbBreadcrumbPage>@item.Label</BbBreadcrumbPage>
+                }
+                else
+                {
+                    <BbBreadcrumbLink Href="@item.Path">@item.Label</BbBreadcrumbLink>
+                }
+            </BbBreadcrumbItem>
+        }
+    </BbBreadcrumbList>
+</BbBreadcrumb>
+
+@code {
+    List<BreadCrumbHandler.Item> items = [];
+
+    protected override void OnInitialized()
+    {
+        handler.NavigationChange += OnNavigationChanged;
+    }
+
+    void OnNavigationChanged()
+    {
+        items = handler.Items;
+        StateHasChanged();
+    }
+}

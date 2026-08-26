@@ -1,0 +1,131 @@
+@using StoryForge.Application.Projects.Operations
+@using StoryForge.Core.Projects
+@inject NavigationManager navigationManager
+@inject IFileDialogService fileDialog
+@inject DialogService dialog
+@inject ToastService toast
+@inject ISender sender
+
+<BbCard>
+    <BbCardHeader>
+        <BbCardTitle>Recent projects</BbCardTitle>
+        <!--<BbCardDescription>Recent projects</BbCardDescription>-->
+    </BbCardHeader>
+    <BbCardContent Class="flex flex-row w-200 gap-4 p-4">
+        <div class="h-full min-h-0">
+            <BbDataView TItem="Project" Data="@recentProjects" ShowToolbar="false" ShowPagination="false">
+                <ListTemplate Context="project">
+                    <BbItem AsChild="button" OnClick="@(() => OpenProject(project.FilePath))" Size="ItemSize.Sm" Variant="ItemVariant.Outline">
+                        <BbItemMedia>
+                            <BbAvatar>
+                                <BbAvatarFallback>@project.Name[0]</BbAvatarFallback>
+                            </BbAvatar>
+                        </BbItemMedia>
+                        <BbItemContent>
+                            <div style="text-align:start;">
+                                <BbItemTitle>@project.Name</BbItemTitle>
+                                <BbItemDescription>@project.FilePath</BbItemDescription>
+                            </div>
+                        </BbItemContent>
+                    </BbItem>
+                </ListTemplate>
+                <EmptyTemplate>
+                    <Center>
+                        <BbEmpty Title="No projects yet"
+                                 Description="Get started by creating your first project.">
+                            <Icon>
+                                <LucideIcon Name="folder" class="h-12 w-12" />
+                            </Icon>
+                            <ChildContent>
+                                <BbButton Variant="ButtonVariant.Outline" OnClick="ShowNewProjectDialog">
+                                    <LucideIcon Name="file-plus" class="mr-2 h-4 w-4" />
+                                    Create Project
+                                </BbButton>
+                            </ChildContent>
+                        </BbEmpty>
+                    </Center>
+                </EmptyTemplate>
+                <Fields>
+                    <BbDataViewColumn TItem="Project" TValue="string"
+                                      Property="@(p => p.Name)"
+                                      Header="Name" />
+                    <BbDataViewColumn TItem="Project" TValue="string"
+                                      Property="@(p => p.FilePath)"
+                                      Header="Location" />
+                </Fields>
+            </BbDataView>
+        </div>
+
+        <div class="flex flex-col h-full min-h-0 space-y-3">
+            <BbItem AsChild="button" @onclick="ShowNewProjectDialog" Variant="ItemVariant.Outline">
+                <BbItemMedia>
+                    <LucideIcon Name="file-plus" class="h-5 w-5" />
+                </BbItemMedia>
+                <BbItemContent>
+                    <BbItemTitle>Create a new project</BbItemTitle>
+                </BbItemContent>
+            </BbItem>
+            <BbItem AsChild="button" @onclick="OpenFileBrowser" Variant="ItemVariant.Outline">
+                <BbItemMedia>
+                    <LucideIcon Name="folder-open" class="h-5 w-5" />
+                </BbItemMedia>
+                <BbItemContent>
+                    <BbItemTitle>Open a project</BbItemTitle>
+                </BbItemContent>
+            </BbItem>
+        </div>
+    </BbCardContent>
+</BbCard>
+
+@code {
+    IEnumerable<Project> recentProjects = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        var projectsResult = await sender.Send(new GetRecentProjectsOperation());
+        recentProjects = projectsResult.Or([])
+            .OrderByDescending(p => p.LastActive)
+            .Take(5)
+            .ToList();
+    }
+
+    async Task ShowNewProjectDialog()
+    {
+        var result = await dialog.OpenAsync<NewProjectDialog>(
+            new DialogOpenOptions
+            {
+                Title = "New Project",
+                Size = DialogSize.Small
+            });
+
+        if (result.Cancelled) return;
+
+        var project = result.GetData<NewProjectDialog.ProjectDetails>();
+        if (project is null || string.IsNullOrWhiteSpace(project.Name)) return;
+
+        await OnCreateNewProject(project.Name.Trim(), project.Path);
+    }
+
+    async Task OnCreateNewProject(string name, string path)
+    {
+        var projectResult = await sender.Send(new CreateProjectOperation(name, path));
+        projectResult
+            .OnError(msg => toast.Error(msg))
+            .Then(() => navigationManager.NavigateTo("/general", true));
+    }
+
+    async Task OpenFileBrowser()
+    {
+        var filePath = await fileDialog.ShowOpenFileAsync("Choose project file", ("Project database", "*.db"));
+        if (filePath is null) return;
+        await OpenProject(filePath);
+    }
+
+    async Task OpenProject(string filePath)
+    {
+        var projectResult = await sender.Send(new OpenProjectPathOperation(filePath));
+        projectResult
+            .OnError(msg => toast.Error(msg))
+            .Then(() => navigationManager.NavigateTo("/general", true));
+    }
+}

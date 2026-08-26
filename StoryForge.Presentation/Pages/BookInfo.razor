@@ -1,0 +1,38 @@
+@page "/general/book"
+@using StoryForge.Application.Books.Operations
+@using StoryForge.Core.Data
+@inject BreadCrumbHandler crumbHandler
+@inject ISender sender
+
+<PageTitle>@Title</PageTitle>
+<BbTypographyH2 Class="mb-4">@Title</BbTypographyH2>
+
+<BbCard Class="max-w-2xl">
+    <BbCardContent Class="pt-6 space-y-4">
+        <div class="space-y-2"><BbLabel For="book-title">Title</BbLabel><BbInput Id="book-title" @bind-Value="BookTitle" /></div>
+        <div class="space-y-2"><BbLabel For="book-subtitle">Subtitle</BbLabel><BbInput Id="book-subtitle" @bind-Value="BookSubtitle" /></div>
+        <div class="space-y-2"><BbLabel For="book-series">Series</BbLabel><BbInput Id="book-series" @bind-Value="BookSeries" /></div>
+        <div class="space-y-2"><BbLabel For="book-volume">Volume</BbLabel><BbInput Id="book-volume" @bind-Value="BookVolume" /></div>
+        <div class="space-y-2"><BbLabel For="book-genre">Genre</BbLabel><BbInput Id="book-genre" @bind-Value="BookGenre" /></div>
+    </BbCardContent>
+</BbCard>
+
+@code {
+    const string Title = "Book Information";
+    Book? bookData;
+
+    string BookTitle { get => bookData?.Title ?? string.Empty; set { if (bookData is not null) { bookData.Title = value; _ = sender.Send(new UpdateBookTitleOperation(value)); } } }
+    string BookSubtitle { get => bookData?.Subtitle ?? string.Empty; set { if (bookData is not null) { bookData.Subtitle = value; _ = sender.Send(new UpdateBookSubtitleOperation(value)); } } }
+    string BookSeries { get => bookData?.Series ?? string.Empty; set { if (bookData is not null) { bookData.Series = value; _ = sender.Send(new UpdateBookSeriesOperation(value)); } } }
+    string BookVolume { get => bookData?.Volume ?? string.Empty; set { if (bookData is not null) { bookData.Volume = value; _ = sender.Send(new UpdateBookVolumeOperation(value)); } } }
+    string BookGenre { get => bookData?.Genre ?? string.Empty; set { if (bookData is not null) { bookData.Genre = value; _ = sender.Send(new UpdateBookGenreOperation(value)); } } }
+
+    protected override async Task OnInitializedAsync()
+    {
+        crumbHandler.Items.Clear();
+        crumbHandler.Items.Add(new("General", "/general", "layout-dashboard"));
+        crumbHandler.Items.Add(new(Title, "/general/book", null));
+        crumbHandler.NavigationChange?.Invoke();
+        bookData = (await sender.Send(new GetBookOperation())).Or(Book.Invalid);
+    }
+}

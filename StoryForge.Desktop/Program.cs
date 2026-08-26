@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Photino.Blazor;
-using StoryForge.MudPresentation;
+using StoryForge.Presentation;
 
 namespace StoryForge.Desktop;
 
@@ -30,7 +30,7 @@ internal class Program
 
         app.MainWindow.SetupDefault(windowTitle);
 
-        //app.UseStatusCodePagesWithRedirects("/StatusCode/{0}");
+        //app.UseStatusCodePagesWithRedirects("/error/{0}");
 
         app.Run();
     }

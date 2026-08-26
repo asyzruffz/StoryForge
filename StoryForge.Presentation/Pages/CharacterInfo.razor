@@ -1,0 +1,60 @@
+@page "/characters/{Id}"
+@using StoryForge.Application.Characters.Operations
+@using StoryForge.Application.Summaries.Operations
+@using StoryForge.Core.Data
+@inject BreadCrumbHandler crumbHandler
+@inject NavigationManager navigationManager
+@inject ISender sender
+
+<PageTitle>@Title</PageTitle>
+<BbTypographyH2 Class="mb-4">@Title</BbTypographyH2>
+
+<BbTabs DefaultValue="basic" Class="max-w-4xl">
+    <BbTabsList Responsive>
+        <BbTabsTrigger Value="basic">Basic info</BbTabsTrigger>
+        <BbTabsTrigger Value="summary">Summary</BbTabsTrigger>
+        <BbTabsTrigger Value="notes">Notes</BbTabsTrigger>
+        <BbTabsTrigger Value="details">Detailed info</BbTabsTrigger>
+    </BbTabsList>
+    <BbTabsContent Value="basic" Class="pt-4"><BbCard><BbCardContent Class="pt-6 space-y-4">
+        <div class="space-y-2"><BbLabel For="character-name">Name</BbLabel><BbInput Id="character-name" @bind-Value="CharacterName" /></div>
+        <div class="space-y-2"><BbLabel>Importance</BbLabel><div class="flex items-center gap-4"><BbSlider @bind-Value="ImportanceValue" Min="0" Max="2" Step="1" Class="flex-1" /><span class="w-24 text-sm text-muted-foreground">@Importance</span></div></div>
+        <div class="space-y-2"><BbLabel For="character-motivation">Motivation</BbLabel><BbTextarea Id="character-motivation" @bind-Value="CharacterMotivation" rows="3" /></div>
+        <div class="space-y-2"><BbLabel For="character-goal">Goal</BbLabel><BbTextarea Id="character-goal" @bind-Value="CharacterGoal" rows="3" /></div>
+        <div class="space-y-2"><BbLabel For="character-conflict">Conflict</BbLabel><BbTextarea Id="character-conflict" @bind-Value="CharacterConflict" rows="3" /></div>
+        <div class="space-y-2"><BbLabel For="character-epiphany">Epiphany</BbLabel><BbTextarea Id="character-epiphany" @bind-Value="CharacterEpiphany" rows="3" /></div>
+    </BbCardContent></BbCard></BbTabsContent>
+    <BbTabsContent Value="summary" Class="pt-4"><BbCard><BbCardContent Class="pt-6 space-y-4">
+        <div class="space-y-2"><BbLabel For="character-summary-sentence">One-sentence summary</BbLabel><BbTextarea Id="character-summary-sentence" @bind-Value="SentenceSummary" rows="2" /></div>
+        <div class="space-y-2"><BbLabel For="character-summary-paragraph">One-paragraph summary</BbLabel><BbTextarea Id="character-summary-paragraph" @bind-Value="ParagraphSummary" rows="8" /></div>
+        <div class="space-y-2"><BbLabel For="character-summary-page">One-page summary</BbLabel><BbTextarea Id="character-summary-page" @bind-Value="PageSummary" rows="18" /></div>
+    </BbCardContent></BbCard></BbTabsContent>
+    <BbTabsContent Value="notes" Class="pt-4"><BbCard><BbCardContent Class="pt-6"><BbLabel For="character-notes">Notes</BbLabel><BbTextarea Id="character-notes" @bind-Value="Notes" rows="18" Class="mt-2" /></BbCardContent></BbCard></BbTabsContent>
+    <BbTabsContent Value="details" Class="pt-4"><BbCard><BbCardContent Class="pt-6"><BbLabel For="character-details">Details</BbLabel><BbTextarea Id="character-details" @bind-Value="Details" rows="18" Class="mt-2" /></BbCardContent></BbCard></BbTabsContent>
+</BbTabs>
+
+@code {
+    const string Title = "Character Information";
+    [Parameter] public string Id { get; set; } = default!;
+    Character? characterData;
+
+    string CharacterName { get => characterData?.Name ?? string.Empty; set { if (characterData is not null) { characterData.Name = value; _ = sender.Send(new UpdateCharacterNameOperation(characterData.Id, value)); } } }
+    double ImportanceValue { get => characterData?.Importance.Tier() ?? 0; set { if (characterData is not null) { characterData.Importance = (Importance)(int)value; _ = sender.Send(new UpdateCharacterImportanceOperation(characterData.Id, characterData.Importance)); } } }
+    string Importance => characterData?.Importance.ToString() ?? string.Empty;
+    string CharacterMotivation { get => characterData?.Motivation ?? string.Empty; set { if (characterData is not null) { characterData.Motivation = value; _ = sender.Send(new UpdateCharacterMotivationOperation(characterData.Id, value)); } } }
+    string CharacterGoal { get => characterData?.Goal ?? string.Empty; set { if (characterData is not null) { characterData.Goal = value; _ = sender.Send(new UpdateCharacterGoalOperation(characterData.Id, value)); } } }
+    string CharacterConflict { get => characterData?.Conflict ?? string.Empty; set { if (characterData is not null) { characterData.Conflict = value; _ = sender.Send(new UpdateCharacterConflictOperation(characterData.Id, value)); } } }
+    string CharacterEpiphany { get => characterData?.Epiphany ?? string.Empty; set { if (characterData is not null) { characterData.Epiphany = value; _ = sender.Send(new UpdateCharacterEpiphanyOperation(characterData.Id, value)); } } }
+    string SentenceSummary { get => characterData?.Summary.Sentence ?? string.Empty; set { if (characterData is not null) { characterData.Summary.Sentence = value; _ = sender.Send(new UpdateSummarySentenceOperation(characterData.Summary.Id, value)); } } }
+    string ParagraphSummary { get => characterData?.Summary.Paragraph ?? string.Empty; set { if (characterData is not null) { characterData.Summary.Paragraph = value; _ = sender.Send(new UpdateSummaryParagraphOperation(characterData.Summary.Id, value)); } } }
+    string PageSummary { get => characterData?.Summary.Page ?? string.Empty; set { if (characterData is not null) { characterData.Summary.Page = value; _ = sender.Send(new UpdateSummaryPageOperation(characterData.Summary.Id, value)); } } }
+    string Notes { get => characterData?.Notes ?? string.Empty; set { if (characterData is not null) { characterData.Notes = string.IsNullOrEmpty(value) ? null : value; _ = sender.Send(new UpdateCharacterNotesOperation(characterData.Id, characterData.Notes)); } } }
+    string Details { get => characterData?.Details ?? string.Empty; set { if (characterData is not null) { characterData.Details = string.IsNullOrEmpty(value) ? null : value; _ = sender.Send(new UpdateCharacterDetailsOperation(characterData.Id, characterData.Details)); } } }
+
+    protected override async Task OnInitializedAsync()
+    {
+        crumbHandler.Items.Clear(); crumbHandler.Items.Add(new("Characters", "/characters", "users")); crumbHandler.Items.Add(new(Title, $"/characters/{Id}", null)); crumbHandler.NavigationChange?.Invoke();
+        var result = await sender.Send(new GetCharacterOperation(CharacterId.From(Id)));
+        if (result.IsSuccess) characterData = result.Or(null!); else navigationManager.NavigateTo("/error/404");
+    }
+}

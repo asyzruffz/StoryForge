@@ -1,0 +1,73 @@
+﻿<BbSidebar style="margin-right:-0.5rem;">
+    <BbSidebarHeader>
+        <ProjectSelector />
+    </BbSidebarHeader>
+    <BbSidebarContent>
+        <BbSidebarGroup>
+            <BbSidebarMenu>
+                <BbSidebarMenuItem>
+                    <BbSidebarMenuButton Href="/general" IsActive="true">
+                        <LucideIcon Name="layout-dashboard" />
+                        <span>General</span>
+                    </BbSidebarMenuButton>
+                </BbSidebarMenuItem>
+                <BbSidebarMenuItem>
+                    <BbSidebarMenuButton Href="/summary">
+                        <LucideIcon Name="notebook-text" />
+                        <span>Summary</span>
+                    </BbSidebarMenuButton>
+                </BbSidebarMenuItem>
+                <BbSidebarMenuItem>
+                    <BbSidebarMenuButton Href="/characters">
+                        <LucideIcon Name="users" />
+                        <span>Characters</span>
+                    </BbSidebarMenuButton>
+                </BbSidebarMenuItem>
+                <BbSidebarMenuItem>
+                    <BbSidebarMenuButton Href="/plots">
+                        <LucideIcon Name="waypoints" />
+                        <span>Plots</span>
+                    </BbSidebarMenuButton>
+                </BbSidebarMenuItem>
+                <BbSidebarMenuItem>
+                    <BbSidebarMenuButton Href="/world">
+                        <LucideIcon Name="earth" />
+                        <span>World</span>
+                    </BbSidebarMenuButton>
+                </BbSidebarMenuItem>
+                <BbSidebarMenuItem>
+                    <BbSidebarMenuButton Href="/outline">
+                        <LucideIcon Name="chart-network" />
+                        <span>Outline</span>
+                    </BbSidebarMenuButton>
+                </BbSidebarMenuItem>
+                <BbSidebarMenuItem>
+                    <BbSidebarMenuButton Href="/editor">
+                        <LucideIcon Name="file-pen-line" />
+                        <span>Editor</span>
+                    </BbSidebarMenuButton>
+                </BbSidebarMenuItem>
+            </BbSidebarMenu>
+        </BbSidebarGroup>
+        <div class="flex flex-grow h-full"></div>
+        <BbSidebarGroup>
+            <BbSidebarMenu>
+                <BbSidebarMenuItem>
+                    <BbSidebarMenuButton Href="/settings" IsActive="true">
+                        <LucideIcon Name="settings" />
+                        <span>Settings</span>
+                    </BbSidebarMenuButton>
+                </BbSidebarMenuItem>
+                <BbSidebarMenuItem>
+                    <BbSidebarMenuButton Href="/about">
+                        <LucideIcon Name="info" />
+                        <span>About</span>
+                    </BbSidebarMenuButton>
+                </BbSidebarMenuItem>
+            </BbSidebarMenu>
+        </BbSidebarGroup>
+        <div class="flex flex-row flex-1 justify-end items-end space-x-2">
+            <DarkModeToggle />
+        </div>
+    </BbSidebarContent>
+</BbSidebar>

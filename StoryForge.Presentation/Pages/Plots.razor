@@ -1,0 +1,52 @@
+@page "/plots"
+@using StoryForge.Application.Plots.Operations
+@using StoryForge.Core.Data
+@inject BreadCrumbHandler crumbHandler
+@inject DialogService dialog
+@inject ISender sender
+
+<PageTitle>@Title</PageTitle>
+<div class="flex items-center justify-between mb-4"><BbTypographyH2>@Title</BbTypographyH2><BbButton OnClick="CreatePlotAsync"><LucideIcon Name="plus" Class="mr-2 h-4 w-4" />New plot</BbButton></div>
+
+@if (!plots.Any())
+{
+    <BbEmpty Title="No plots yet" Description="Create a plot to begin outlining your story."><Icon><LucideIcon Name="waypoints" Class="h-12 w-12" /></Icon><ChildContent><BbButton OnClick="CreatePlotAsync">New plot</BbButton></ChildContent></BbEmpty>
+}
+else
+{
+    <div class="space-y-4">
+        @foreach (var group in plots.GroupBy(plot => plot.Importance))
+        {
+            <BbCard><BbCardHeader><BbCardTitle>@group.Key</BbCardTitle></BbCardHeader><BbCardContent Class="space-y-2">
+                @foreach (var plot in group)
+                {
+                    <BbItem AsChild="a" Href="@($"/plots/{plot.IdString}")" Variant="ItemVariant.Outline"><BbItemContent><BbItemTitle>@plot.Name</BbItemTitle></BbItemContent></BbItem>
+                }
+            </BbCardContent></BbCard>
+        }
+    </div>
+}
+
+@code {
+    const string Title = "Plots";
+    IEnumerable<PlotEntry> plots = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        crumbHandler.Items.Clear();
+        crumbHandler.Items.Add(new(Title, "/plots", "waypoints"));
+        crumbHandler.NavigationChange?.Invoke();
+        await LoadPlotsAsync();
+    }
+
+    async Task LoadPlotsAsync() => plots = (await sender.Send(new GetPlotEntriesOperation())).Or([]);
+
+    async Task CreatePlotAsync()
+    {
+        var result = await dialog.OpenAsync<NewNameDialog>(new Dictionary<string, object?> { [nameof(NewNameDialog.NameLabel)] = "Plot name" }, new DialogOpenOptions { Title = "Create New Plot", Size = DialogSize.Small });
+        var name = result.Cancelled ? null : result.GetData<string>()?.Trim();
+        if (string.IsNullOrEmpty(name)) return;
+        await sender.Send(new CreatePlotOperation(name));
+        await LoadPlotsAsync();
+    }
+}
