@@ -1,10 +1,12 @@
+@using StoryForge.Presentation.Error;
+
 <Router AppAssembly="@Presentation.AssemblyReference.Assembly">
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
     </Found>
     <NotFound>
         <LayoutView Layout="@typeof(MainLayout)">
-            <NotFound />
+            <NotFoundPage />
         </LayoutView>
     </NotFound>
 </Router>
