@@ -1,0 +1,112 @@
+﻿@page "/summary"
+@using StoryForge.Application.Summaries.Operations
+@using StoryForge.Core.Data
+@inject BreadCrumbHandler crumbHandler;
+@inject ISender sender;
+
+<PageTitle>@Title</PageTitle>
+<MudText Typo="Typo.h4" Class="mb-4">@Title</MudText>
+
+<MudStack Spacing="2">
+    <MudTextField @bind-Value="Situation" Label="Situation" Variant="Variant.Outlined" />
+    <MudTabs Rounded="true" Centered="true">
+        <MudTabPanel Text="Sentence" Class="pt-2">
+            <MudTextField T="string" Value="@SentenceSummary" ValueChanged="SentenceUpdated" Label="One-Sentence Summary" Lines="2" Variant="Variant.Outlined" />
+            <WordCountLabel WordCount="@SentenceWordCount" />
+        </MudTabPanel>
+        <MudTabPanel Text="Paragraph" Class="pt-2">
+            <MudTextField T="string" Value="@ParagraphSummary" ValueChanged="ParagraphUpdated" Label="One-Paragraph Summary" Lines="8" Variant="Variant.Outlined" />
+            <WordCountLabel WordCount="@ParagraphWordCount" />
+        </MudTabPanel>
+        <MudTabPanel Text="Page" Class="pt-2">
+            <MudTextField T="string" Value="@PageSummary" ValueChanged="PageUpdated" Label="One-Page Summary" Lines="18" Variant="Variant.Outlined" />
+            <WordCountLabel WordCount="@PageWordCount" />
+        </MudTabPanel>
+    </MudTabs>
+</MudStack>
+
+@code {
+    const string Title = "Summary";
+
+    string Situation
+    {
+        get => bookData?.Situation ?? string.Empty;
+        set
+        {
+            if (bookData is null) return;
+            bookData.Situation = value;
+            _ = sender.Send(new UpdateBookSummarySituationOperation(value));
+        }
+    }
+
+    string SentenceSummary
+    {
+        get => bookData?.Summary.Sentence ?? string.Empty;
+        set
+        {
+            if (bookData is null) return;
+            bookData.Summary.Sentence = value;
+            _ = sender.Send(new UpdateSummarySentenceOperation(bookData.Summary.Id, value));
+        }
+    }
+
+    string ParagraphSummary
+    {
+        get => bookData?.Summary.Paragraph ?? string.Empty;
+        set
+        {
+            if (bookData is null) return;
+            bookData.Summary.Paragraph = value;
+            _ = sender.Send(new UpdateSummaryParagraphOperation(bookData.Summary.Id, value));
+        }
+    }
+
+    string PageSummary
+    {
+        get => bookData?.Summary.Page ?? string.Empty;
+        set
+        {
+            if (bookData is null) return;
+            bookData.Summary.Page = value;
+            _ = sender.Send(new UpdateSummaryPageOperation(bookData.Summary.Id, value));
+        }
+    }
+
+    int SentenceWordCount { get; set; } = 0;
+    int ParagraphWordCount { get; set; } = 0;
+    int PageWordCount { get; set; } = 0;
+
+    BookSummary? bookData;
+
+    protected override async Task OnInitializedAsync()
+    {
+        crumbHandler.Items.Clear();
+        crumbHandler.Items.Add(new("Summary", "/summary", Icons.Material.Filled.Summarize));
+        crumbHandler.NavigationChange?.Invoke();
+
+        var summaryResult = await sender.Send(new GetBookSummaryOperation());
+        bookData = summaryResult.Or(BookSummary.Invalid);
+
+        SentenceWordCount = SentenceSummary.WordCount();
+        ParagraphWordCount = ParagraphSummary.WordCount();
+        PageWordCount = PageSummary.WordCount();
+    }
+
+    void SentenceUpdated(string sentence)
+    {
+        SentenceSummary = sentence;
+        SentenceWordCount = sentence.WordCount();
+    }
+
+    void ParagraphUpdated(string paragraph)
+    {
+        ParagraphSummary = paragraph;
+        ParagraphWordCount = paragraph.WordCount();
+    }
+
+    void PageUpdated(string page)
+    {
+        PageSummary = page;
+        PageWordCount = page.WordCount();
+    }
+}

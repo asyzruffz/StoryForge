@@ -1,0 +1,87 @@
+﻿@page "/general/book"
+@using StoryForge.Application.Books.Operations
+@using StoryForge.Core.Data
+@inject BreadCrumbHandler crumbHandler;
+@inject ISender sender;
+
+<PageTitle>@Title</PageTitle>
+<MudText Typo="Typo.h4" Class="mb-4">@Title</MudText>
+
+<MudStack Spacing="2">
+    <MudTextField @bind-Value="BookTitle" Label="Title" Variant="Variant.Outlined" />
+    <MudTextField @bind-Value="BookSubtitle" Label="Subtitle" Variant="Variant.Outlined" />
+    <MudTextField @bind-Value="BookSeries" Label="Series" Variant="Variant.Outlined" />
+    <MudTextField @bind-Value="BookVolume" Label="Volume" Variant="Variant.Outlined" />
+    <MudTextField @bind-Value="BookGenre" Label="Genre" Variant="Variant.Outlined" />
+</MudStack>
+
+@code {
+    const string Title = "Book Information";
+
+    string BookTitle
+    {
+        get => bookData?.Title ?? string.Empty;
+        set {
+            if (bookData is null) return;
+            bookData.Title = value;
+            _ = sender.Send(new UpdateBookTitleOperation(value));
+        }
+    }
+
+    string BookSubtitle
+    {
+        get => bookData?.Subtitle ?? string.Empty;
+        set
+        {
+            if (bookData is null) return;
+            bookData.Subtitle = value;
+            _ = sender.Send(new UpdateBookSubtitleOperation(value));
+        }
+    }
+
+    string BookSeries
+    {
+        get => bookData?.Series ?? string.Empty;
+        set
+        {
+            if (bookData is null) return;
+            bookData.Series = value;
+            _ = sender.Send(new UpdateBookSeriesOperation(value));
+        }
+    }
+
+    string BookVolume
+    {
+        get => bookData?.Volume ?? string.Empty;
+        set
+        {
+            if (bookData is null) return;
+            bookData.Volume = value;
+            _ = sender.Send(new UpdateBookVolumeOperation(value));
+        }
+    }
+
+    string BookGenre
+    {
+        get => bookData?.Genre ?? string.Empty;
+        set
+        {
+            if (bookData is null) return;
+            bookData.Genre = value;
+            _ = sender.Send(new UpdateBookGenreOperation(value));
+        }
+    }
+
+    Book? bookData;
+
+    protected override async Task OnInitializedAsync()
+    {
+        crumbHandler.Items.Clear();
+        crumbHandler.Items.Add(new("General", "/general", Icons.Material.Filled.Dashboard));
+        crumbHandler.Items.Add(new(Title, "/general/book", null));
+        crumbHandler.NavigationChange?.Invoke();
+
+        var bookResult = await sender.Send(new GetBookOperation());
+        bookData = bookResult.Or(Book.Invalid);
+    }
+}

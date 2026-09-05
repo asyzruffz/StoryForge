@@ -1,0 +1,41 @@
+@page "/general/author"
+@using StoryForge.Application.Books.Operations
+@using StoryForge.Core.Data
+@inject BreadCrumbHandler crumbHandler
+@inject ISender sender
+
+<PageTitle>@Title</PageTitle>
+<BbTypographyH2 Class="mb-4">@Title</BbTypographyH2>
+
+<BbCard Class="max-w-2xl">
+    <BbCardContent Class="pt-6 space-y-4">
+        <div class="space-y-2"><BbLabel For="author-name">Name</BbLabel><BbInput Id="author-name" @bind-Value="AuthorName" /></div>
+        <div class="space-y-2"><BbLabel For="author-email">Email</BbLabel><BbInput Id="author-email" @bind-Value="AuthorEmail" /></div>
+    </BbCardContent>
+</BbCard>
+
+@code {
+    const string Title = "Author Information";
+    Author? authorData;
+
+    string AuthorName
+    {
+        get => authorData?.Name ?? string.Empty;
+        set { if (authorData is not null) { authorData.Name = value; _ = sender.Send(new UpdateAuthorNameOperation(value)); } }
+    }
+
+    string AuthorEmail
+    {
+        get => authorData?.Email ?? string.Empty;
+        set { if (authorData is not null) { authorData.Email = string.IsNullOrEmpty(value) ? null : value; _ = sender.Send(new UpdateAuthorEmailOperation(authorData.Email)); } }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        crumbHandler.Items.Clear();
+        crumbHandler.Items.Add(new("General", "/general", "layout-dashboard"));
+        crumbHandler.Items.Add(new(Title, "/general/author", null));
+        crumbHandler.NavigationChange?.Invoke();
+        authorData = (await sender.Send(new GetAuthorOperation())).Or(Author.Invalid);
+    }
+}

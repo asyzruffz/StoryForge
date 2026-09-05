@@ -1,7 +1,7 @@
-﻿using StoryForge.Application.Abstractions;
+﻿using Keystone;
+using Keystone.Application;
 using StoryForge.Core.Data;
-using StoryForge.Core.Services;
-using StoryForge.Core.Utils;
+using StoryForge.Core.Storage;
 
 namespace StoryForge.Application.Chapters;
 
@@ -17,7 +17,7 @@ internal sealed class GetChaptersOperationHandler
         data = dataSession;
     }
 
-    public async Task<Result<IEnumerable<Chapter>>> Handle(GetChaptersOperation request, CancellationToken cancellationToken)
+    public async ValueTask<Result<IEnumerable<Chapter>>> Handle(GetChaptersOperation request, CancellationToken cancellationToken)
     {
         await Task.CompletedTask;
         var result = data.Chapters.GetAll();

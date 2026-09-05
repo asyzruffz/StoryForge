@@ -1,0 +1,33 @@
+@using StoryForge.Application.Books.Operations
+@using StoryForge.Core.Data
+@inject ISender sender
+
+<BbCard Class="h-full">
+    <BbCardHeader>
+        <BbCardTitle>@(bookData?.Title ?? "Untitled Title")</BbCardTitle>
+        @if (!string.IsNullOrWhiteSpace(bookData?.Subtitle))
+        {
+            <BbCardDescription><em>@bookData.Subtitle</em></BbCardDescription>
+        }
+        <BbCardAction>
+            <BbButton Href="/general/book" Variant="ButtonVariant.Ghost" Size="ButtonSize.Icon" AriaLabel="Edit book information">
+                <LucideIcon Name="square-pen" Class="h-4 w-4" />
+            </BbButton>
+        </BbCardAction>
+    </BbCardHeader>
+    <BbCardContent Class="space-y-2 text-sm">
+        <p>@(bookData?.Series ?? "Series 1")</p>
+        <p>@(bookData?.Volume ?? "Volume 0")</p>
+        <p>Genre: @(bookData?.Genre ?? "Unspecified")</p>
+    </BbCardContent>
+</BbCard>
+
+@code {
+    Book? bookData;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var bookResult = await sender.Send(new GetBookOperation());
+        bookData = bookResult.Or(Book.Invalid);
+    }
+}

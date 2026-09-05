@@ -1,13 +1,10 @@
-﻿using StoryForge.Core.Data;
+﻿using StoryForge.Core.Projects;
 
 namespace StoryForge.Infrastructure.Database.InMemory;
 
 public class ApplicationDbContext
 {
-    public List<Summary> Summaries { get; } = [];
-    public List<Character> Characters { get; } = [];
-    public List<Plot> Plots { get; } = [];
-    public List<Chapter> Chapters { get; } = [];
+    public List<Project> Projects { get; } = [];
 
     public int SaveChanges() => 0;
     public void Dispose() { }

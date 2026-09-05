@@ -1,0 +1,32 @@
+﻿using Keystone;
+using Keystone.Application;
+using StoryForge.Core.Data;
+using StoryForge.Core.Storage;
+
+namespace StoryForge.Application.Plots.Operations;
+
+public sealed record UpdatePlotNameOperation(PlotId PlotId, string Name) : IOperation;
+
+internal sealed class UpdatePlotNameOperationHandler : IOperationHandler<UpdatePlotNameOperation>
+{
+    private readonly IDataSession data;
+
+    public UpdatePlotNameOperationHandler(IDataSession dataSession)
+    {
+        data = dataSession;
+    }
+
+    public async ValueTask<Result> Handle(UpdatePlotNameOperation request, CancellationToken cancellationToken)
+    {
+        return await data.Plots.GetById(request.PlotId)
+            .ToResult("Couldn't find plot in database.")
+            .ThenAsync(async (plot, ct) =>
+            {
+                plot.Name = request.Name;
+                data.Plots.Update(plot);
+                await data.SaveAsync(ct).ConfigureAwait(false);
+                return Result.Ok();
+            }, cancellationToken)
+            .ConfigureAwait(false);
+    }
+}

@@ -1,0 +1,35 @@
+﻿@inject SceneLighting lighting
+
+<BbButton Variant="ButtonVariant.Ghost" Size="ButtonSize.Icon" Class="w-8 h-8" @onclick="ToggleDarkMode">
+    @if (isDarkMode)
+    {
+        <LucideIcon Name="sun" Size="20" />
+    }
+    else
+    {
+        <LucideIcon Name="moon" Size="20" />
+    }
+</BbButton>
+
+    @code {
+    bool isDarkMode { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            isDarkMode = await lighting.IsDarkMode();
+            if (!isDarkMode)
+            {
+                await ToggleDarkMode();
+            }
+            StateHasChanged();
+        }
+    }
+
+    async Task ToggleDarkMode()
+    {
+        await lighting.ToggleDarkMode();
+        isDarkMode = !isDarkMode;
+    }
+}

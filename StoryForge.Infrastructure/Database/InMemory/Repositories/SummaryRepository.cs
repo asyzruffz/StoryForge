@@ -1,6 +1,6 @@
-﻿using StoryForge.Core.Data;
-using StoryForge.Core.Repositories;
-using StoryForge.Core.Utils;
+﻿using Keystone;
+using StoryForge.Core.Data;
+using StoryForge.Core.Storage.Repositories;
 
 namespace StoryForge.Infrastructure.Database.InMemory.Repositories;
 
@@ -8,7 +8,7 @@ internal class SummaryRepository : ISummaryRepository
 {
     protected readonly List<Summary> summaries;
 
-    public SummaryRepository(ApplicationDbContext context)
+    public SummaryRepository(ProjectDbContext context)
     {
         summaries = context.Summaries;
     }
@@ -18,12 +18,15 @@ internal class SummaryRepository : ISummaryRepository
         return summaries.AsQueryable();
     }
 
-    public Result<Summary> GetById(SummaryId id)
+    public Option<Summary> GetById(SummaryId id)
     {
         return summaries
             .SingleOrDefault(summary => summary.Id == id)
-            .AsOption().ToResult();
+            .AsOption();
     }
+
+    public bool HasWithId(SummaryId id) =>
+        summaries.Any(summary => summary.Id == id);
 
     public void Create(Summary summary)
     {

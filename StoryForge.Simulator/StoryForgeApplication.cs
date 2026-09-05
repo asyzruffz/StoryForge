@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
-using StoryForge.Application.Services;
-using StoryForge.Core.Services;
+using StoryForge.Application.Misc;
+using StoryForge.Core.Misc;
 
 namespace StoryForge.Simulator;
 
@@ -12,6 +12,5 @@ public static class StoryForgeApplication
         .AddStoryForgeSystem();
 
     private static IServiceCollection AddStoryForgeSystem(this IServiceCollection services) => services
-        .AddSingleton<IRandomService, RandomService>()
-        .AddScoped<IAIService, AIService>();
+        .AddSingleton<IRandomService, RandomService>();
 }

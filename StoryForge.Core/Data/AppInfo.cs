@@ -8,6 +8,7 @@ public class AppInfo
     public string Runtime { get; set; } = string.Empty;
     public string Platform { get; set; } = string.Empty;
     public string[] Technologies { get; set; } = [];
+    public string SourceLink { get; set; } = string.Empty;
 
     public static AppInfo Default => new()
     {
@@ -16,6 +17,7 @@ public class AppInfo
         Description = "AI-powered story writing assistant",
         Runtime = $".NET {Environment.Version}",
         Platform = Environment.OSVersion.ToString(),
-        Technologies = ["Blazor", "Photino", "MudBlazor", "MediatR"]
+        Technologies = ["Blazor", "Photino", "MudBlazor", "MediatR"],
+        SourceLink = "https://github.com/asyzruffz/StoryForge",
     };
 }

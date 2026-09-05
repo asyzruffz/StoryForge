@@ -1,6 +1,6 @@
-﻿using StoryForge.Core.Data;
-using StoryForge.Core.Repositories;
-using StoryForge.Core.Utils;
+﻿using Keystone;
+using StoryForge.Core.Data;
+using StoryForge.Core.Storage.Repositories;
 
 namespace StoryForge.Infrastructure.Database.InMemory.Repositories;
 
@@ -8,7 +8,7 @@ internal class PlotRepository : IPlotRepository
 {
     protected readonly List<Plot> plots;
 
-    public PlotRepository(ApplicationDbContext context)
+    public PlotRepository(ProjectDbContext context)
     {
         plots = context.Plots;
     }
@@ -18,12 +18,15 @@ internal class PlotRepository : IPlotRepository
         return plots.AsQueryable();
     }
 
-    public Result<Plot> GetById(PlotId id)
+    public Option<Plot> GetById(PlotId id)
     {
         return plots
             .SingleOrDefault(plot => plot.Id == id)
-            .AsOption().ToResult();
+            .AsOption();
     }
+
+    public bool HasWithId(PlotId id) =>
+        plots.Any(plot => plot.Id == id);
 
     public void Create(Plot plot)
     {

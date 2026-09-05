@@ -1,0 +1,52 @@
+@page "/characters"
+@using StoryForge.Application.Characters.Operations
+@using StoryForge.Core.Data
+@inject BreadCrumbHandler crumbHandler
+@inject DialogService dialog
+@inject ISender sender
+
+<PageTitle>@Title</PageTitle>
+<div class="flex items-center justify-between mb-4"><BbTypographyH2>@Title</BbTypographyH2><BbButton OnClick="CreateCharacterAsync"><LucideIcon Name="plus" Class="mr-2 h-4 w-4" />New character</BbButton></div>
+
+@if (!characters.Any())
+{
+    <BbEmpty Title="No characters yet" Description="Create a character to begin developing your cast."><Icon><LucideIcon Name="users" Class="h-12 w-12" /></Icon><ChildContent><BbButton OnClick="CreateCharacterAsync">New character</BbButton></ChildContent></BbEmpty>
+}
+else
+{
+    <div class="space-y-4">
+        @foreach (var group in characters.GroupBy(character => character.Importance))
+        {
+            <BbCard><BbCardHeader><BbCardTitle>@group.Key</BbCardTitle></BbCardHeader><BbCardContent Class="space-y-2">
+                @foreach (var character in group)
+                {
+                    <BbItem AsChild="a" Href="@($"/characters/{character.IdString}")" Variant="ItemVariant.Outline"><BbItemContent><BbItemTitle>@character.Name</BbItemTitle></BbItemContent></BbItem>
+                }
+            </BbCardContent></BbCard>
+        }
+    </div>
+}
+
+@code {
+    const string Title = "Characters";
+    IEnumerable<CharacterEntry> characters = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        crumbHandler.Items.Clear();
+        crumbHandler.Items.Add(new(Title, "/characters", "users"));
+        crumbHandler.NavigationChange?.Invoke();
+        await LoadCharactersAsync();
+    }
+
+    async Task LoadCharactersAsync() => characters = (await sender.Send(new GetCharacterEntriesOperation())).Or([]);
+
+    async Task CreateCharacterAsync()
+    {
+        var result = await dialog.OpenAsync<NewNameDialog>(new Dictionary<string, object?> { [nameof(NewNameDialog.NameLabel)] = "Character name" }, new DialogOpenOptions { Title = "Create New Character", Size = DialogSize.Small });
+        var name = result.Cancelled ? null : result.GetData<string>()?.Trim();
+        if (string.IsNullOrEmpty(name)) return;
+        await sender.Send(new CreateCharacterOperation(name));
+        await LoadCharactersAsync();
+    }
+}

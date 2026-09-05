@@ -1,0 +1,119 @@
+@page "/summary"
+@using StoryForge.Application.Summaries.Operations
+@using StoryForge.Core.Data
+@inject BreadCrumbHandler crumbHandler
+@inject ISender sender
+
+<PageTitle>@Title</PageTitle>
+<BbTypographyH2 Class="mb-4">@Title</BbTypographyH2>
+
+<div class="space-y-4 max-w-4xl">
+    <BbCard>
+        <BbCardHeader>
+            <BbCardTitle>Story situation</BbCardTitle>
+            <BbCardDescription>Describe the central situation that drives your story.</BbCardDescription>
+        </BbCardHeader>
+        <BbCardContent>
+            <BbInput Id="summary-situation"
+                     Value="@Situation"
+                     ValueChanged="UpdateSituationAsync"
+                     Placeholder="Situation" />
+        </BbCardContent>
+    </BbCard>
+
+    <BbCard>
+        <BbCardHeader>
+            <BbCardTitle>Story summary</BbCardTitle>
+            <BbCardDescription>Develop the story from a sentence to a full-page summary.</BbCardDescription>
+        </BbCardHeader>
+        <BbCardContent>
+            <BbTabs DefaultValue="sentence">
+                <BbTabsList>
+                    <BbTabsTrigger Value="sentence">Sentence</BbTabsTrigger>
+                    <BbTabsTrigger Value="paragraph">Paragraph</BbTabsTrigger>
+                    <BbTabsTrigger Value="page">Page</BbTabsTrigger>
+                </BbTabsList>
+
+                <BbTabsContent Value="sentence" Class="pt-4 space-y-2">
+                    <BbLabel For="sentence-summary">One-sentence summary</BbLabel>
+                    <BbTextarea Id="sentence-summary"
+                                Value="@SentenceSummary"
+                                ValueChanged="UpdateSentenceAsync"
+                                rows="2" />
+                    <p class="text-sm text-muted-foreground">Words: @SentenceSummary.WordCount()</p>
+                </BbTabsContent>
+
+                <BbTabsContent Value="paragraph" Class="pt-4 space-y-2">
+                    <BbLabel For="paragraph-summary">One-paragraph summary</BbLabel>
+                    <BbTextarea Id="paragraph-summary"
+                                Value="@ParagraphSummary"
+                                ValueChanged="UpdateParagraphAsync"
+                                rows="8" />
+                    <p class="text-sm text-muted-foreground">Words: @ParagraphSummary.WordCount()</p>
+                </BbTabsContent>
+
+                <BbTabsContent Value="page" Class="pt-4 space-y-2">
+                    <BbLabel For="page-summary">One-page summary</BbLabel>
+                    <BbTextarea Id="page-summary"
+                                Value="@PageSummary"
+                                ValueChanged="UpdatePageAsync"
+                                rows="18" />
+                    <p class="text-sm text-muted-foreground">Words: @PageSummary.WordCount()</p>
+                </BbTabsContent>
+            </BbTabs>
+        </BbCardContent>
+    </BbCard>
+</div>
+
+@code {
+    const string Title = "Summary";
+
+    BookSummary? bookData;
+
+    string Situation => bookData?.Situation ?? string.Empty;
+    string SentenceSummary => bookData?.Summary.Sentence ?? string.Empty;
+    string ParagraphSummary => bookData?.Summary.Paragraph ?? string.Empty;
+    string PageSummary => bookData?.Summary.Page ?? string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        crumbHandler.Items.Clear();
+        crumbHandler.Items.Add(new(Title, "/summary", "notebook-text"));
+        crumbHandler.NavigationChange?.Invoke();
+
+        var summaryResult = await sender.Send(new GetBookSummaryOperation());
+        bookData = summaryResult.Or(BookSummary.Invalid);
+    }
+
+    async Task UpdateSituationAsync(string situation)
+    {
+        if (bookData is null) return;
+
+        bookData.Situation = situation;
+        await sender.Send(new UpdateBookSummarySituationOperation(situation));
+    }
+
+    async Task UpdateSentenceAsync(string sentence)
+    {
+        if (bookData is null) return;
+
+        bookData.Summary.Sentence = sentence;
+        await sender.Send(new UpdateSummarySentenceOperation(bookData.Summary.Id, sentence));
+    }
+
+    async Task UpdateParagraphAsync(string paragraph)
+    {
+        if (bookData is null) return;
+
+        bookData.Summary.Paragraph = paragraph;
+        await sender.Send(new UpdateSummaryParagraphOperation(bookData.Summary.Id, paragraph));
+    }
+
+    async Task UpdatePageAsync(string page)
+    {
+        if (bookData is null) return;
+
+        bookData.Summary.Page = page;
+        await sender.Send(new UpdateSummaryPageOperation(bookData.Summary.Id, page));
+    }
+}

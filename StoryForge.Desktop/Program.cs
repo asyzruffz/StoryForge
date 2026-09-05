@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using MudBlazor.Services;
+using Microsoft.Extensions.Logging;
 using Photino.Blazor;
-using StoryForge.Desktop.UI;
+using StoryForge.Presentation;
 
 namespace StoryForge.Desktop;
 
@@ -10,29 +10,27 @@ internal class Program
     [STAThread]
     static void Main(string[] args)
     {
+        string windowTitle = "Story Forge";
+
         var builder = PhotinoBlazorAppBuilder.CreateDefault(args);
 
         builder.Services
-            .AddLogging()
-            .AddMudServices()
-            .AddInfrastructure()
+            .AddLogging(config => config.AddConsole())
             .AddApplication()
-            .AddUIUtils();
+            .AddInfrastructure()
+            .AddPresentation()
+            .AddWindowsService();
 
-        builder.RootComponents.Add<App>("app");
+        builder.AddAppComponent();
 
         var app = builder.Build();
 
-        app.MainWindow
-            .SetUseOsDefaultSize(true)
-            .SetUseOsDefaultLocation(true)
-            .SetIconFile("favicon.ico")
-            .SetTitle("Story Forge");
+        app.Services
+            .SetupInfrastructure();
 
-        AppDomain.CurrentDomain.UnhandledException += (sender, error) =>
-        {
-            app.MainWindow.ShowMessage("Fatal exception", error.ExceptionObject.ToString());
-        };
+        app.MainWindow.SetupDefault(windowTitle);
+
+        //app.UseStatusCodePagesWithRedirects("/error/{0}");
 
         app.Run();
     }

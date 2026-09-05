@@ -1,0 +1,13 @@
+﻿<MudStack Row="true" Class="@Class" Spacing="2">
+    <MudLink Href="@Href" Target="_blank" Typo="Typo.body2" Class="d-flex flex-row gap-2">
+        <MudIcon Icon="@Icons.Custom.Brands.GitHub" Size="Size.Small" /> GitHub
+    </MudLink>
+</MudStack>
+
+@code {
+    [Parameter]
+    public string? Href { get; set; }
+
+    [Parameter]
+    public string? Class { get; set; }
+}

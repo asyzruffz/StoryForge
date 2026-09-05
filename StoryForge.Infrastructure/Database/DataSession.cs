@@ -1,33 +1,42 @@
-﻿using StoryForge.Core.Repositories;
-using StoryForge.Core.Services;
-using StoryForge.Infrastructure.Database.InMemory;
-using StoryForge.Infrastructure.Database.InMemory.Repositories;
+﻿using StoryForge.Core.Storage;
+using StoryForge.Core.Storage.Repositories;
+using StoryForge.Infrastructure.Database.SQLite;
+using StoryForge.Infrastructure.Database.SQLite.Repositories;
 
 namespace StoryForge.Infrastructure.Database;
 
-public class DataSession : IDataSession, IDisposable
+public class DataSession : IDataSession
 {
-    private readonly ApplicationDbContext context;
+    private readonly ProjectDbContext context;
 
-    public DataSession(ApplicationDbContext context)
-    {
-        this.context = context;
-
-        Summaries = new SummaryRepository(context);
-        Books = new BookRepository(Summaries);
-        Authors = new AuthorRepository();
-        Characters = new CharacterRepository(context);
-        Plots = new PlotRepository(context);
-        Chapters = new ChapterRepository(context);
-    }
-
+    public IProjectInfoRepository Meta { get; init; }
     public IBookRepository Books { get; init; }
     public IAuthorRepository Authors { get; init; }
     public ISummaryRepository Summaries { get; init; }
     public ICharacterRepository Characters { get; init; }
     public IPlotRepository Plots { get; init; }
+    public IStorySettingRepository StorySettings { get; init; }
     public IChapterRepository Chapters { get; init; }
 
-    public int Save() => context.SaveChanges();
-    public void Dispose() => context.Dispose();
+    public DataSession(ProjectDbContext context)
+    {
+        this.context = context;
+
+        Meta = new ProjectInfoRepository(context);
+        Books = new BookRepository(context);
+        Authors = new AuthorRepository(context);
+        Summaries = new SummaryRepository(context);
+        Characters = new CharacterRepository(context);
+        Plots = new PlotRepository(context);
+        StorySettings = new StorySettingRepository(context);
+        Chapters = new ChapterRepository(context);
+    }
+
+    public Task<bool> EnsureCreatedAsync(CancellationToken ct) =>
+        context.Database.EnsureCreatedAsync(ct);
+
+    public Task<int> SaveAsync(CancellationToken ct) =>
+        context.SaveChangesAsync(ct);
+
+    public ValueTask DisposeAsync() => context.DisposeAsync();
 }

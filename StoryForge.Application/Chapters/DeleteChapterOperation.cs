@@ -1,7 +1,6 @@
-﻿using StoryForge.Application.Abstractions;
-using StoryForge.Core.Data;
-using StoryForge.Core.Services;
-using StoryForge.Core.Utils;
+﻿using Keystone;
+using Keystone.Application;
+using StoryForge.Core.Storage;
 
 namespace StoryForge.Application.Chapters;
 
@@ -16,7 +15,7 @@ internal sealed class DeleteChapterOperationHandler : IOperationHandler<DeleteCh
         data = dataSession;
     }
 
-    public async Task<Result> Handle(DeleteChapterOperation request, CancellationToken cancellationToken)
+    public async ValueTask<Result> Handle(DeleteChapterOperation request, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(request.ShortId))
         {

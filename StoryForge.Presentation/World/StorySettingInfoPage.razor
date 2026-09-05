@@ -1,0 +1,36 @@
+@page "/world/{Id}"
+@using StoryForge.Application.StorySettings.Operations
+@using StoryForge.Core.Data
+@inject BreadCrumbHandler crumbHandler
+@inject NavigationManager navigationManager
+@inject ISender sender
+
+<PageTitle>@Title</PageTitle>
+<BbTypographyH2 Class="mb-4">@Title</BbTypographyH2>
+
+<BbTabs DefaultValue="general" Class="max-w-4xl">
+    <BbTabsList><BbTabsTrigger Value="general">General</BbTabsTrigger><BbTabsTrigger Value="more">More</BbTabsTrigger></BbTabsList>
+    <BbTabsContent Value="general" Class="pt-4"><BbCard><BbCardContent Class="pt-6 space-y-4">
+        <div class="space-y-2"><BbLabel For="setting-category">Category</BbLabel><BbInput Id="setting-category" @bind-Value="SettingCategory" /></div>
+        <div class="space-y-2"><BbLabel For="setting-name">Name</BbLabel><BbInput Id="setting-name" @bind-Value="SettingName" /></div>
+        <div class="space-y-2"><BbLabel For="setting-description">Description</BbLabel><BbTextarea Id="setting-description" @bind-Value="SettingDescription" rows="8" /></div>
+    </BbCardContent></BbCard></BbTabsContent>
+    <BbTabsContent Value="more" Class="pt-4"><BbCard><BbCardContent Class="pt-6"><BbLabel For="setting-details">Details</BbLabel><BbTextarea Id="setting-details" @bind-Value="Details" rows="18" Class="mt-2" /></BbCardContent></BbCard></BbTabsContent>
+</BbTabs>
+
+@code {
+    const string Title = "Setting Information";
+    [Parameter] public string Id { get; set; } = default!;
+    StorySetting? settingData;
+    string SettingCategory { get => settingData?.Category.ToString() ?? string.Empty; set { if (settingData is not null) { settingData.Category = new StorySettingCategory(value); _ = sender.Send(new UpdateStorySettingCategoryOperation(settingData.Id, settingData.Category)); } } }
+    string SettingName { get => settingData?.Name ?? string.Empty; set { if (settingData is not null) { settingData.Name = value; _ = sender.Send(new UpdateStorySettingNameOperation(settingData.Id, value)); } } }
+    string SettingDescription { get => settingData?.Description ?? string.Empty; set { if (settingData is not null) { settingData.Description = value; _ = sender.Send(new UpdateStorySettingDescriptionOperation(settingData.Id, value)); } } }
+    string Details { get => settingData?.Details ?? string.Empty; set { if (settingData is not null) { settingData.Details = value; _ = sender.Send(new UpdateStorySettingDetailsOperation(settingData.Id, value)); } } }
+
+    protected override async Task OnInitializedAsync()
+    {
+        crumbHandler.Items.Clear(); crumbHandler.Items.Add(new("World", "/world", "earth")); crumbHandler.Items.Add(new(Title, $"/world/{Id}", null)); crumbHandler.NavigationChange?.Invoke();
+        var result = await sender.Send(new GetStorySettingOperation(StorySettingId.From(Id)));
+        if (result.IsSuccess) settingData = result.Or(null!); else navigationManager.NavigateTo("/error/404");
+    }
+}

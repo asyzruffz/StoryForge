@@ -1,0 +1,82 @@
+@using StoryForge.Application.Projects.Operations
+@inject NavigationManager navigationManager
+@inject IFileDialogService fileDialog
+@inject DialogService dialog
+@inject ToastService toast
+@inject ISender sender
+
+<BbDropdownMenu>
+    <BbDropdownMenuTrigger AsChild>
+        <BbButton Variant="ButtonVariant.Ghost" Class="w-full justify-start gap-2">
+            <div class="h-7 w-8 rounded bg-primary flex justify-center items-center">
+                <LucideIcon Name="folder" class="h-5 w-5" />
+            </div>
+            <div class="flex flex-grow flex-col overflow-x-hidden items-start">
+                <span class="font-semibold w-full text-left truncate">
+                    Default Project of the Book
+                </span>
+                <span class="text-xs text-muted-foreground w-full text-left truncate">
+                    Subtitle
+                </span>
+            </div>
+            <LucideIcon Name="chevrons-up-down" class="ml-auto" />
+        </BbButton>
+    </BbDropdownMenuTrigger>
+    <BbDropdownMenuContent Class="w-60">
+        <BbDropdownMenuItem OnClick="ShowNewProjectDialog">
+            New Project <BbDropdownMenuShortcut>Ctrl+N</BbDropdownMenuShortcut>
+        </BbDropdownMenuItem>
+        <BbDropdownMenuItem OnClick="OpenProject">
+            Open Project <BbDropdownMenuShortcut>Ctrl+O</BbDropdownMenuShortcut>
+        </BbDropdownMenuItem>
+        <BbDropdownMenuItem OnClick="CloseProject">
+            Close Project <BbDropdownMenuShortcut>Ctrl+W</BbDropdownMenuShortcut>
+        </BbDropdownMenuItem>
+    </BbDropdownMenuContent>
+</BbDropdownMenu>
+
+@code {
+    async Task ShowNewProjectDialog()
+    {
+        var result = await dialog.OpenAsync<NewProjectDialog>(
+            new DialogOpenOptions
+            {
+                Title = "New Project",
+                Size = DialogSize.Small
+            });
+
+        if (result.Cancelled) return;
+
+        var project = result.GetData<NewProjectDialog.ProjectDetails>();
+        if (project is null || string.IsNullOrWhiteSpace(project.Name)) return;
+
+        await OnCreateNewProject(project.Name.Trim(), project.Path);
+    }
+
+    async Task OnCreateNewProject(string name, string path)
+    {
+        var projectResult = await sender.Send(new CreateProjectOperation(name, path));
+        projectResult
+            .OnError(msg => toast.Error(msg))
+            .Then(() => navigationManager.NavigateTo("/general", true));
+    }
+
+    async Task OpenProject()
+    {
+        var filePath = await fileDialog.ShowOpenFileAsync("Choose project file", ("Project database", "*.db"));
+        if (filePath is null) return;
+
+        var projectResult = await sender.Send(new OpenProjectPathOperation(filePath));
+        projectResult
+            .OnError(msg => toast.Error(msg))
+            .Then(() => navigationManager.NavigateTo("/general", true));
+    }
+
+    async Task CloseProject()
+    {
+        var projectResult = await sender.Send(new CloseProjectOperation());
+        projectResult
+            .OnError(msg => toast.Error(msg))
+            .Then(() => navigationManager.NavigateTo("/", true));
+    }
+}

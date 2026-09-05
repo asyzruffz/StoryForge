@@ -1,6 +1,6 @@
-﻿using StoryForge.Core.Data;
-using StoryForge.Core.Repositories;
-using StoryForge.Core.Utils;
+﻿using Keystone;
+using StoryForge.Core.Data;
+using StoryForge.Core.Storage.Repositories;
 
 namespace StoryForge.Infrastructure.Database.InMemory.Repositories;
 
@@ -9,7 +9,7 @@ internal class CharacterRepository : ICharacterRepository
     protected readonly List<Character> characters;
     protected readonly List<Summary> summaries;
 
-    public CharacterRepository(ApplicationDbContext context)
+    public CharacterRepository(ProjectDbContext context)
     {
         characters = context.Characters;
         summaries = context.Summaries;
@@ -20,12 +20,15 @@ internal class CharacterRepository : ICharacterRepository
         return characters.AsQueryable();
     }
 
-    public Result<Character> GetById(CharacterId id)
+    public Option<Character> GetById(CharacterId id)
     {
         return characters
             .SingleOrDefault(character => character.Id == id)
-            .AsOption().ToResult();
+            .AsOption();
     }
+
+    public bool HasWithId(CharacterId id) =>
+        characters.Any(character => character.Id == id);
 
     public void Create(Character character)
     {

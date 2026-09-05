@@ -1,0 +1,17 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="Directory.Packages.props" />
+  </Folder>
+  <Project Path="Keystone/Keystone.csproj" />
+  <Project Path="StoryForge.Application/StoryForge.Application.csproj" />
+  <Project Path="StoryForge.Core/StoryForge.Core.csproj" />
+  <Project Path="StoryForge.Desktop/StoryForge.Desktop.csproj">
+    <BuildDependency Project="StoryForge.Application/StoryForge.Application.csproj" />
+    <BuildDependency Project="StoryForge.Core/StoryForge.Core.csproj" />
+    <BuildDependency Project="StoryForge.Infrastructure/StoryForge.Infrastructure.csproj" />
+  </Project>
+  <Project Path="StoryForge.Infrastructure/StoryForge.Infrastructure.csproj" />
+  <Project Path="StoryForge.MudPresentation/StoryForge.MudPresentation.csproj" />
+  <Project Path="StoryForge.Presentation/StoryForge.Presentation.csproj" />
+  <Project Path="StoryForge.Tests/StoryForge.Tests.csproj" />
+</Solution>

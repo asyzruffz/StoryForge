@@ -1,0 +1,48 @@
+﻿@page "/outline"
+@using StoryForge.Application.Plots.Operations
+@using StoryForge.Core.Data
+@inject BreadCrumbHandler crumbHandler;
+@inject ISender sender;
+
+<PageTitle>@Title</PageTitle>
+<MudText Typo="Typo.h4" Class="mb-4">@Title</MudText>
+
+<MudStack Spacing="4">
+    @{
+        var groupings = PlotList.GroupBy(plot => plot.Importance);
+        if (groupings.Count() > 0)
+        {
+            foreach (var group in groupings)
+            {
+                <ButtonList T="PlotEntry" Label="@group.Key.ToString()" Items="group" PathPrefix="/outline" OnItemClick="OnPlotSelected" />
+            }
+        }
+        else
+        {
+            <MudStack Justify="Justify.Center" AlignItems="AlignItems.Center" Class="my-4">
+                <MudText>Not available</MudText>
+            </MudStack>
+        }
+    }
+</MudStack>
+
+@code {
+    const string Title = "Outline";
+
+    IEnumerable<PlotEntry> PlotList { get; set; } = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        crumbHandler.Items.Clear();
+        crumbHandler.Items.Add(new(Title, "/outline", Icons.Material.Filled.Webhook));
+        crumbHandler.NavigationChange?.Invoke();
+
+        var plotsResult = await sender.Send(new GetPlotEntriesOperation());
+        PlotList = plotsResult.Or([]);
+    }
+
+    void OnPlotSelected(PlotEntry plot)
+    {
+        
+    }
+}

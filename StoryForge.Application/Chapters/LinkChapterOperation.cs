@@ -1,6 +1,6 @@
-﻿using StoryForge.Application.Abstractions;
-using StoryForge.Core.Services;
-using StoryForge.Core.Utils;
+﻿using Keystone;
+using Keystone.Application;
+using StoryForge.Core.Storage;
 
 namespace StoryForge.Application.Chapters;
 
@@ -15,7 +15,7 @@ internal sealed class LinkChapterOperationHandler : IOperationHandler<LinkChapte
         data = dataSession;
     }
 
-    public async Task<Result> Handle(LinkChapterOperation request, CancellationToken cancellationToken)
+    public async ValueTask<Result> Handle(LinkChapterOperation request, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(request.PreviousChapterShortId))
         {

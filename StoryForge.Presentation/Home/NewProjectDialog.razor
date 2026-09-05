@@ -1,0 +1,28 @@
+<div class="grid gap-4 py-4">
+    <div class="grid grid-cols-4 items-center gap-4">
+        <BbLabel For="project-name" class="text-right">Project name</BbLabel>
+        <BbInput Id="project-name" @bind-Value="projectName" class="col-span-3" />
+    </div>
+    <div class="grid grid-cols-4 items-center gap-4">
+        <BbLabel For="project-path" class="text-right">Project path</BbLabel>
+        <BbInput Id="project-path" @bind-Value="projectPath" class="col-span-3" />
+    </div>
+</div>
+<BbDialogFooter>
+    <BbButton Variant="ButtonVariant.Outline" OnClick="CancelAsync">Cancel</BbButton>
+    <BbButton OnClick="ConfirmAsync">Confirm</BbButton>
+</BbDialogFooter>
+
+@code {
+    [CascadingParameter]
+    public IDialogReference Dialog { get; set; } = default!;
+
+    string projectName { get; set; } = string.Empty;
+    string projectPath { get; set; } = string.Empty;
+
+    Task CancelAsync() => Dialog.CancelAsync();
+
+    Task ConfirmAsync() => Dialog.CloseAsync(DialogResult.Ok(new ProjectDetails(projectName, projectPath)));
+
+    public sealed record ProjectDetails(string Name, string Path);
+}

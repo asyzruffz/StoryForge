@@ -1,0 +1,205 @@
+﻿@page "/characters/{id}"
+@using StoryForge.Application.Characters.Operations
+@using StoryForge.Application.Summaries.Operations
+@using StoryForge.Core.Data
+@inject BreadCrumbHandler crumbHandler;
+@inject NavigationManager navigationManager;
+@inject ISender sender;
+
+<PageTitle>@Title</PageTitle>
+<MudText Typo="Typo.h4" Class="mb-4">@Title</MudText>
+
+<MudStack Spacing="2">
+    <MudTabs Rounded="true" Centered="true">
+        <MudTabPanel Text="Basic Info" Class="pt-2">
+            <MudStack Spacing="2">
+                <MudTextField @bind-Value="CharacterName" Label="Name" Variant="Variant.Outlined" />
+                <MudStack Row="true" Spacing="4">
+                    <MudText Class="mr-4">Importance</MudText>
+                    <MudSlider TickMarks="true" Min="0" Max="2" @bind-Value="ImportanceValue"></MudSlider>
+                    <MudText>@Importance</MudText>
+                    <div class="w-full"></div>
+                </MudStack>
+                <MudTextField @bind-Value="CharacterMotivation" Label="Motivation" Lines="3" Variant="Variant.Outlined" />
+                <MudTextField @bind-Value="CharacterGoal" Label="Goal" Lines="3" Variant="Variant.Outlined" />
+                <MudTextField @bind-Value="CharacterConflict" Label="Conflict" Lines="3" Variant="Variant.Outlined" />
+                <MudTextField @bind-Value="CharacterEpiphany" Label="Epiphany" Lines="3" Variant="Variant.Outlined" />
+            </MudStack>
+        </MudTabPanel>
+        <MudTabPanel Text="Summary" Class="pt-2">
+            <MudStack Spacing="2">
+                <MudTextField @bind-Value="SentenceSummary" Label="One-Sentence Summary" Lines="2" Variant="Variant.Outlined" />
+                <MudTextField @bind-Value="ParagraphSummary" Label="One-Paragraph Summary" Lines="8" Variant="Variant.Outlined" />
+                <MudTextField @bind-Value="PageSummary" Label="One-Page Summary" Lines="18" Variant="Variant.Outlined" />
+            </MudStack>
+        </MudTabPanel>
+        <MudTabPanel Text="Notes" Class="pt-2">
+            <MudTextField @bind-Value="Notes" Label="Notes" Lines="18" Variant="Variant.Outlined" />
+        </MudTabPanel>
+        <MudTabPanel Text="Detailed Info" Class="pt-2">
+            <MudTextField @bind-Value="Details" Label="Details" Lines="18" Variant="Variant.Outlined" />
+        </MudTabPanel>
+    </MudTabs>
+</MudStack>
+
+@code {
+    const string Title = "Character Information";
+
+    [Parameter]
+    public string Id { get; set; } = default!;
+
+    string CharacterName
+    {
+        get => characterData?.Name ?? string.Empty;
+        set
+        {
+            if (characterData is null) return;
+            characterData.Name = value;
+            _ = sender.Send(new UpdateCharacterNameOperation(characterData.Id, value));
+        }
+    }
+
+    int ImportanceValue
+    {
+        get => characterData?.Importance.Tier() ?? 0;
+        set
+        {
+            if (characterData is null) return;
+            characterData.Importance = (Importance)value;
+            _ = sender.Send(new UpdateCharacterImportanceOperation(characterData.Id, characterData.Importance));
+        }
+    }
+    string Importance => characterData?.Importance.ToString() ?? string.Empty;
+
+    string CharacterMotivation
+    {
+        get => characterData?.Motivation ?? string.Empty;
+        set
+        {
+            if (characterData is null) return;
+            characterData.Motivation = value;
+            _ = sender.Send(new UpdateCharacterMotivationOperation(characterData.Id, value));
+        }
+    }
+
+    string CharacterGoal
+    {
+        get => characterData?.Goal ?? string.Empty;
+        set
+        {
+            if (characterData is null) return;
+            characterData.Goal = value;
+            _ = sender.Send(new UpdateCharacterGoalOperation(characterData.Id, value));
+        }
+    }
+
+    string CharacterConflict
+    {
+        get => characterData?.Conflict ?? string.Empty;
+        set
+        {
+            if (characterData is null) return;
+            characterData.Conflict = value;
+            _ = sender.Send(new UpdateCharacterConflictOperation(characterData.Id, value));
+        }
+    }
+
+    string CharacterEpiphany
+    {
+        get => characterData?.Epiphany ?? string.Empty;
+        set
+        {
+            if (characterData is null) return;
+            characterData.Epiphany = value;
+            _ = sender.Send(new UpdateCharacterEpiphanyOperation(characterData.Id, value));
+        }
+    }
+
+    string SentenceSummary
+    {
+        get => characterData?.Summary.Sentence ?? string.Empty;
+        set
+        {
+            if (characterData is null) return;
+            characterData.Summary.Sentence = value;
+            _ = sender.Send(new UpdateSummarySentenceOperation(characterData.Summary.Id, value));
+        }
+    }
+
+    string ParagraphSummary
+    {
+        get => characterData?.Summary.Paragraph ?? string.Empty;
+        set
+        {
+            if (characterData is null) return;
+            characterData.Summary.Paragraph = value;
+            _ = sender.Send(new UpdateSummaryParagraphOperation(characterData.Summary.Id, value));
+}
+    }
+
+    string PageSummary
+    {
+        get => characterData?.Summary.Page ?? string.Empty;
+        set
+        {
+            if (characterData is null) return;
+            characterData.Summary.Page = value;
+            _ = sender.Send(new UpdateSummaryPageOperation(characterData.Summary.Id, value));
+        }
+    }
+
+    string Notes
+    {
+        get => characterData?.Notes ?? string.Empty;
+        set
+        {
+            if (characterData is null) return;
+            if (string.IsNullOrEmpty(value))
+            {
+                characterData.Notes = null;
+            }
+            else
+            {
+                characterData.Notes = value;
+            }
+            _ = sender.Send(new UpdateCharacterNotesOperation(characterData.Id, characterData.Notes));
+        }
+    }
+
+    string Details
+    {
+        get => characterData?.Details ?? string.Empty;
+        set
+        {
+            if (characterData is null) return;
+            if (string.IsNullOrEmpty(value))
+            {
+                characterData.Details = null;
+            }
+            else
+            {
+                characterData.Details = value;
+            }
+            _ = sender.Send(new UpdateCharacterDetailsOperation(characterData.Id, characterData.Details));
+        }
+    }
+
+    Character? characterData;
+
+    protected override async Task OnInitializedAsync()
+    {
+        crumbHandler.Items.Clear();
+        crumbHandler.Items.Add(new("Characters", "/characters", Icons.Material.Filled.People));
+        crumbHandler.Items.Add(new(Title, $"/characters/{Id}", null));
+        crumbHandler.NavigationChange?.Invoke();
+
+        var characterResult = await sender.Send(new GetCharacterOperation(CharacterId.From(Id)));
+        characterResult
+            .Then(character =>
+            {
+                characterData = character;
+                return Result<Character>.Ok(character);
+            })
+            .OnError(msg => navigationManager.NavigateTo("/error"));
+    }
+}

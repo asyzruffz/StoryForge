@@ -1,0 +1,15 @@
+﻿<BbCard Class="w-80 overflow-hidden">
+    <BbAspectRatio Ratio="16.0/9.0" Class="bg-muted">
+        @ChildContent
+    </BbAspectRatio>
+</BbCard>
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public string? Width { get; set; }
+
+    string Style => Width is null ? string.Empty : $"width:{Width};";
+}

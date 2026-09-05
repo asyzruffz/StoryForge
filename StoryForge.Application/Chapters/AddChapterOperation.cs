@@ -1,7 +1,7 @@
-﻿using StoryForge.Application.Abstractions;
+﻿using Keystone;
+using Keystone.Application;
 using StoryForge.Core.Data;
-using StoryForge.Core.Services;
-using StoryForge.Core.Utils;
+using StoryForge.Core.Storage;
 
 namespace StoryForge.Application.Chapters;
 
@@ -16,7 +16,7 @@ internal sealed class AddChapterOperationHandler : IOperationHandler<AddChapterO
         data = dataSession;
     }
 
-    public async Task<Result> Handle(AddChapterOperation request, CancellationToken cancellationToken)
+    public async ValueTask<Result> Handle(AddChapterOperation request, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(request.Title))
             return Result.Fail("Invalid title provided");
