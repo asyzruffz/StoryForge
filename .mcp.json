@@ -1,0 +1,12 @@
+{
+  "servers": {
+    "github": {
+      "url": "https://api.githubcopilot.com/mcp/"
+    },
+    "blazorblueprint": {
+      "type": "stdio",
+      "command": "cmd",
+      "args": [ "/c", "npx", "-y", "@blazorblueprint/mcp@latest" ]
+    }
+  }
+}
