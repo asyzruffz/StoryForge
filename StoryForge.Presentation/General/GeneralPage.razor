@@ -1,22 +1,41 @@
-﻿@page "/general"
+@page "/general"
 @inject BreadCrumbHandler crumbHandler
 
 <PageTitle>@Title</PageTitle>
-<BbTypographyH2 Class="mb-4">General Information</BbTypographyH2>
+<PageHeader Title="Your story, taking shape."
+            Eyebrow="Project overview"
+            Description="A home for the people, places, and possibilities that make your story yours." />
 
-<BbDashboardGrid Editable="false">
-    <BbDashboardWidget Id="book-info" Title="Book"
-                       Column="1" Row="1" ColumnSpan="12" RowSpan="6">
-        <BookInfoCard />
-    </BbDashboardWidget>
-    <BbDashboardWidget Id="author-info" Title="Author"
-                       Column="13" Row="1" ColumnSpan="12" RowSpan="6">
-        <AuthorInfoCard />
-    </BbDashboardWidget>
-</BbDashboardGrid>
+<div class="sf-overview-grid">
+    <BookInfoCard />
+    <AuthorInfoCard />
+</div>
 
+<div class="sf-section-header">
+    <h2>Build your story</h2>
+    <p>From the first spark to the bigger picture</p>
+</div>
+<div class="sf-destinations">
+    @foreach (var section in sections)
+    {
+        <a href="@section.Path" class="sf-destination">
+            <span class="sf-destination-icon"><LucideIcon Name="@section.Icon" Size="21" /></span>
+            <div><h3>@section.Title</h3><p>@section.Description</p></div>
+            <span class="sf-destination-link">Explore @section.Title.ToLowerInvariant() <LucideIcon Name="arrow-right" Size="15" /></span>
+        </a>
+    }
+</div>
 @code {
-    const string Title = "General";
+    const string Title = "Overview";
+
+    static readonly (string Path, string Title, string Icon, string Description)[] sections =
+    [
+        ("/summary", "Summary", "notebook-text", "Find the heart of your story, one sentence at a time."),
+        ("/characters", "Characters", "users", "Give your cast a purpose, a conflict, and room to grow."),
+        ("/plots", "Plots", "waypoints", "Weave the threads that keep your readers turning pages."),
+        ("/world", "World", "earth", "Create the places and details that make it feel real."),
+        ("/outline", "Outline", "chart-network", "Step back and see how your story comes together.")
+    ];
 
     protected override void OnInitialized()
     {

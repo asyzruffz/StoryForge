@@ -2,28 +2,33 @@
 @using StoryForge.Core.Data
 @inject ISender sender
 
-<BbCard Class="h-full">
-    <BbCardHeader>
-        <BbCardTitle>@(bookData?.Title ?? "Untitled Title")</BbCardTitle>
+<BbCard Class="h-full sf-card sf-book-card">
+    <BbCardHeader Class="sf-info-header">
+        <p class="sf-card-kicker">The book</p>
+        <BbCardTitle Class="sf-card-title">@(string.IsNullOrWhiteSpace(bookData?.Title) ? "An untitled story" : bookData.Title)</BbCardTitle>
         @if (!string.IsNullOrWhiteSpace(bookData?.Subtitle))
         {
             <BbCardDescription><em>@bookData.Subtitle</em></BbCardDescription>
         }
-        <BbCardAction>
+        <BbCardAction Class="sf-info-action">
             <BbButton Href="/general/book" Variant="ButtonVariant.Ghost" Size="ButtonSize.Icon" AriaLabel="Edit book information">
                 <LucideIcon Name="square-pen" Class="h-4 w-4" />
             </BbButton>
         </BbCardAction>
     </BbCardHeader>
-    <BbCardContent Class="space-y-2 text-sm">
-        <p>@(bookData?.Series ?? "Series 1")</p>
-        <p>@(bookData?.Volume ?? "Volume 0")</p>
-        <p>Genre: @(bookData?.Genre ?? "Unspecified")</p>
+    <BbCardContent>
+        <dl class="sf-metadata">
+            <div><dt>Genre</dt><dd>@DisplayValue(bookData?.Genre)</dd></div>
+            <div><dt>Series</dt><dd>@DisplayValue(bookData?.Series)</dd></div>
+            <div><dt>Volume</dt><dd>@DisplayValue(bookData?.Volume)</dd></div>
+        </dl>
     </BbCardContent>
 </BbCard>
 
 @code {
     Book? bookData;
+
+    static string DisplayValue(string? value) => string.IsNullOrWhiteSpace(value) ? "Not set" : value;
 
     protected override async Task OnInitializedAsync()
     {

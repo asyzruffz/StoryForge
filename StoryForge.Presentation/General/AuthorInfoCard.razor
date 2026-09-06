@@ -2,17 +2,18 @@
 @using StoryForge.Core.Data
 @inject ISender sender
 
-<BbCard Class="h-full">
-    <BbCardHeader>
-        <BbCardTitle>@(authorData?.Name ?? "Unnamed Author")</BbCardTitle>
-        <BbCardAction>
+<BbCard Class="h-full sf-card">
+    <BbCardHeader Class="sf-info-header">
+        <p class="sf-card-kicker">Behind the story</p>
+        <BbCardTitle Class="sf-card-title">@(string.IsNullOrWhiteSpace(authorData?.Name) ? "Your name goes here" : authorData.Name)</BbCardTitle>
+        <BbCardAction Class="sf-info-action">
             <BbButton Href="/general/author" Variant="ButtonVariant.Ghost" Size="ButtonSize.Icon" AriaLabel="Edit author information">
                 <LucideIcon Name="square-pen" Class="h-4 w-4" />
             </BbButton>
         </BbCardAction>
     </BbCardHeader>
     <BbCardContent Class="text-sm text-muted-foreground">
-        @(authorData?.Email ?? string.Empty)
+        @(string.IsNullOrWhiteSpace(authorData?.Email) ? "Add your author details to make this story your own." : authorData.Email)
     </BbCardContent>
 </BbCard>
 
