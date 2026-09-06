@@ -1,7 +1,8 @@
-﻿@inject BreadCrumbHandler handler
+@inject BreadCrumbHandler handler
+@implements IDisposable
 
 <BbBreadcrumb>
-    <BbBreadcrumbList AutoSeparator>
+    <BbBreadcrumbList>
         @for (int i = 0; i < items.Count; i++)
         {
             var item = items[i];
@@ -10,7 +11,7 @@
                 {
                     <LucideIcon Name="@item.Icon" class="h-3.5 w-3.5 mr-1" />
                 }
-                @if (item.Path is null)
+                @if (item.Path is null || i == items.Count - 1)
                 {
                     <BbBreadcrumbPage>@item.Label</BbBreadcrumbPage>
                 }
@@ -19,6 +20,10 @@
                     <BbBreadcrumbLink Href="@item.Path">@item.Label</BbBreadcrumbLink>
                 }
             </BbBreadcrumbItem>
+            if (i < items.Count - 1)
+            {
+                <BbBreadcrumbSeparator />
+            }
         }
     </BbBreadcrumbList>
 </BbBreadcrumb>
@@ -28,12 +33,15 @@
 
     protected override void OnInitialized()
     {
+        items = handler.Items;
         handler.NavigationChange += OnNavigationChanged;
     }
+
+    public void Dispose() => handler.NavigationChange -= OnNavigationChanged;
 
     void OnNavigationChanged()
     {
         items = handler.Items;
-        StateHasChanged();
+        _ = InvokeAsync(StateHasChanged);
     }
 }

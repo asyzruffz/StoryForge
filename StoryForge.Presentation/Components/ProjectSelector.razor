@@ -1,42 +1,56 @@
 @using StoryForge.Application.Projects.Operations
+@using StoryForge.Core.Projects
 @using StoryForge.Presentation.Home
+@using System.IO
 @inject NavigationManager navigationManager
 @inject IFileDialogService fileDialog
 @inject DialogService dialog
 @inject ToastService toast
 @inject ISender sender
+@inject IProjectSessionHandler projectSession
 
 <BbDropdownMenu>
     <BbDropdownMenuTrigger AsChild>
-        <BbButton Variant="ButtonVariant.Ghost" Class="w-full justify-start gap-2">
-            <div class="h-7 w-8 rounded bg-primary flex justify-center items-center">
-                <LucideIcon Name="folder" class="h-5 w-5" />
-            </div>
-            <div class="flex flex-grow flex-col overflow-x-hidden items-start">
-                <span class="font-semibold w-full text-left truncate">
-                    Default Project of the Book
-                </span>
-                <span class="text-xs text-muted-foreground w-full text-left truncate">
-                    Subtitle
-                </span>
-            </div>
-            <LucideIcon Name="chevrons-up-down" class="ml-auto" />
+        <BbButton Variant="ButtonVariant.Ghost" Class="sf-project-trigger" AriaLabel="Project menu" title="@projectName">
+            <LucideIcon Name="book-open-text" Size="19" Class="sf-project-icon" />
+            <span class="sf-project-copy">
+                <span class="sf-project-name">@projectName</span>
+                <span class="sf-project-caption">@projectCaption</span>
+            </span>
+            <LucideIcon Name="chevrons-up-down" Size="14" Class="sf-project-chevron" />
         </BbButton>
     </BbDropdownMenuTrigger>
     <BbDropdownMenuContent Class="w-60">
+        <BbDropdownMenuLabel>Project</BbDropdownMenuLabel>
+        <BbDropdownMenuSeparator />
         <BbDropdownMenuItem OnClick="ShowNewProjectDialog">
-            New Project <BbDropdownMenuShortcut>Ctrl+N</BbDropdownMenuShortcut>
+            <LucideIcon Name="file-plus" Size="16" /> New project
         </BbDropdownMenuItem>
         <BbDropdownMenuItem OnClick="OpenProject">
-            Open Project <BbDropdownMenuShortcut>Ctrl+O</BbDropdownMenuShortcut>
+            <LucideIcon Name="folder-open" Size="16" /> Open project
         </BbDropdownMenuItem>
-        <BbDropdownMenuItem OnClick="CloseProject">
-            Close Project <BbDropdownMenuShortcut>Ctrl+W</BbDropdownMenuShortcut>
-        </BbDropdownMenuItem>
+        @if (projectSession.IsActive)
+        {
+            <BbDropdownMenuSeparator />
+            <BbDropdownMenuItem OnClick="CloseProject">Close project</BbDropdownMenuItem>
+        }
     </BbDropdownMenuContent>
 </BbDropdownMenu>
-
 @code {
+    string projectName = "Your workspace";
+
+    string projectCaption => projectSession.IsActive ? "Current project" : "Your stories, all together";
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!projectSession.IsActive) return;
+        var result = await sender.Send(new GetRecentProjectsOperation());
+        projectName = result.Or([])
+            .FirstOrDefault(project => string.Equals(project.FilePath, projectSession.CurrentProject, StringComparison.OrdinalIgnoreCase))?.Name
+            ?? Path.GetFileNameWithoutExtension(projectSession.CurrentProject)
+            ?? "Current project";
+    }
+
     async Task ShowNewProjectDialog()
     {
         var result = await dialog.OpenAsync<NewProjectDialog>(

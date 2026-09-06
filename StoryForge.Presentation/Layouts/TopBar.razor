@@ -1,11 +1,12 @@
-﻿<header class="flex items-center justify-between px-4 py-3 border-b shrink-0">
-    <div class="flex items-center gap-4">
-        <BbSidebarTrigger Class="h-8 w-8">
-            <LucideIcon Name="menu" class="h-4 w-4" />
+<header class="sf-topbar">
+    <div class="sf-topbar-navigation">
+        <BbSidebarTrigger Class="h-8 w-8" aria-label="Toggle sidebar">
+            <LucideIcon Name="panel-left" Class="h-4 w-4" />
         </BbSidebarTrigger>
-
+        <span class="sf-topbar-divider" aria-hidden="true"></span>
         <NavCrumb />
     </div>
-
+    <span class="sf-topbar-separator" aria-hidden="true"></span>
     <Toolbar />
+    <Brand />
 </header>
