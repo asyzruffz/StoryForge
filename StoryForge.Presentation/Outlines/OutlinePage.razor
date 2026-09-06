@@ -1,0 +1,45 @@
+@page "/outline"
+@using StoryForge.Application.Plots.Operations
+@using StoryForge.Core.Data
+@inject BreadCrumbHandler crumbHandler
+@inject ISender sender
+
+<PageTitle>@Title</PageTitle>
+<PageHeader Title="@Title" Eyebrow="The bigger picture" Description="See your plot threads together, organized by their importance." />
+
+@if (!plots.Any())
+{
+    <BbEmpty Class="sf-empty" Title="See the shape of your story" Description="Create plots to build your story outline.">
+        <Icon><LucideIcon Name="chart-network" Class="h-12 w-12" /></Icon>
+        <ChildContent>
+            <BbButton Href="/plots">Start with a plot<LucideIcon Name="arrow-right" Class="ml-2 h-4 w-4" /></BbButton>
+        </ChildContent>
+    </BbEmpty>
+}
+else
+{
+    <div class="sf-collection">
+        @foreach (var group in plots.GroupBy(plot => plot.Importance))
+        {
+            <BbCard Class="sf-card"><BbCardHeader><BbCardTitle Class="sf-group-heading">@group.Key <span class="sf-count">@group.Count()</span></BbCardTitle></BbCardHeader><BbCardContent Class="space-y-2">
+                @foreach (var plot in group)
+                {
+                    <BbItem AsChild="a" Href="@($"/outline/{plot.IdString}")" Class="sf-entity" Variant="ItemVariant.Outline"><BbItemMedia><span class="sf-entity-icon"><LucideIcon Name="waypoints" Size="19" /></span></BbItemMedia><BbItemContent><BbItemTitle>@plot.Name</BbItemTitle></BbItemContent><LucideIcon Name="arrow-up-right" Size="16" Class="sf-entity-arrow" /></BbItem>
+                }
+            </BbCardContent></BbCard>
+        }
+    </div>
+}
+
+@code {
+    const string Title = "Outline";
+    IEnumerable<PlotEntry> plots = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        crumbHandler.Items.Clear();
+        crumbHandler.Items.Add(new(Title, "/outline", "chart-network"));
+        crumbHandler.NavigationChange?.Invoke();
+        plots = (await sender.Send(new GetPlotEntriesOperation())).Or([]);
+    }
+}
