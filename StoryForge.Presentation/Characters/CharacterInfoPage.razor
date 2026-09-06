@@ -7,9 +7,9 @@
 @inject ISender sender
 
 <PageTitle>@Title</PageTitle>
-<BbTypographyH2 Class="mb-4">@Title</BbTypographyH2>
+<PageHeader Title="@(string.IsNullOrWhiteSpace(CharacterName) ? Title : CharacterName)" Eyebrow="Character notebook" Description="Explore their ambitions, contradictions, and the journey ahead." />
 
-<BbTabs DefaultValue="basic" Class="max-w-4xl">
+<BbTabs DefaultValue="basic" Class="sf-form">
     <BbTabsList Responsive>
         <BbTabsTrigger Value="basic">Basic info</BbTabsTrigger>
         <BbTabsTrigger Value="summary">Summary</BbTabsTrigger>
@@ -19,18 +19,18 @@
     <BbTabsContent Value="basic" Class="pt-4"><BbCard><BbCardContent Class="pt-6 space-y-4">
         <div class="space-y-2"><BbLabel For="character-name">Name</BbLabel><BbInput Id="character-name" @bind-Value="CharacterName" /></div>
         <div class="space-y-2"><BbLabel>Importance</BbLabel><div class="flex items-center gap-4"><BbSlider @bind-Value="ImportanceValue" Min="0" Max="2" Step="1" Class="flex-1" /><span class="w-24 text-sm text-muted-foreground">@Importance</span></div></div>
-        <div class="space-y-2"><BbLabel For="character-motivation">Motivation</BbLabel><BbTextarea Id="character-motivation" @bind-Value="CharacterMotivation" rows="3" /></div>
-        <div class="space-y-2"><BbLabel For="character-goal">Goal</BbLabel><BbTextarea Id="character-goal" @bind-Value="CharacterGoal" rows="3" /></div>
-        <div class="space-y-2"><BbLabel For="character-conflict">Conflict</BbLabel><BbTextarea Id="character-conflict" @bind-Value="CharacterConflict" rows="3" /></div>
-        <div class="space-y-2"><BbLabel For="character-epiphany">Epiphany</BbLabel><BbTextarea Id="character-epiphany" @bind-Value="CharacterEpiphany" rows="3" /></div>
+        <div class="space-y-2"><BbLabel For="character-motivation">Motivation</BbLabel><BbTextarea Id="character-motivation" @bind-Value="CharacterMotivation" Class="sf-textarea-short" /></div>
+        <div class="space-y-2"><BbLabel For="character-goal">Goal</BbLabel><BbTextarea Id="character-goal" @bind-Value="CharacterGoal" Class="sf-textarea-short" /></div>
+        <div class="space-y-2"><BbLabel For="character-conflict">Conflict</BbLabel><BbTextarea Id="character-conflict" @bind-Value="CharacterConflict" Class="sf-textarea-short" /></div>
+        <div class="space-y-2"><BbLabel For="character-epiphany">Epiphany</BbLabel><BbTextarea Id="character-epiphany" @bind-Value="CharacterEpiphany" Class="sf-textarea-short" /></div>
     </BbCardContent></BbCard></BbTabsContent>
     <BbTabsContent Value="summary" Class="pt-4"><BbCard><BbCardContent Class="pt-6 space-y-4">
-        <div class="space-y-2"><BbLabel For="character-summary-sentence">One-sentence summary</BbLabel><BbTextarea Id="character-summary-sentence" @bind-Value="SentenceSummary" rows="2" /></div>
-        <div class="space-y-2"><BbLabel For="character-summary-paragraph">One-paragraph summary</BbLabel><BbTextarea Id="character-summary-paragraph" @bind-Value="ParagraphSummary" rows="8" /></div>
-        <div class="space-y-2"><BbLabel For="character-summary-page">One-page summary</BbLabel><BbTextarea Id="character-summary-page" @bind-Value="PageSummary" rows="18" /></div>
+        <div class="space-y-2"><BbLabel For="character-summary-sentence">One-sentence summary</BbLabel><BbTextarea Id="character-summary-sentence" @bind-Value="SentenceSummary" Class="sf-textarea-short" /></div>
+        <div class="space-y-2"><BbLabel For="character-summary-paragraph">One-paragraph summary</BbLabel><BbTextarea Id="character-summary-paragraph" @bind-Value="ParagraphSummary" Class="sf-textarea-medium" /></div>
+        <div class="space-y-2"><BbLabel For="character-summary-page">One-page summary</BbLabel><BbTextarea Id="character-summary-page" @bind-Value="PageSummary" Class="sf-textarea-long" /></div>
     </BbCardContent></BbCard></BbTabsContent>
-    <BbTabsContent Value="notes" Class="pt-4"><BbCard><BbCardContent Class="pt-6"><BbLabel For="character-notes">Notes</BbLabel><BbTextarea Id="character-notes" @bind-Value="Notes" rows="18" Class="mt-2" /></BbCardContent></BbCard></BbTabsContent>
-    <BbTabsContent Value="details" Class="pt-4"><BbCard><BbCardContent Class="pt-6"><BbLabel For="character-details">Details</BbLabel><BbTextarea Id="character-details" @bind-Value="Details" rows="18" Class="mt-2" /></BbCardContent></BbCard></BbTabsContent>
+    <BbTabsContent Value="notes" Class="pt-4"><BbCard><BbCardContent Class="pt-6"><BbLabel For="character-notes">Notes</BbLabel><BbTextarea Id="character-notes" @bind-Value="Notes" Class="sf-textarea-long mt-2" /></BbCardContent></BbCard></BbTabsContent>
+    <BbTabsContent Value="details" Class="pt-4"><BbCard><BbCardContent Class="pt-6"><BbLabel For="character-details">Details</BbLabel><BbTextarea Id="character-details" @bind-Value="Details" Class="sf-textarea-long mt-2" /></BbCardContent></BbCard></BbTabsContent>
 </BbTabs>
 
 @code {

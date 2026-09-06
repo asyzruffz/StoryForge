@@ -5,9 +5,9 @@
 @inject ISender sender
 
 <PageTitle>@Title</PageTitle>
-<BbTypographyH2 Class="mb-4">@Title</BbTypographyH2>
+<PageHeader Title="@Title" Eyebrow="The book" Description="Give your story a title and a place on the shelf." />
 
-<BbCard Class="max-w-2xl">
+<BbCard Class="sf-form sf-card">
     <BbCardContent Class="pt-6 space-y-4">
         <div class="space-y-2"><BbLabel For="book-title">Title</BbLabel><BbInput Id="book-title" @bind-Value="BookTitle" /></div>
         <div class="space-y-2"><BbLabel For="book-subtitle">Subtitle</BbLabel><BbInput Id="book-subtitle" @bind-Value="BookSubtitle" /></div>
@@ -30,7 +30,7 @@
     protected override async Task OnInitializedAsync()
     {
         crumbHandler.Items.Clear();
-        crumbHandler.Items.Add(new("General", "/general", "layout-dashboard"));
+        crumbHandler.Items.Add(new("Overview", "/general", "layout-dashboard"));
         crumbHandler.Items.Add(new(Title, "/general/book", null));
         crumbHandler.NavigationChange?.Invoke();
         bookData = (await sender.Send(new GetBookOperation())).Or(Book.Invalid);

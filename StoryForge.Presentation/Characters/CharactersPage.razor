@@ -6,27 +6,40 @@
 @inject ISender sender
 
 <PageTitle>@Title</PageTitle>
-<div class="flex items-center justify-between mb-4"><BbTypographyH2>@Title</BbTypographyH2><BbButton OnClick="CreateCharacterAsync"><LucideIcon Name="plus" Class="mr-2 h-4 w-4" />New character</BbButton></div>
+<PageHeader Title="@Title" Eyebrow="Story development" Description="Meet the people who give your story its heart.">
+    <BbButton OnClick="CreateCharacterAsync"><LucideIcon Name="plus" Class="mr-2 h-4 w-4" />New character</BbButton>
+</PageHeader>
 
 @if (!characters.Any())
 {
-    <BbEmpty Title="No characters yet" Description="Create a character to begin developing your cast."><Icon><LucideIcon Name="users" Class="h-12 w-12" /></Icon><ChildContent><BbButton OnClick="CreateCharacterAsync">New character</BbButton></ChildContent></BbEmpty>
+    <BbEmpty Class="sf-empty" Title="Your cast starts here" Description="Give your first character a name, then discover what they want and what stands in their way.">
+        <Icon><span class="sf-destination-icon"><LucideIcon Name="users" Size="24" /></span></Icon>
+        <ChildContent><BbButton OnClick="CreateCharacterAsync">Create your first character</BbButton></ChildContent>
+    </BbEmpty>
 }
 else
 {
-    <div class="space-y-4">
+    <div class="sf-collection">
         @foreach (var group in characters.GroupBy(character => character.Importance))
         {
-            <BbCard><BbCardHeader><BbCardTitle>@group.Key</BbCardTitle></BbCardHeader><BbCardContent Class="space-y-2">
-                @foreach (var character in group)
-                {
-                    <BbItem AsChild="a" Href="@($"/characters/{character.IdString}")" Variant="ItemVariant.Outline"><BbItemContent><BbItemTitle>@character.Name</BbItemTitle></BbItemContent></BbItem>
-                }
-            </BbCardContent></BbCard>
+            <BbCard Class="sf-card">
+                <BbCardHeader>
+                    <BbCardTitle Class="sf-group-heading">@group.Key <span class="sf-count">@group.Count()</span></BbCardTitle>
+                </BbCardHeader>
+                <BbCardContent Class="sf-entity-grid">
+                    @foreach (var character in group)
+                    {
+                        <BbItem AsChild="a" Href="@($"/characters/{character.IdString}")" Class="sf-entity" Variant="ItemVariant.Outline">
+                            <BbItemMedia><span class="sf-entity-icon"><LucideIcon Name="users" Size="19" /></span></BbItemMedia>
+                            <BbItemContent><BbItemTitle Class="sf-entity-title">@character.Name</BbItemTitle></BbItemContent>
+                            <LucideIcon Name="arrow-up-right" Size="16" Class="sf-entity-arrow" />
+                        </BbItem>
+                    }
+                </BbCardContent>
+            </BbCard>
         }
     </div>
 }
-
 @code {
     const string Title = "Characters";
     IEnumerable<CharacterEntry> characters = [];

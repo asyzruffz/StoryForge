@@ -6,27 +6,40 @@
 @inject ISender sender
 
 <PageTitle>@Title</PageTitle>
-<div class="flex items-center justify-between mb-4"><BbTypographyH2>@Title</BbTypographyH2><BbButton OnClick="CreatePlotAsync"><LucideIcon Name="plus" Class="mr-2 h-4 w-4" />New plot</BbButton></div>
+<PageHeader Title="@Title" Eyebrow="Story development" Description="Follow the threads of conflict, consequence, and change.">
+    <BbButton OnClick="CreatePlotAsync"><LucideIcon Name="plus" Class="mr-2 h-4 w-4" />New plot</BbButton>
+</PageHeader>
 
 @if (!plots.Any())
 {
-    <BbEmpty Title="No plots yet" Description="Create a plot to begin outlining your story."><Icon><LucideIcon Name="waypoints" Class="h-12 w-12" /></Icon><ChildContent><BbButton OnClick="CreatePlotAsync">New plot</BbButton></ChildContent></BbEmpty>
+    <BbEmpty Class="sf-empty" Title="Every story needs a spark" Description="Create your first plot to explore a conflict and where it might lead.">
+        <Icon><span class="sf-destination-icon"><LucideIcon Name="waypoints" Size="24" /></span></Icon>
+        <ChildContent><BbButton OnClick="CreatePlotAsync">Create your first plot</BbButton></ChildContent>
+    </BbEmpty>
 }
 else
 {
-    <div class="space-y-4">
+    <div class="sf-collection">
         @foreach (var group in plots.GroupBy(plot => plot.Importance))
         {
-            <BbCard><BbCardHeader><BbCardTitle>@group.Key</BbCardTitle></BbCardHeader><BbCardContent Class="space-y-2">
-                @foreach (var plot in group)
-                {
-                    <BbItem AsChild="a" Href="@($"/plots/{plot.IdString}")" Variant="ItemVariant.Outline"><BbItemContent><BbItemTitle>@plot.Name</BbItemTitle></BbItemContent></BbItem>
-                }
-            </BbCardContent></BbCard>
+            <BbCard Class="sf-card">
+                <BbCardHeader>
+                    <BbCardTitle Class="sf-group-heading">@group.Key <span class="sf-count">@group.Count()</span></BbCardTitle>
+                </BbCardHeader>
+                <BbCardContent Class="sf-entity-grid">
+                    @foreach (var plot in group)
+                    {
+                        <BbItem AsChild="a" Href="@($"/plots/{plot.IdString}")" Class="sf-entity" Variant="ItemVariant.Outline">
+                            <BbItemMedia><span class="sf-entity-icon"><LucideIcon Name="waypoints" Size="19" /></span></BbItemMedia>
+                            <BbItemContent><BbItemTitle Class="sf-entity-title">@plot.Name</BbItemTitle></BbItemContent>
+                            <LucideIcon Name="arrow-up-right" Size="16" Class="sf-entity-arrow" />
+                        </BbItem>
+                    }
+                </BbCardContent>
+            </BbCard>
         }
     </div>
 }
-
 @code {
     const string Title = "Plots";
     IEnumerable<PlotEntry> plots = [];

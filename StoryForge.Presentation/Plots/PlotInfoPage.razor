@@ -6,18 +6,18 @@
 @inject ISender sender
 
 <PageTitle>@Title</PageTitle>
-<BbTypographyH2 Class="mb-4">@Title</BbTypographyH2>
+<PageHeader Title="@(string.IsNullOrWhiteSpace(PlotName) ? Title : PlotName)" Eyebrow="Plot notebook" Description="Trace the conflict from its first spark to its resolution." />
 
-<BbTabs DefaultValue="basic" Class="max-w-4xl">
-    <BbTabsList><BbTabsTrigger Value="basic">Basic info</BbTabsTrigger><BbTabsTrigger Value="resolution">Resolution steps</BbTabsTrigger></BbTabsList>
+<BbTabs DefaultValue="basic" Class="sf-form">
+    <BbTabsList Responsive><BbTabsTrigger Value="basic">Basic info</BbTabsTrigger><BbTabsTrigger Value="resolution">Resolution steps</BbTabsTrigger></BbTabsList>
     <BbTabsContent Value="basic" Class="pt-4"><BbCard><BbCardContent Class="pt-6 space-y-4">
         <div class="space-y-2"><BbLabel For="plot-name">Plot</BbLabel><BbInput Id="plot-name" @bind-Value="PlotName" /></div>
         <div class="space-y-2"><BbLabel>Importance</BbLabel><div class="flex items-center gap-4"><BbSlider @bind-Value="ImportanceValue" Min="0" Max="2" Step="1" Class="flex-1" /><span class="w-24 text-sm text-muted-foreground">@Importance</span></div></div>
-        <div class="space-y-2"><BbLabel For="plot-characters">Character(s)</BbLabel><BbTextarea Id="plot-characters" @bind-Value="PlotCharacters" rows="2" /></div>
-        <div class="space-y-2"><BbLabel For="plot-description">Description</BbLabel><BbTextarea Id="plot-description" @bind-Value="PlotDescription" rows="4" /></div>
-        <div class="space-y-2"><BbLabel For="plot-result">Result</BbLabel><BbTextarea Id="plot-result" @bind-Value="PlotResult" rows="4" /></div>
+        <div class="space-y-2"><BbLabel For="plot-characters">Character(s)</BbLabel><BbTextarea Id="plot-characters" @bind-Value="PlotCharacters" Class="sf-textarea-short" /></div>
+        <div class="space-y-2"><BbLabel For="plot-description">Description</BbLabel><BbTextarea Id="plot-description" @bind-Value="PlotDescription" Class="sf-textarea-short" /></div>
+        <div class="space-y-2"><BbLabel For="plot-result">Result</BbLabel><BbTextarea Id="plot-result" @bind-Value="PlotResult" Class="sf-textarea-short" /></div>
     </BbCardContent></BbCard></BbTabsContent>
-    <BbTabsContent Value="resolution" Class="pt-4"><BbCard><BbCardContent Class="pt-6"><BbLabel For="plot-resolution">Details</BbLabel><BbTextarea Id="plot-resolution" @bind-Value="ResolutionSteps" rows="18" Class="mt-2" /></BbCardContent></BbCard></BbTabsContent>
+    <BbTabsContent Value="resolution" Class="pt-4"><BbCard><BbCardContent Class="pt-6"><BbLabel For="plot-resolution">Details</BbLabel><BbTextarea Id="plot-resolution" @bind-Value="ResolutionSteps" Class="sf-textarea-long mt-2" /></BbCardContent></BbCard></BbTabsContent>
 </BbTabs>
 
 @code {

@@ -5,9 +5,9 @@
 @inject ISender sender
 
 <PageTitle>@Title</PageTitle>
-<BbTypographyH2 Class="mb-4">@Title</BbTypographyH2>
+<PageHeader Title="@Title" Eyebrow="Behind the story" Description="The name and details behind your work." />
 
-<BbCard Class="max-w-2xl">
+<BbCard Class="sf-form sf-card">
     <BbCardContent Class="pt-6 space-y-4">
         <div class="space-y-2"><BbLabel For="author-name">Name</BbLabel><BbInput Id="author-name" @bind-Value="AuthorName" /></div>
         <div class="space-y-2"><BbLabel For="author-email">Email</BbLabel><BbInput Id="author-email" @bind-Value="AuthorEmail" /></div>
@@ -33,7 +33,7 @@
     protected override async Task OnInitializedAsync()
     {
         crumbHandler.Items.Clear();
-        crumbHandler.Items.Add(new("General", "/general", "layout-dashboard"));
+        crumbHandler.Items.Add(new("Overview", "/general", "layout-dashboard"));
         crumbHandler.Items.Add(new(Title, "/general/author", null));
         crumbHandler.NavigationChange?.Invoke();
         authorData = (await sender.Send(new GetAuthorOperation())).Or(Author.Invalid);

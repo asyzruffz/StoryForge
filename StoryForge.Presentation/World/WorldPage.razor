@@ -6,27 +6,40 @@
 @inject ISender sender
 
 <PageTitle>@Title</PageTitle>
-<div class="flex items-center justify-between mb-4"><BbTypographyH2>@Title</BbTypographyH2><BbButton OnClick="CreateSettingAsync"><LucideIcon Name="plus" Class="mr-2 h-4 w-4" />New setting</BbButton></div>
+<PageHeader Title="@Title" Eyebrow="Story development" Description="Build a world your readers can get lost in.">
+    <BbButton OnClick="CreateSettingAsync"><LucideIcon Name="plus" Class="mr-2 h-4 w-4" />New setting</BbButton>
+</PageHeader>
 
 @if (!settings.Any())
 {
-    <BbEmpty Title="No settings yet" Description="Create a setting to build your story world."><Icon><LucideIcon Name="earth" Class="h-12 w-12" /></Icon><ChildContent><BbButton OnClick="CreateSettingAsync">New setting</BbButton></ChildContent></BbEmpty>
+    <BbEmpty Class="sf-empty" Title="A world of possibilities" Description="Start with a place, a culture, or a detail that makes your story world feel alive.">
+        <Icon><span class="sf-destination-icon"><LucideIcon Name="earth" Size="24" /></span></Icon>
+        <ChildContent><BbButton OnClick="CreateSettingAsync">Create your first setting</BbButton></ChildContent>
+    </BbEmpty>
 }
 else
 {
-    <div class="space-y-4">
+    <div class="sf-collection">
         @foreach (var group in settings.GroupBy(setting => setting.Category))
         {
-            <BbCard><BbCardHeader><BbCardTitle>@group.Key</BbCardTitle></BbCardHeader><BbCardContent Class="space-y-2">
-                @foreach (var setting in group)
-                {
-                    <BbItem AsChild="a" Href="@($"/world/{setting.IdString}")" Variant="ItemVariant.Outline"><BbItemContent><BbItemTitle>@setting.Name</BbItemTitle></BbItemContent></BbItem>
-                }
-            </BbCardContent></BbCard>
+            <BbCard Class="sf-card">
+                <BbCardHeader>
+                    <BbCardTitle Class="sf-group-heading">@group.Key <span class="sf-count">@group.Count()</span></BbCardTitle>
+                </BbCardHeader>
+                <BbCardContent Class="sf-entity-grid">
+                    @foreach (var setting in group)
+                    {
+                        <BbItem AsChild="a" Href="@($"/world/{setting.IdString}")" Class="sf-entity" Variant="ItemVariant.Outline">
+                            <BbItemMedia><span class="sf-entity-icon"><LucideIcon Name="earth" Size="19" /></span></BbItemMedia>
+                            <BbItemContent><BbItemTitle Class="sf-entity-title">@setting.Name</BbItemTitle></BbItemContent>
+                            <LucideIcon Name="arrow-up-right" Size="16" Class="sf-entity-arrow" />
+                        </BbItem>
+                    }
+                </BbCardContent>
+            </BbCard>
         }
     </div>
 }
-
 @code {
     const string Title = "World";
     IEnumerable<StorySettingEntry> settings = [];
