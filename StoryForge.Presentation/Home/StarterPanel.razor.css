@@ -19,10 +19,11 @@
 
 .sf-project-path {
     display: block;
+    text-align: start;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    max-width: 22rem;
+    max-width: 28rem;
     font-size: .7rem;
     color: var(--muted-foreground);
 }
