@@ -5,19 +5,20 @@
 @inject ISender sender
 
 <PageTitle>@Title</PageTitle>
-<BbTypographyH2 Class="mb-4">@Title</BbTypographyH2>
+<PageHeader Title="@Title" Eyebrow="The heart of your story" Description="Start with a spark. Shape it into a story worth telling." />
 
-<div class="space-y-4 max-w-4xl">
+<div class="sf-form space-y-4">
     <BbCard>
         <BbCardHeader>
             <BbCardTitle>Story situation</BbCardTitle>
             <BbCardDescription>Describe the central situation that drives your story.</BbCardDescription>
         </BbCardHeader>
         <BbCardContent>
+            <BbLabel For="summary-situation" Class="sr-only">Story situation</BbLabel>
             <BbInput Id="summary-situation"
                      Value="@Situation"
                      ValueChanged="UpdateSituationAsync"
-                     Placeholder="Situation" />
+                     Placeholder="What changes everything for your protagonist?" />
         </BbCardContent>
     </BbCard>
 
@@ -28,7 +29,7 @@
         </BbCardHeader>
         <BbCardContent>
             <BbTabs DefaultValue="sentence">
-                <BbTabsList>
+                <BbTabsList Responsive>
                     <BbTabsTrigger Value="sentence">Sentence</BbTabsTrigger>
                     <BbTabsTrigger Value="paragraph">Paragraph</BbTabsTrigger>
                     <BbTabsTrigger Value="page">Page</BbTabsTrigger>
@@ -39,7 +40,7 @@
                     <BbTextarea Id="sentence-summary"
                                 Value="@SentenceSummary"
                                 ValueChanged="UpdateSentenceAsync"
-                                rows="2" />
+                                Class="sf-textarea-short" />
                     <p class="text-sm text-muted-foreground">Words: @SentenceSummary.WordCount()</p>
                 </BbTabsContent>
 
@@ -48,7 +49,7 @@
                     <BbTextarea Id="paragraph-summary"
                                 Value="@ParagraphSummary"
                                 ValueChanged="UpdateParagraphAsync"
-                                rows="8" />
+                                Class="sf-textarea-medium" />
                     <p class="text-sm text-muted-foreground">Words: @ParagraphSummary.WordCount()</p>
                 </BbTabsContent>
 
@@ -57,7 +58,7 @@
                     <BbTextarea Id="page-summary"
                                 Value="@PageSummary"
                                 ValueChanged="UpdatePageAsync"
-                                rows="18" />
+                                Class="sf-textarea-long" />
                     <p class="text-sm text-muted-foreground">Words: @PageSummary.WordCount()</p>
                 </BbTabsContent>
             </BbTabs>
