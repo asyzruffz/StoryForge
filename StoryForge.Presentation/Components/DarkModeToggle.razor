@@ -1,6 +1,6 @@
-﻿@inject SceneLighting lighting
+@inject SceneLighting lighting
 
-<BbButton Variant="ButtonVariant.Ghost" Size="ButtonSize.Icon" Class="w-8 h-8" @onclick="ToggleDarkMode">
+<BbButton Variant="ButtonVariant.Ghost" Size="ButtonSize.Icon" Class="w-8 h-8" OnClick="ToggleDarkMode" AriaLabel="@label" title="@label">
     @if (isDarkMode)
     {
         <LucideIcon Name="sun" Size="20" />
@@ -11,18 +11,16 @@
     }
 </BbButton>
 
-    @code {
+@code {
     bool isDarkMode { get; set; }
+
+    string label => isDarkMode ? "Switch to light theme" : "Switch to dark theme";
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
             isDarkMode = await lighting.IsDarkMode();
-            if (!isDarkMode)
-            {
-                await ToggleDarkMode();
-            }
             StateHasChanged();
         }
     }
