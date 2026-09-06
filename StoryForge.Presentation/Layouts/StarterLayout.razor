@@ -1,0 +1,13 @@
+﻿<div class="sf-welcome-shell">
+    <main id="main-content" class="sf-welcome-main" tabindex="-1">
+        <div class="sf-page">@ChildContent</div>
+    </main>
+    <footer class="sf-welcome-footer">
+        <DarkModeToggle />
+    </footer>
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

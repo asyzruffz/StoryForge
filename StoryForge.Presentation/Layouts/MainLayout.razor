@@ -1,16 +1,24 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
+@using StoryForge.Core.Projects
+@inject IProjectSessionHandler projectSession
 
-<BbSidebarProvider HeightClass="h-screen bg-sidebar" Variant="SidebarVariant.Inset">
-    <SideBar />
-
-    <BbSidebarInset Class="min-w-0">
-        <TopBar />
-
-        <div class="flex-1 min-h-0 overflow-auto px-4 py-4 space-y-8">
-            @Body
-        </div>
-    </BbSidebarInset>
-</BbSidebarProvider>
+<a class="sf-skip-link" href="#main-content">Skip to content</a>
+@if (projectSession.IsActive)
+{
+    <BbSidebarProvider HeightClass="sf-shell" Variant="SidebarVariant.Inset">
+        <SideBar />
+        <BbSidebarInset Class="sf-workspace min-w-0">
+            <TopBar />
+            <div id="main-content" class="sf-main" tabindex="-1">
+                <div class="sf-page">@Body</div>
+            </div>
+        </BbSidebarInset>
+    </BbSidebarProvider>
+}
+else
+{
+    <StarterLayout>@Body</StarterLayout>
+}
 
 <BbToastProvider Position="ToastPosition.BottomRight" />
 <BbDialogProvider />
