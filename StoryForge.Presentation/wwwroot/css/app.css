@@ -57,12 +57,6 @@ button, a, input, textarea {
     overflow: hidden;
 }
 
-.sf-workspace {
-    overflow: hidden;
-    border: 1px solid var(--border);
-    box-shadow: var(--sf-shadow);
-}
-
 .sf-topbar {
     display: flex;
     align-items: center;
@@ -96,13 +90,6 @@ button, a, input, textarea {
     font-size: .75rem;
     color: var(--muted-foreground);
     white-space: nowrap;
-}
-
-.sf-main {
-    flex: 1;
-    min-height: 0;
-    overflow: auto;
-    scrollbar-gutter: stable;
 }
 
 .sf-page {
@@ -474,14 +461,6 @@ button, a, input, textarea {
     line-height: 1.6;
 }
 
-@media (min-width: 768px) {
-    .sf-workspace {
-        margin-block: .75rem;
-        margin-right: .75rem;
-        border-radius: 1rem;
-    }
-}
-
 @media (max-width: 1100px) {
     .sf-page {
         padding: 2rem 1.75rem 3rem;
@@ -497,10 +476,6 @@ button, a, input, textarea {
 }
 
 @media (max-width: 767px) {
-    .sf-workspace {
-        border: 0;
-    }
-
     .sf-topbar {
         padding: .85rem 1rem;
         min-height: 3.75rem;

@@ -5,15 +5,7 @@
 <a class="sf-skip-link" href="#main-content">Skip to content</a>
 @if (projectSession.IsActive)
 {
-    <BbSidebarProvider HeightClass="sf-shell" Variant="SidebarVariant.Inset">
-        <SideBar />
-        <BbSidebarInset Class="sf-workspace min-w-0">
-            <TopBar />
-            <div id="main-content" class="sf-main" tabindex="-1">
-                <div class="sf-page">@Body</div>
-            </div>
-        </BbSidebarInset>
-    </BbSidebarProvider>
+    <ProjectLayout>@Body</ProjectLayout>
 }
 else
 {

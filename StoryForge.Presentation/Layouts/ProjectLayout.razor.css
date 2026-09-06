@@ -1,0 +1,26 @@
+﻿.sf-workspace {
+    overflow: hidden;
+    border: 1px solid var(--border);
+    box-shadow: var(--sf-shadow);
+}
+
+@media (min-width: 768px) {
+    .sf-workspace {
+        margin-block: .75rem;
+        margin-right: .75rem;
+        border-radius: 1rem;
+    }
+}
+
+@media (max-width: 767px) {
+    .sf-workspace {
+        border: 0;
+    }
+}
+
+.sf-main {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    scrollbar-gutter: stable;
+}
