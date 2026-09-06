@@ -1,16 +1,16 @@
-<div class="grid gap-4 py-4">
-    <div class="grid grid-cols-4 items-center gap-4">
-        <BbLabel For="project-name" class="text-right">Project name</BbLabel>
-        <BbInput Id="project-name" @bind-Value="projectName" class="col-span-3" />
+<div class="sf-dialog-fields">
+    <div class="sf-dialog-field">
+        <BbLabel For="project-name">Project name</BbLabel>
+        <BbInput Id="project-name" @bind-Value="projectName" />
     </div>
-    <div class="grid grid-cols-4 items-center gap-4">
-        <BbLabel For="project-path" class="text-right">Project path</BbLabel>
-        <BbInput Id="project-path" @bind-Value="projectPath" class="col-span-3" />
+    <div class="sf-dialog-field">
+        <BbLabel For="project-path">Project path</BbLabel>
+        <BbInput Id="project-path" @bind-Value="projectPath" />
     </div>
 </div>
 <BbDialogFooter>
     <BbButton Variant="ButtonVariant.Outline" OnClick="CancelAsync">Cancel</BbButton>
-    <BbButton OnClick="ConfirmAsync">Confirm</BbButton>
+    <BbButton OnClick="ConfirmAsync" Disabled="@string.IsNullOrWhiteSpace(projectName)">Create project</BbButton>
 </BbDialogFooter>
 
 @code {

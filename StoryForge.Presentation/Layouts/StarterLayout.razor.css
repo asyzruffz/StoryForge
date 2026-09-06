@@ -1,0 +1,32 @@
+.sf-welcome-shell {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    background: radial-gradient(ellipse at 90% 0%, var(--sidebar-accent), transparent 55%), var(--background);
+}
+
+.sf-welcome-main {
+    flex: 1;
+    display: grid;
+    align-items: center;
+}
+
+    .sf-welcome-main .sf-page {
+        padding-top: clamp(2rem, 7vh, 6rem);
+    }
+
+.sf-welcome-footer {
+    width: 100%;
+    margin: -0.25rem 0 0.5rem;
+    padding: 0 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: .75rem;
+    color: var(--muted-foreground);
+}
+
+    .sf-welcome-footer > ::deep button {
+        margin-left: auto;
+    }

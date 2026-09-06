@@ -1,0 +1,21 @@
+<div class="sf-page-header">
+    <div class="sf-page-heading">
+        <p class="sf-eyebrow">@Eyebrow</p>
+        <h1>@Title</h1>
+        @if (!string.IsNullOrWhiteSpace(Description))
+        {
+            <p class="sf-page-description">@Description</p>
+        }
+    </div>
+    @if (ChildContent is not null)
+    {
+        <div class="sf-page-actions">@ChildContent</div>
+    }
+</div>
+
+@code {
+    [Parameter] public string Title { get; set; } = string.Empty;
+    [Parameter] public string Eyebrow { get; set; } = "Your writing studio";
+    [Parameter] public string? Description { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

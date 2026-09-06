@@ -112,50 +112,6 @@ button, a, input, textarea {
     padding: 2.5rem 3rem 4rem;
 }
 
-.sf-page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-}
-
-.sf-page-heading {
-    min-width: 0;
-}
-
-.sf-eyebrow {
-    margin: 0 0 .7rem;
-    color: var(--primary);
-    font-size: .65rem;
-    font-weight: 700;
-    letter-spacing: .18em;
-    text-transform: uppercase;
-}
-
-.sf-page-heading h1 {
-    font-family: var(--sf-font-display);
-    font-size: clamp(2rem, 3vw, 2.75rem);
-    font-weight: 400;
-    line-height: 1.16;
-    letter-spacing: -.035em;
-    margin: 0;
-    overflow-wrap: anywhere;
-}
-
-.sf-page-description {
-    color: var(--muted-foreground);
-    font-size: .9rem;
-    line-height: 1.7;
-    margin: .8rem 0 0;
-}
-
-.sf-page-actions {
-    display: flex;
-    gap: .75rem;
-    flex-shrink: 0;
-}
-
 .sf-brand {
     display: flex;
     align-items: center;
@@ -501,68 +457,6 @@ button, a, input, textarea {
         padding-top: 1.25rem;
     }
 
-.sf-home {
-    max-width: 65rem;
-    margin: 0 auto;
-}
-
-    .sf-home .sf-page-heading h1 {
-        font-size: clamp(2.4rem, 4.5vw, 3.8rem);
-    }
-
-.sf-home-grid {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr;
-    gap: 1.5rem;
-    margin-top: 2.5rem;
-    align-items: start;
-}
-
-.sf-home-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.sf-home-action {
-    width: 100%;
-    align-items: flex-start;
-    text-align: left;
-    cursor: pointer;
-}
-
-.sf-home-action-primary {
-    background: var(--primary);
-    color: var(--primary-foreground);
-    border-color: transparent;
-}
-
-    .sf-home-action-primary p, .sf-home-action-primary .sf-destination-link {
-        color: inherit;
-        opacity: .85;
-    }
-
-.sf-project-list {
-    display: flex;
-    flex-direction: column;
-    gap: .6rem;
-}
-
-.sf-project-row {
-    width: 100%;
-    text-align: left;
-}
-
-.sf-project-path {
-    display: block;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    max-width: 22rem;
-    font-size: .7rem;
-    color: var(--muted-foreground);
-}
-
 .sf-dialog-fields {
     display: grid;
     gap: 1.25rem;
@@ -616,29 +510,12 @@ button, a, input, textarea {
         padding: 1.75rem 1rem 3rem;
     }
 
-    .sf-page-header {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .sf-overview-grid, .sf-home-grid, .sf-destinations {
+    .sf-overview-grid, .sf-destinations {
         grid-template-columns: 1fr;
-    }
-
-    .sf-home {
-        margin-top: .5rem;
-    }
-
-    .sf-home-actions {
-        grid-row: 1;
     }
 
     .sf-section-header p {
         display: none;
-    }
-
-    .sf-project-path {
-        max-width: 55vw;
     }
 }
 
@@ -648,47 +525,6 @@ button, a, input, textarea {
         transition: none !important;
         animation: none !important;
     }
-}
-
-.sf-welcome-shell {
-    min-height: 100vh;
-    min-height: 100dvh;
-    display: flex;
-    flex-direction: column;
-    background: radial-gradient(ellipse at 90% 0%, var(--sidebar-accent), transparent 55%), var(--background);
-}
-
-.sf-welcome-main {
-    flex: 1;
-    display: grid;
-    align-items: center;
-}
-
-    .sf-welcome-main .sf-page {
-        padding-top: clamp(2rem, 7vh, 6rem);
-    }
-
-.sf-welcome-footer {
-    width: min(100% - 3rem, 65rem);
-    margin: 0 auto;
-    /* padding: 1.25rem 0; */
-    padding-bottom: 0.75rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    /* border-top: 1px solid var(--border); */
-    font-size: .75rem;
-    color: var(--muted-foreground);
-}
-
-    .sf-welcome-footer > button {
-        margin-left: auto;
-    }
-
-.sf-welcome-wordmark {
-    color: var(--foreground);
-    font-weight: 650;
-    text-decoration: none;
 }
 
 .sf-info-header {

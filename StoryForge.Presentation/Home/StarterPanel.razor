@@ -6,77 +6,54 @@
 @inject ToastService toast
 @inject ISender sender
 
-<BbCard>
-    <BbCardHeader>
-        <BbCardTitle>Recent projects</BbCardTitle>
-        <!--<BbCardDescription>Recent projects</BbCardDescription>-->
-    </BbCardHeader>
-    <BbCardContent Class="flex flex-row w-200 gap-4 p-4">
-        <div class="h-full min-h-0">
-            <BbDataView TItem="Project" Data="@recentProjects" ShowToolbar="false" ShowPagination="false">
-                <ListTemplate Context="project">
-                    <BbItem AsChild="button" OnClick="@(() => OpenProject(project.FilePath))" Size="ItemSize.Sm" Variant="ItemVariant.Outline">
-                        <BbItemMedia>
-                            <BbAvatar>
-                                <BbAvatarFallback>@project.Name[0]</BbAvatarFallback>
-                            </BbAvatar>
-                        </BbItemMedia>
-                        <BbItemContent>
-                            <div style="text-align:start;">
-                                <BbItemTitle>@project.Name</BbItemTitle>
-                                <BbItemDescription>@project.FilePath</BbItemDescription>
-                            </div>
-                        </BbItemContent>
-                    </BbItem>
-                </ListTemplate>
-                <EmptyTemplate>
-                    <Center>
-                        <BbEmpty Title="No projects yet"
-                                 Description="Get started by creating your first project.">
-                            <Icon>
-                                <LucideIcon Name="folder" class="h-12 w-12" />
-                            </Icon>
-                            <ChildContent>
-                                <BbButton Variant="ButtonVariant.Outline" OnClick="ShowNewProjectDialog">
-                                    <LucideIcon Name="file-plus" class="mr-2 h-4 w-4" />
-                                    Create Project
-                                </BbButton>
-                            </ChildContent>
-                        </BbEmpty>
-                    </Center>
-                </EmptyTemplate>
-                <Fields>
-                    <BbDataViewColumn TItem="Project" TValue="string"
-                                      Property="@(p => p.Name)"
-                                      Header="Name" />
-                    <BbDataViewColumn TItem="Project" TValue="string"
-                                      Property="@(p => p.FilePath)"
-                                      Header="Location" />
-                </Fields>
-            </BbDataView>
-        </div>
-
-        <div class="flex flex-col h-full min-h-0 space-y-3">
-            <BbItem AsChild="button" @onclick="ShowNewProjectDialog" Variant="ItemVariant.Outline">
-                <BbItemMedia>
-                    <LucideIcon Name="file-plus" class="h-5 w-5" />
-                </BbItemMedia>
-                <BbItemContent>
-                    <BbItemTitle>Create a new project</BbItemTitle>
-                </BbItemContent>
-            </BbItem>
-            <BbItem AsChild="button" @onclick="OpenFileBrowser" Variant="ItemVariant.Outline">
-                <BbItemMedia>
-                    <LucideIcon Name="folder-open" class="h-5 w-5" />
-                </BbItemMedia>
-                <BbItemContent>
-                    <BbItemTitle>Open a project</BbItemTitle>
-                </BbItemContent>
-            </BbItem>
-        </div>
-    </BbCardContent>
-</BbCard>
-
+<div class="sf-home-grid">
+    <BbCard Class="sf-card">
+        <BbCardHeader>
+            <BbCardTitle>Pick up where you left off</BbCardTitle>
+            <BbCardDescription>Your three most recently opened projects.</BbCardDescription>
+        </BbCardHeader>
+        <BbCardContent>
+            @if (recentProjects.Any())
+            {
+                <div class="sf-project-list">
+                    @foreach (var project in recentProjects)
+                    {
+                        <BbItem AsChild="button" @onclick="@(() => OpenProject(project.FilePath))"
+                                Class="sf-project-row sf-entity" Variant="ItemVariant.Outline">
+                            <BbItemMedia>
+                                <span class="sf-entity-icon"><LucideIcon Name="book-open-text" Size="19" /></span>
+                            </BbItemMedia>
+                            <BbItemContent>
+                                <BbItemTitle Class="sf-entity-title">@project.Name</BbItemTitle>
+                                <span class="sf-project-path" title="@project.FilePath">@project.FilePath.EllipsisMiddle(65)</span>
+                            </BbItemContent>
+                            <LucideIcon Name="arrow-up-right" Size="16" Class="sf-entity-arrow" />
+                        </BbItem>
+                    }
+                </div>
+            }
+            else
+            {
+                <BbEmpty Title="Your bookshelf awaits"
+                         Description="Create a project or open an existing one. Your recent stories will appear here.">
+                    <Icon><LucideIcon Name="book-open-text" Class="h-10 w-10" /></Icon>
+                </BbEmpty>
+            }
+        </BbCardContent>
+    </BbCard>
+    <div class="sf-home-actions">
+        <button type="button" class="sf-destination sf-home-action sf-home-action-primary" @onclick="ShowNewProjectDialog">
+            <LucideIcon Name="file-plus" Size="24" />
+            <div><h3>Begin a new story</h3><p>A fresh space for your characters, plots, and possibilities.</p></div>
+            <span class="sf-destination-link">Create project <LucideIcon Name="arrow-right" Size="16" /></span>
+        </button>
+        <button type="button" class="sf-destination sf-home-action" @onclick="OpenFileBrowser">
+            <LucideIcon Name="folder-open" Size="24" />
+            <div><h3>Open a project</h3><p>Bring an existing StoryForge project into your workspace.</p></div>
+            <span class="sf-destination-link">Browse files <LucideIcon Name="arrow-right" Size="16" /></span>
+        </button>
+    </div>
+</div>
 @code {
     IEnumerable<Project> recentProjects = [];
 
@@ -85,7 +62,7 @@
         var projectsResult = await sender.Send(new GetRecentProjectsOperation());
         recentProjects = projectsResult.Or([])
             .OrderByDescending(p => p.LastActive)
-            .Take(5)
+            .Take(3)
             .ToList();
     }
 

@@ -1,0 +1,7 @@
+.sf-home {
+    margin-top: .5rem;
+}
+
+    .sf-home ::deep .sf-page-heading h1 {
+        font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+    }
