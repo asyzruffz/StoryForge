@@ -1,6 +1,6 @@
 .sf-home-grid {
     display: grid;
-    grid-template-columns: 1.5fr 1fr;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
     gap: 1.5rem;
     margin-top: 2.5rem;
     align-items: start;
@@ -12,7 +12,7 @@
     gap: .6rem;
 }
 
-.sf-project-row {
+.sf-project-list ::deep .sf-project-row {
     width: 100%;
     text-align: left;
 }
@@ -23,7 +23,7 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    max-width: 28rem;
+    max-width: 100%;
     font-size: .7rem;
     color: var(--muted-foreground);
 }
@@ -61,7 +61,29 @@
         grid-row: 1;
     }
 
-    .sf-project-path {
-        max-width: 55vw;
+
+}
+
+.sf-home-grid ::deep > *,
+.sf-project-list ::deep .sf-project-row > div {
+    min-width: 0;
+}
+
+.sf-project-list ::deep .sf-project-row {
+    gap: .75rem;
+}
+
+.sf-project-list ::deep .sf-entity-title {
+    text-align: left;
+    overflow-wrap: anywhere;
+}
+
+.sf-home-action:focus-visible {
+    border-color: var(--primary);
+}
+
+@media (hover: hover) {
+    .sf-home-action-primary:hover {
+        background: color-mix(in oklch, var(--primary) 92%, var(--foreground));
     }
 }

@@ -1,7 +1,6 @@
 .sf-topbar {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
     gap: 1rem;
     min-height: 4.5rem;
     padding: 1rem 2rem;
@@ -10,18 +9,39 @@
 }
 
 .sf-topbar-navigation {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
     gap: 1rem;
 }
 
-.sf-topbar-navigation, ::deep .sf-toolbar {
-    display: flex;
-    align-items: center;
+.sf-topbar-navigation ::deep [data-sidebar="trigger"],
+.sf-topbar ::deep .sf-toolbar,
+.sf-topbar-brand {
+    flex-shrink: 0;
+}
+
+.sf-topbar-navigation ::deep nav {
     min-width: 0;
 }
 
-    .sf-topbar-navigation ::deep nav {
-        min-width: 0;
-    }
+.sf-topbar-navigation ::deep ol {
+    flex-wrap: nowrap;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.sf-topbar-navigation ::deep li {
+    min-width: 0;
+}
+
+.sf-topbar-navigation ::deep li > a,
+.sf-topbar-navigation ::deep li > span[aria-current="page"] {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 
 .sf-topbar-divider {
     height: 1.2rem;
@@ -30,12 +50,24 @@
     flex-shrink: 0;
 }
 
-.sf-topbar-separator {
-    flex:auto;
+@media (max-width: 767px) {
+    .sf-topbar {
+        padding: .85rem 1rem;
+        min-height: 3.75rem;
+        gap: .75rem;
+    }
+
+    .sf-topbar-navigation {
+        gap: .75rem;
+    }
+
+    .sf-topbar-brand ::deep .sf-brand-copy {
+        display: none;
+    }
 }
 
-::deep .sf-toolbar-caption {
-    font-size: .75rem;
-    color: var(--muted-foreground);
-    white-space: nowrap;
+@media (max-width: 480px) {
+    .sf-topbar-brand {
+        display: none;
+    }
 }

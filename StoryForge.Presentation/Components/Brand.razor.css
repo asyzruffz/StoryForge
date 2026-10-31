@@ -22,6 +22,7 @@
     font-size: 1.1rem;
     font-weight: 650;
     letter-spacing: -.04em;
+    white-space: nowrap;
 }
 
     .sf-brand-copy > span {

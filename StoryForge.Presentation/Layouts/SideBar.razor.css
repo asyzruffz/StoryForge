@@ -1,3 +1,9 @@
-.sf-sidebar {
-    margin-right: -0.5rem;
+.sf-sidebar-footer-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding-bottom: .5rem;
+}
+
+[data-collapsible="icon"] .sf-sidebar-footer-actions {
+    justify-content: center;
 }

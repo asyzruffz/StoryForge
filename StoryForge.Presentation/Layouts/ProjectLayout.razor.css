@@ -1,11 +1,27 @@
-﻿.sf-workspace {
+.sf-project-layout {
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+}
+
+/* The inset is rendered by BlazorBlueprint, so scope from our native wrapper. */
+.sf-project-layout ::deep .sf-workspace {
+    min-height: 0;
     overflow: hidden;
     border: 1px solid var(--border);
     box-shadow: var(--sf-shadow);
 }
 
+.sf-main {
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    overflow: auto;
+    scrollbar-gutter: stable;
+}
+
 @media (min-width: 768px) {
-    .sf-workspace {
+    .sf-project-layout ::deep .sf-workspace {
         margin-block: .75rem;
         margin-right: .75rem;
         border-radius: 1rem;
@@ -13,14 +29,7 @@
 }
 
 @media (max-width: 767px) {
-    .sf-workspace {
+    .sf-project-layout ::deep .sf-workspace {
         border: 0;
     }
-}
-
-.sf-main {
-    flex: 1;
-    min-height: 0;
-    overflow: auto;
-    scrollbar-gutter: stable;
 }
